@@ -1,15 +1,16 @@
 import React from "react";
 import ReactNative from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Button } from "react-native";
 import CustomButton from "../../UI/CustomButton";
 type Navigation = {
   navigate: (destination: string) => void;
 };
 type ButtonBoxProps = {
   onPress: any;
+  disabled: boolean;
 };
-const ButtonBox: React.FC<ButtonBoxProps> = ({ onPress }) => {
+const ButtonBox: React.FC<ButtonBoxProps> = ({ onPress, disabled }) => {
   const navigate = useNavigation<Navigation>();
   return (
     <View style={styles.actionsContainer}>
@@ -19,7 +20,9 @@ const ButtonBox: React.FC<ButtonBoxProps> = ({ onPress }) => {
         </CustomButton>
       </View>
       <View style={styles.singleButton}>
-        <CustomButton onPress={onPress}>Dodaj</CustomButton>
+        <CustomButton onPress={onPress} disabled={disabled}>
+          Dodaj
+        </CustomButton>
       </View>
     </View>
   );

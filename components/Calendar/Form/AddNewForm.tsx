@@ -13,6 +13,7 @@ import {
   TextInput,
   View,
   Alert,
+  DefaultSectionT,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -27,6 +28,8 @@ import ButtonBox from "./ButtonsBox";
 import calculateEventDuration from "../../../Utils/calculateEventDuration";
 import pickHandler from "../../../Utils/pickHandler";
 import HoursComponent from "./Hours";
+import useCheckOverlappingEvents from "../../../hooks/calendar/useCheckOverlappingEvents";
+import OverlappedText from "./OverlappedText";
 
 interface Props {
   date: string;
@@ -48,7 +51,7 @@ interface Navigate {
 }
 const AddNewForm: FunctionComponent<Props> = () => {
   const ctx = useContext(MeetingsContext);
-
+  const items = ctx.meetings;
   const navigation = useNavigation<Navigate>();
   const route = useRoute<RouteProp<RouteProps>>();
   const dateString = route.params.date.dateString;
@@ -87,6 +90,27 @@ const AddNewForm: FunctionComponent<Props> = () => {
     duration: pickedService[0]?.duration,
     excludedTimes: calculateEventDuration(pickedService[0]?.duration, fullDate),
   };
+  const [sortedEvents, setSortedEvents] = useState<DefaultSectionT | any>([]);
+  const newArr: DefaultSectionT[] = [];
+  useEffect(() => {
+    for (const [key, value] of Object.entries(items)) {
+      newArr.push({ key: key, data: [...value] });
+    }
+    const sortedArray = newArr.sort(
+      (a, b) => new Date(a.title).getTime() - new Date(b.title).getTime()
+    );
+    setSortedEvents(sortedArray);
+  }, [items]);
+  const isEmpty = Object.values(data).some(
+    (x) => x === undefined || x === "" || x === "Invalid Date"
+  );
+
+  const isOverlapped = useCheckOverlappingEvents(
+    pickedDate.split("T")[0],
+    sortedEvents,
+    data.duration,
+    data.startFullDate || new Date()
+  );
 
   const submitHandler = (e: any) => {
     ctx?.addMeeting(data, pickedDate.split("T")[0]);
@@ -141,8 +165,9 @@ const AddNewForm: FunctionComponent<Props> = () => {
           />
         </View>
       </View>
+      {isOverlapped && <OverlappedText />}
       <MeetingDetails date={fullDate} service={pickedService[0]} />
-      <ButtonBox onPress={submitHandler} />
+      <ButtonBox disabled={isOverlapped} onPress={submitHandler} />
     </SafeAreaView>
   );
 };

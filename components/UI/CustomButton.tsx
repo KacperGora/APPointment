@@ -11,15 +11,18 @@ interface ButtonProps {
   children: string;
   onPress: (event: GestureResponderEvent) => void;
   secondary?: boolean;
+  disabled?: boolean;
 }
 const CustomButton: FunctionComponent<ButtonProps> = ({
   children,
   onPress,
   secondary,
+  disabled,
 }) => {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={({ pressed }) => [
         styles.buttonContainer,
         secondary && {
@@ -28,6 +31,7 @@ const CustomButton: FunctionComponent<ButtonProps> = ({
           borderWidth: 1,
         },
         pressed && styles.pressed,
+        disabled && styles.disabled,
       ]}
     >
       <View>
@@ -59,5 +63,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     textTransform: "uppercase",
+  },
+  disabled: {
+    backgroundColor: colors.greydark,
+    color: colors.graylight,
   },
 });

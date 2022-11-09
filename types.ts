@@ -1,4 +1,5 @@
 export interface Meeting {
+  key: string;
   name: string;
   lastName: string;
   startDayStr: string;
