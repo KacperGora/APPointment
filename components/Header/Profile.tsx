@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from "react";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import {
   GestureResponderEvent,
   ImageSourcePropType,
@@ -22,16 +23,10 @@ const StyledView = styled.TouchableOpacity`
   border-radius: 15px;
 `;
 
-const StyledImage = styled.Image`
-  resize-mode: cover;
-  width: 100%;
-  height: 100%;
-  border-radius: 15px;
-`;
 const Profile: FunctionComponent<ProfileProps> = (props) => {
   return (
-    <StyledView onPress={props.onPress} style={props.imgContainerStyle}>
-      <StyledImage style={props.imgStyle} source={props.img} />
+    <StyledView onPress={props.onPress}>
+      <Ionicons name="add" />
     </StyledView>
   );
 };

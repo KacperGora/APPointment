@@ -130,10 +130,10 @@ export default class TimelineCalendarScreen extends Component {
     // start: 0,
     // end: 24,
     unavailableHours: [
-      { start: 0, end: 6 },
-      { start: 22, end: 24 },
+      { start: 0, end: 9 },
+      { start: 17, end: 24 },
     ],
-    overlapEventsSpacing: 8,
+    overlapEventsSpacing: 5,
     rightEdgeSpacing: 24,
   };
 
@@ -148,13 +148,15 @@ export default class TimelineCalendarScreen extends Component {
           onMonthChange={this.onMonthChange}
           showTodayButton
           disabledOpacity={0.6}
-          // numberOfDays={3}
+          // numberOfDays={7}
+
         >
           <ExpandableCalendar
             firstDay={1}
             // leftArrowImageSource={require("../img/previous.png")}
             // rightArrowImageSource={require("../img/next.png")}
             markedDates={this.marked}
+            numberOfDays={2}
           />
           <TimelineList
             events={eventsByDate}
@@ -163,9 +165,10 @@ export default class TimelineCalendarScreen extends Component {
             // scrollToNow
             scrollToFirst
             initialTime={INITIAL_TIME}
+            
           />
         </CalendarProvider>
-     </SafeAreaView>
+      </SafeAreaView>
     );
   }
 }

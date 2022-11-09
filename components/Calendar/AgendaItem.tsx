@@ -8,12 +8,13 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
-import { addHours, parseISO } from "date-fns";
-import testIDs from "../Calendar/testIds";
+
+import testIDs from "./testIds";
 import CustomButton from "../UI/CustomButton";
+import { Meeting } from "../../types";
 
 interface ItemProps {
-  item: any;
+  item: Meeting;
 }
 
 const AgendaItem = (props: ItemProps) => {
@@ -42,11 +43,13 @@ const AgendaItem = (props: ItemProps) => {
       testID={testIDs.agenda.ITEM}
     >
       <View>
-        <Text style={styles.itemHourText}>{`${item.hour}-${item.end}`}</Text>
+        <Text
+          style={styles.itemHourText}
+        >{`${item.startHourStr}-${item.endHour}`}</Text>
         <Text style={styles.itemDurationText}>{item.duration}</Text>
       </View>
       <View style={styles.itemDetails}>
-        <Text style={styles.itemTitleText}>{item.title}</Text>
+        <Text style={styles.itemTitleText}>{item.name}</Text>
         <Text style={styles.itemDetailText}>{item.serviceName}</Text>
       </View>
       <View style={styles.itemButtonContainer}>

@@ -16,6 +16,7 @@ const Home: FunctionComponent = () => {
   return (
     <HomeContainer>
       <StatusBar style="auto" />
+      {/* <TimelineCalendarScreen /> */}
       <ExpandableCalendarScreen />
     </HomeContainer>
   );

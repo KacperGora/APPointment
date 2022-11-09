@@ -113,3 +113,4 @@ export interface DayAgenda {
   reservation?: AgendaEntry;
   date?: Date;
 }
+

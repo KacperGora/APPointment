@@ -30,9 +30,29 @@ export const hours = [
   { hour: "16:00", isActive: false },
 ];
 export const servicesDetails = [
-  { name: "Manicure Klasyczny", isActive: false, duration: 90 },
-  { name: "Manicure Hybrydowy", isActive: false, duration: 120 },
-  { name: "Uzupełnienie żelowe", isActive: false, duration: 150 },
-  { name: "Przedłużenie paznokci żelem", isActive: false, duration: 170 },
-  { name: "Pedicure", isActive: false, duration: 60 },
+  {
+    name: "Manicure Klasyczny",
+    isActive: false,
+    duration: 90,
+    price: "120PLN",
+  },
+  {
+    name: "Manicure Hybrydowy",
+    isActive: false,
+    duration: 120,
+    price: "120PLN",
+  },
+  {
+    name: "Uzupełnienie żelowe",
+    isActive: false,
+    duration: 150,
+    price: "120PLN",
+  },
+  {
+    name: "Przedłużenie paznokci żelem",
+    isActive: false,
+    duration: 170,
+    price: "120PLN",
+  },
+  { name: "Pedicure", isActive: false, duration: 60, price: "120PLN" },
 ];

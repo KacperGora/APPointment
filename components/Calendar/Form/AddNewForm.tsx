@@ -1,4 +1,10 @@
-import { FunctionComponent, useReducer, useState } from "react";
+import React, {
+  FunctionComponent,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   Pressable,
   ScrollView,
@@ -6,58 +12,71 @@ import {
   Text,
   TextInput,
   View,
+  Alert,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../../colors";
 import Calendar from "../Calendar";
-import CustomButton from "../../UI/CustomButton";
 import calculateTimeOfEnd from "../../../Utils/calculateTimeOfEnd";
 import { hours, servicesDetails } from "../../../data";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { MeetingsContext } from "../../../store/store";
+import MeetingDetails from "./MeetingDetails";
+import ButtonBox from "./ButtonsBox";
+import calculateEventDuration from "../../../Utils/calculateEventDuration";
+import pickHandler from "../../../Utils/pickHandler";
+import HoursComponent from "./Hours";
+
 interface Props {
   date: string;
 }
 
-const AddNewForm: FunctionComponent<Props> = ({ date }) => {
-  const [pickedDate, setPickedDate] = useState(date);
+type RouteProps = {
+  params: {
+    date: {
+      year: number;
+      month: number;
+      day: number;
+      timestamp: number;
+      dateString: string;
+    };
+  };
+};
+interface Navigate {
+  navigate: (destination: string) => void;
+}
+const AddNewForm: FunctionComponent<Props> = () => {
+  const ctx = useContext(MeetingsContext);
 
+  const navigation = useNavigation<Navigate>();
+  const route = useRoute<RouteProp<RouteProps>>();
+  const dateString = route.params.date.dateString;
+
+  const [pickedDate, setPickedDate] = useState(dateString);
+
+  const [pickedHour, setPickedHour] = useState("");
   const [userTypedName, setUserTypedName] = useState("");
   const [userTypedLastName, setUserTypedLastName] = useState("");
   const [services, setServices] = useState(servicesDetails);
   const pickedService = services.filter((service) => service.isActive === true);
-  const [pickedHours, setPickedHour] = useState(hours);
 
   const servicePressHandler = (index: number) => {
-    const newArr = [...services];
-    const oldIndex = newArr.findIndex((service) => service.isActive);
-    newArr[oldIndex] = {
-      ...newArr[oldIndex],
-      isActive: !newArr[oldIndex]?.isActive,
-    };
-    newArr[index] = {
-      ...newArr[index],
-      isActive: !newArr[index].isActive,
-    };
+    pickHandler(index, services, setServices);
+  };
 
-    setServices(newArr);
-  };
-  const hourPressHandler = (index: number) => {
-    const newArr = [...hours];
-    newArr[index] = {
-      ...newArr[index],
-      isActive: !newArr[index].isActive,
-    };
-    setPickedHour(newArr);
-  };
-  const dayStr = date;
-  const hourStr = pickedHours.filter((hour) => hour.isActive === true)[0]?.hour;
-  const fullDate = new Date(dayStr + "T" + hourStr + ":00.000Z");
+  const fullDate = new Date(
+    pickedDate.split("T")[0] + "T" + pickedHour + ":00.000Z"
+  );
 
   const data = {
+    start: pickedDate,
+    end: pickedDate,
+    title: userTypedName,
     name: userTypedName,
     lastName: userTypedLastName,
-    startDayStr: dayStr,
-    startHourStr: hourStr,
+    startDayStr: pickedDate,
+    startHourStr: pickedHour,
     startFullDate: fullDate,
     serviceName: pickedService[0]?.name,
     endFullDate: calculateTimeOfEnd(fullDate, pickedService[0]?.duration),
@@ -66,26 +85,29 @@ const AddNewForm: FunctionComponent<Props> = ({ date }) => {
       pickedService[0]?.duration
     ).toLocaleTimeString(),
     duration: pickedService[0]?.duration,
+    excludedTimes: calculateEventDuration(pickedService[0]?.duration, fullDate),
+  };
+
+  const submitHandler = (e: any) => {
+    ctx?.addMeeting(data, pickedDate.split("T")[0]);
+    navigation.navigate("Home");
   };
 
   return (
     <SafeAreaView>
-      <Calendar date={date} setNewDate={setPickedDate} />
+      <Calendar date={pickedDate} setNewDate={setPickedDate} />
       <Text>{new Date(pickedDate).toLocaleDateString()} </Text>
       <View style={{ height: 250 }}>
         <ScrollView style={[styles.hourBox]} horizontal={true}>
-          {pickedHours.map((hour, index) => (
-            <Pressable
-              onPress={hourPressHandler.bind(this, index)}
-              style={[styles.container, hour.isActive && styles.active]}
-            >
-              <Text style={styles.hour}>{hour.hour}</Text>
-            </Pressable>
-          ))}
+          <HoursComponent
+            pickedDay={pickedDate}
+            setPickedHour={setPickedHour}
+          />
         </ScrollView>
         <View style={styles.serviceBox}>
           {services.map((service, index) => (
             <Pressable
+              key={index}
               onPress={servicePressHandler.bind(this, index)}
               style={[
                 styles.serviceContainer,
@@ -119,7 +141,8 @@ const AddNewForm: FunctionComponent<Props> = ({ date }) => {
           />
         </View>
       </View>
-      <CustomButton onPress={() => console.log(data)}>Dodaj</CustomButton>
+      <MeetingDetails date={fullDate} service={pickedService[0]} />
+      <ButtonBox onPress={submitHandler} />
     </SafeAreaView>
   );
 };

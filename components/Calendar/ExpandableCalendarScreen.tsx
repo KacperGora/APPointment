@@ -1,20 +1,22 @@
-import React, { useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useContext } from "react";
 import { StyleSheet } from "react-native";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import {
   ExpandableCalendar,
-  AgendaList,
   CalendarProvider,
   WeekCalendar,
+  DateData,
 } from "react-native-calendars";
 import testIDs from "./testIds";
-import { agendaItems, getMarkedDates } from "../mocks/agendaItems";
-import AgendaItem from "../mocks/AgendaItem";
 import { getTheme, themeColor, lightThemeColor } from "../mocks/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { DateData } from "../mocks/types";
+
 import { LocaleConfig } from "react-native-calendars";
-import { UpdateSources } from "react-native-calendars/src/expandableCalendar/commons";
+
+import { MeetingsContext } from "../../store/store";
+import Agenda from "./Agenda";
+
+import { AllMeetings } from "../../types";
 
 LocaleConfig.locales["pl"] = {
   monthNames: [
@@ -58,89 +60,90 @@ LocaleConfig.locales["pl"] = {
   today: "Dziś",
 };
 LocaleConfig.defaultLocale = "pl";
-const ITEMS: any[] = agendaItems;
 
+type Navigation = {
+  navigate: (
+    destination: string,
+    params: {
+      date:
+        | {
+            dateString: string;
+            day: number;
+            month: number;
+            timeStamp: number;
+            year: number;
+          }
+        | DateData;
+      items?: { title: string; data: string[] }[];
+    }
+  ) => void;
+};
 interface Props {
   weekView?: boolean;
 }
 
 const ExpandableCalendarScreen = (props: Props) => {
-  const navigate = useNavigation();
-
   const { weekView } = props;
-  const marked = useRef(getMarkedDates());
+  const ctx = useContext(MeetingsContext);
+  const items = ctx?.meetings;
+
+  const [meetings, setMeetings] = useState<AllMeetings>(items);
+
+  const navigate = useNavigation<Navigation>();
+
   const theme = useRef(getTheme());
   const todayBtnTheme = useRef({
     todayButtonTextColor: themeColor,
   });
-  console.log(ITEMS[0].title);
-  const onDateChanged = useCallback(
-    (date: string, updateSource: UpdateSources) => {
-      console.log(
-        "ExpandableCalendarScreen onDateChanged: ",
-        date,
-        updateSource
-      );
-    },
-    []
-  );
+  const onDateChanged = useCallback(() => {
+    setMeetings(items);
+  }, []);
 
   const onMonthChange = useCallback((dateString: DateData) => {
     console.log("ExpandableCalendarScreen onMonthChange: ", dateString);
   }, []);
 
-  const renderItem = useCallback(({ item }: any) => {
-    return <AgendaItem item={item} />;
-  }, []);
   const dayLongPressHandler = (date: DateData) => {
-    console.log(date);
-    navigate.navigate("Add", { ...date });
+    navigate.navigate("Add", {
+      date: { ...date },
+    });
   };
+
   return (
-    <SafeAreaView>
-      <CalendarProvider
-        date={ITEMS[1]?.title}
-        onDateChanged={onDateChanged}
-        onMonthChange={onMonthChange}
-        showTodayButton
-        disabledOpacity={0.5}
-        theme={todayBtnTheme.current}
-      >
-        {weekView ? (
-          <WeekCalendar
-            testID={testIDs.weekCalendar.CONTAINER}
-            firstDay={1}
-            markedDates={marked.current}
-          />
-        ) : (
-          <ExpandableCalendar
-            testID={testIDs.expandableCalendar.CONTAINER}
-            hideArrows
-            onDayPress={(e: DateData) => console.log(e + "asdas")}
-            onDayLongPress={dayLongPressHandler}
-            // disablePan
-            // hideKnob
-            initialPosition={ExpandableCalendar.positions.OPEN}
-            calendarStyle={styles.calendar}
-            theme={theme.current}
-            disableAllTouchEventsForDisabledDays
-            firstDay={0}
-            markedDates={marked.current}
-            animateScroll
-            closeOnDayPress={true}
-            disabledDaysIndexes={[6]}
-          />
-        )}
-        <AgendaList
-          onTouchStart={(e) => console.log(e)}
-          sections={ITEMS}
-          renderItem={renderItem}
-          scrollToNextEvent
-          sectionStyle={styles.section}
-          dayFormat={"dd.MM.yyyy"}
+    <CalendarProvider
+      date={new Date().toDateString()}
+      onDateChanged={onDateChanged}
+      onMonthChange={onMonthChange}
+      showTodayButton
+      disabledOpacity={0.5}
+      // theme={todayBtnTheme.current}
+    >
+      {weekView ? (
+        <WeekCalendar testID={testIDs.weekCalendar.CONTAINER} firstDay={1} />
+      ) : (
+        <ExpandableCalendar
+          testID={testIDs.expandableCalendar.CONTAINER}
+          // onDayPress={(e: DateData) => console.log(e + "asdas")}
+          onDayLongPress={dayLongPressHandler}
+          initialPosition={ExpandableCalendar.positions.OPEN}
+          calendarStyle={styles.calendar}
+          theme={theme.current}
+          disableAllTouchEventsForDisabledDays
+          firstDay={0}
+          animateScroll
+          closeOnDayPress={true}
+          disabledDaysIndexes={[6]}
         />
-      </CalendarProvider>
-    </SafeAreaView>
+      )}
+      <Agenda />
+      {/* <TimelineList
+          events={meetings}
+          showNowIndicator
+          // scrollToNow
+          scrollToFirst
+          initialTime={INITIAL_TIME}
+        /> */}
+    </CalendarProvider>
   );
 };
 

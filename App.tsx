@@ -1,6 +1,9 @@
+import "react-native-gesture-handler";
+import React from "react";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import RootStack from "./navigators/RootStack";
+
 export default function App() {
   let [fontLoaded] = useFonts({
     "Lato-Bold": require("./assets/fonts/Lato-Bold.ttf"),

@@ -5,7 +5,6 @@ import React, { FunctionComponent, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import CalendarStrip from "react-native-calendar-strip";
 import { colors } from "../colors";
-import * as ExpoCalendar from "expo-calendar";
 
 const locale = {
   name: "pl",
@@ -16,8 +15,7 @@ interface Props {
   setNewDate: React.Dispatch<React.SetStateAction<string>>;
 }
 const Calendar: FunctionComponent<Props> = ({ date, setNewDate }) => {
-  const [pickedDate, setPickedDate] = useState(new Date(date).toDateString());
-
+  const [pickedDate, setPickedDate] = useState(date);
   const selectDateHandler = (e: any) => {
     console.log(e);
   };
@@ -27,7 +25,7 @@ const Calendar: FunctionComponent<Props> = ({ date, setNewDate }) => {
 
   const dateSelectionHandler = (date: moment.Moment | Date) => {
     setPickedDate(date.toString());
-    setNewDate(date.toString())
+    setNewDate(date.toISOString());
   };
 
   return (
@@ -50,10 +48,6 @@ const Calendar: FunctionComponent<Props> = ({ date, setNewDate }) => {
       disabledDateNameStyle={{ color: "grey" }}
       disabledDateNumberStyle={{ color: "grey" }}
       datesBlacklist={datesBlacklistFunc}
-      // datesWhitelist={datesWhitelist}
-      // datesBlacklist={datesBlacklist}
-      // iconLeft={require("./img/left-arrow.png")}
-      // iconRight={require("./img/right-arrow.png")}
       iconContainer={{ flex: 0.1 }}
       onDateSelected={dateSelectionHandler}
       selectedDate={new Date(pickedDate)}
