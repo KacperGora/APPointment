@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import ReactNative from "react-native";
+
+import { subHours } from "date-fns";
 interface MeetingDetailProps {
   date: Date;
   service: {
@@ -11,8 +12,9 @@ interface MeetingDetailProps {
   };
 }
 const MeetingDetails: React.FC<MeetingDetailProps> = ({ date, service }) => {
-  const dateString = date?.toLocaleDateString();
-  const hourString = date?.toLocaleTimeString().slice(0, 5);
+  const properDate = subHours(date, 1);
+  const dateString = properDate?.toLocaleDateString();
+  const hourString = properDate?.toLocaleTimeString().slice(0, 5);
 
   return (
     <View>

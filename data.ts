@@ -34,13 +34,13 @@ export const servicesDetails = [
     name: "Manicure Klasyczny",
     isActive: false,
     duration: 90,
-    price: "120PLN",
+    price: "40PLN",
   },
   {
     name: "Manicure Hybrydowy",
     isActive: false,
     duration: 120,
-    price: "120PLN",
+    price: "80PLN",
   },
   {
     name: "Uzupełnienie żelowe",
@@ -51,8 +51,8 @@ export const servicesDetails = [
   {
     name: "Przedłużenie paznokci żelem",
     isActive: false,
-    duration: 170,
-    price: "120PLN",
+    duration: 180,
+    price: "140PLN",
   },
   { name: "Pedicure", isActive: false, duration: 60, price: "120PLN" },
 ];

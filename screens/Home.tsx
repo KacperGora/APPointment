@@ -4,8 +4,9 @@ import styled from "styled-components/native";
 
 import { Container } from "../components/shared";
 import { colors } from "../components/colors";
-import ExpandableCalendarScreen from "../components/Calendar/ExpandableCalendarScreen";
-import TimelineCalendarScreen from "../components/Calendar/TimeLineCalendarScreen";
+import ExpandableCalendarScreen from "../components/Calendar/CalendarScreen/ExpandableCalendarScreen";
+import TimelineCalendarScreen from "../components/Calendar/TimeLine/TimelineList";
+import TimelineScreen from "../components/Calendar/TimeLine/TimelineScreen";
 
 const HomeContainer = styled(Container)`
   background-color: ${colors.graylight};
@@ -16,8 +17,11 @@ const Home: FunctionComponent = () => {
   return (
     <HomeContainer>
       <StatusBar style="auto" />
-      {/* <TimelineCalendarScreen /> */}
-      <ExpandableCalendarScreen />
+      <HomeContainer>
+        {/* <TimelineCalendarScreen /> */}
+        <TimelineScreen />
+      </HomeContainer>
+      {/* <ExpandableCalendarScreen /> */}
     </HomeContainer>
   );
 };

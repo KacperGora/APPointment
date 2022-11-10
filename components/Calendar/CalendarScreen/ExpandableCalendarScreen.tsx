@@ -7,17 +7,12 @@ import {
   WeekCalendar,
   DateData,
 } from "react-native-calendars";
-import testIDs from "./testIds";
-import { getTheme, themeColor, lightThemeColor } from "../mocks/theme";
-import { SafeAreaView } from "react-native-safe-area-context";
-
+import testIDs from "../testIds";
+import { getTheme, themeColor, lightThemeColor } from "../../mocks/theme";
 import { LocaleConfig } from "react-native-calendars";
-
-import { MeetingsContext } from "../../store/store";
-import Agenda from "./Agenda";
-
-import { AllMeetings } from "../../types";
-
+import { MeetingsContext } from "../../../store/store";
+import Agenda from "../Agenda/Agenda";
+import { AllMeetings } from "../../../types";
 LocaleConfig.locales["pl"] = {
   monthNames: [
     "Styczeń",
@@ -86,6 +81,7 @@ const ExpandableCalendarScreen = (props: Props) => {
   const { weekView } = props;
   const ctx = useContext(MeetingsContext);
   const items = ctx?.meetings;
+  console.log(items);
 
   const [meetings, setMeetings] = useState<AllMeetings>(items);
 
@@ -116,7 +112,8 @@ const ExpandableCalendarScreen = (props: Props) => {
       onMonthChange={onMonthChange}
       showTodayButton
       disabledOpacity={0.5}
-      // theme={todayBtnTheme.current}
+      numberOfDays={1}
+      theme={todayBtnTheme.current}
     >
       {weekView ? (
         <WeekCalendar testID={testIDs.weekCalendar.CONTAINER} firstDay={1} />
@@ -133,9 +130,11 @@ const ExpandableCalendarScreen = (props: Props) => {
           animateScroll
           closeOnDayPress={true}
           disabledDaysIndexes={[6]}
+          
         />
       )}
       <Agenda />
+
       {/* <TimelineList
           events={meetings}
           showNowIndicator

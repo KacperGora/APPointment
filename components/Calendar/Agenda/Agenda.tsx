@@ -1,6 +1,6 @@
 import { AgendaList } from "react-native-calendars";
 import React, { useContext, useCallback, useState, useEffect } from "react";
-import { MeetingsContext } from "../../store/store";
+import { MeetingsContext } from "../../../store/store";
 import AgendaItem from "./AgendaItem";
 import { DefaultSectionT } from "react-native";
 

@@ -4,13 +4,8 @@ import { colors } from "../../colors";
 import pickHandler from "../../../Utils/pickHandler";
 import { hours } from "../../../data";
 import { MeetingsContext } from "../../../store/store";
-import { Meeting } from "../../../types";
+import { Hours, Meeting } from "../../../types";
 
-
-type Hours = {
-  hour: string;
-  isActive: boolean;
-};
 type ComponentProps = {
   pickedDay: string;
   setPickedHour: any;
@@ -22,14 +17,13 @@ const HoursComponent: React.FC<ComponentProps> = ({
   const ctx = useContext(MeetingsContext);
   const meetings = ctx?.meetings;
   const [availableHours, setAvailableHours] = useState<Hours[]>(hours);
-  const hourPressHandler = (index: number) => {
-    pickHandler(index, availableHours, setAvailableHours);
-  };
-
   const excludedTimesAtThisDay: string[] = [];
   const shortDate: string = pickedDay.split("T")[0];
   const meetingsAtThisDay: Meeting[] = meetings[shortDate];
 
+  const hourPressHandler = (index: number) => {
+    pickHandler(index, availableHours, setAvailableHours);
+  };
   setPickedHour(availableHours.filter((hour) => hour.isActive)[0]?.hour);
 
   useEffect(() => {
@@ -47,7 +41,7 @@ const HoursComponent: React.FC<ComponentProps> = ({
       {availableHours.map((hour, index) => (
         <Pressable
           key={index}
-          onPress={hourPressHandler.bind("", index)}
+          onPress={() => hourPressHandler(index)}
           style={[styles.container, hour.isActive && styles.active]}
         >
           <Text style={styles.hour}>{hour.hour}</Text>

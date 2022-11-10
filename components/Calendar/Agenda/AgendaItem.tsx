@@ -9,9 +9,9 @@ import {
   Button,
 } from "react-native";
 
-import testIDs from "./testIds";
-import CustomButton from "../UI/CustomButton";
-import { Meeting } from "../../types";
+import testIDs from "../testIds";
+import CustomButton from "../../UI/CustomButton";
+import { Meeting } from "../../../types";
 
 interface ItemProps {
   item: Meeting;
@@ -43,10 +43,10 @@ const AgendaItem = (props: ItemProps) => {
       testID={testIDs.agenda.ITEM}
     >
       <View>
-        <Text
-          style={styles.itemHourText}
-        >{`${item.startHourStr}-${item.endHour}`}</Text>
-        <Text style={styles.itemDurationText}>{item.duration}</Text>
+        <Text style={styles.itemHourText}>{`${
+          item.startHourStr
+        }-${item.endHour.slice(0, 5)}`}</Text>
+        <Text style={styles.itemDurationText}>{item.duration} minut</Text>
       </View>
       <View style={styles.itemDetails}>
         <Text style={styles.itemTitleText}>{item.name}</Text>

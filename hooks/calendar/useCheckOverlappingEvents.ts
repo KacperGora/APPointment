@@ -17,7 +17,7 @@ function useCheckOverlappingEvents(
   for (const [key, value] of Object.entries(meetingsAtPickedDate)) {
     newArr.push(...value.data);
   }
-  console.log(newArr);
+
   useEffect(() => {
     setOverlapped(false);
     if (newMeetingDate.valueOf() !== NaN && service) {

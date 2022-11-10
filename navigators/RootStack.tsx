@@ -12,10 +12,11 @@ import SalonCustomers from "../components/Salon/SalonCustomers/SalonCustomers";
 import SalonIncomings from "../components/Salon/SalonIncomings/SalonIncomings";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import TimelineCalendarScreen from "../components/Calendar/TimeLineCalendarScreen";
+import TimelineScreen from "../components/Calendar/TimeLine/TimelineScreen";
+
 export type RootStackParam = {
   Welcome: undefined;
-  TimeLine: undefined;
+  Timeline: undefined;
   Home: undefined;
   Add: {
     date: string;
@@ -89,11 +90,7 @@ const RootStack: FunctionComponent = () => {
             component={Welcome}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="TimeLine"
-            component={TimelineCalendarScreen}
-            options={{ headerShown: false }}
-          />
+
           <Stack.Screen
             name="Home"
             component={Home}
@@ -109,6 +106,11 @@ const RootStack: FunctionComponent = () => {
                 />
               ),
             }}
+          />
+          <Stack.Screen
+            name="Timeline"
+            component={TimelineScreen}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="Add"

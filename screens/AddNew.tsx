@@ -1,11 +1,8 @@
 import React, { FunctionComponent } from "react";
 import { StatusBar } from "expo-status-bar";
 import styled from "styled-components/native";
-
 import { Container } from "../components/shared";
 import { colors } from "../components/colors";
-import ExpandableCalendarScreen from "../components/Calendar/ExpandableCalendarScreen";
-import TimelineCalendarScreen from "../components/Calendar/TimeLineCalendarScreen";
 import AddNewForm from "../components/Calendar/Form/AddNewForm";
 
 const HomeContainer = styled(Container)`
@@ -13,13 +10,11 @@ const HomeContainer = styled(Container)`
   width: 100%;
   flex: 1;
 `;
-const AddNew: FunctionComponent = ({ navigation, route }) => {
-  const date = route.params;
-
+const AddNew: FunctionComponent = () => {
   return (
     <HomeContainer>
       <StatusBar style="auto" />
-      <AddNewForm date={date.dateString} />
+      <AddNewForm />
     </HomeContainer>
   );
 };

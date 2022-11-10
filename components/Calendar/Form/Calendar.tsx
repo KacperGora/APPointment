@@ -1,10 +1,8 @@
 import "moment";
 import "moment/locale/pl";
-
 import React, { FunctionComponent, useState } from "react";
-import { StyleSheet, View } from "react-native";
 import CalendarStrip from "react-native-calendar-strip";
-import { colors } from "../colors";
+import { colors } from "../../colors";
 
 const locale = {
   name: "pl",
@@ -16,18 +14,15 @@ interface Props {
 }
 const Calendar: FunctionComponent<Props> = ({ date, setNewDate }) => {
   const [pickedDate, setPickedDate] = useState(date);
-  const selectDateHandler = (e: any) => {
-    console.log(e);
-  };
+
   const datesBlacklistFunc = (date: { isoWeekday: () => number }) => {
     return date.isoWeekday() === 7;
   };
 
-  const dateSelectionHandler = (date: moment.Moment | Date) => {
-    setPickedDate(date.toString());
-    setNewDate(date.toISOString());
+  const dateSelectionHandler = (date: moment.Moment) => {
+    setPickedDate(date.toISOString().split("T")[0]);
+    setNewDate(date.toISOString().split("T")[0]);
   };
-
   return (
     <CalendarStrip
       calendarAnimation={{ type: "sequence", duration: 30 }}
@@ -56,5 +51,3 @@ const Calendar: FunctionComponent<Props> = ({ date, setNewDate }) => {
 };
 
 export default Calendar;
-
-const styles = StyleSheet.create({});

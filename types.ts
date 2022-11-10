@@ -1,5 +1,4 @@
 export interface Meeting {
-  key: string;
   name: string;
   lastName: string;
   startDayStr: string;
@@ -10,9 +9,12 @@ export interface Meeting {
   endHour: string;
   duration: number;
   excludedTimes: string[];
-  start: any;
-  end: any;
-  title: any;
+
+  id: string;
+  start: string;
+  end: string;
+  title: string;
+  color: string;
 }
 
 export interface AllMeetings {
@@ -22,4 +24,16 @@ export type MeetingContextProp = {
   meetings: Meeting[];
   addMeeting: (meeting: Meeting) => void;
   removeMeeting: (id: number) => void;
+};
+
+export type Service = {
+  name: string;
+  isActive: boolean;
+  duration: number;
+  price: string;
+}[];
+
+export type Hours = {
+  hour: string;
+  isActive: boolean;
 };
