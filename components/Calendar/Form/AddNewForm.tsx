@@ -21,12 +21,7 @@ import { EventItem } from "@howljs/calendar-kit";
 
 type RouteProps = {
   params: {
-    date: {
-      date?: string;
-      hour: number;
-      minutes: number;
-      dateString: string;
-    };
+    date: string;
   };
 };
 interface Navigate {
@@ -42,8 +37,8 @@ const AddNewForm = () => {
 
   const navigation = useNavigation<Navigate>();
   const route = useRoute<RouteProp<RouteProps>>();
-  const dateString = route.params?.date.date || route.params?.date.dateString;
-
+  const dateString = route.params?.date;
+  console.log(dateString);
   const [pickedDate, setPickedDate] = useState(dateString);
   const [pickedHour, setPickedHour] = useState("");
   const [pickedService, setPickedService] = useState<ServiceDetails | any>({});

@@ -4,6 +4,7 @@ import {
   PackedEvent,
   TimelineCalendar,
 } from "@howljs/calendar-kit";
+import { addDays } from "date-fns/esm";
 
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -17,10 +18,11 @@ import { MeetingsContext } from "../../../store/store";
 import { colors } from "../../colors";
 import TimelineViewPicker from "./TimeLineViewPicker";
 
-const Calendar = () => {
+const Calendar = ({ navigation }) => {
   const ctx = useContext(MeetingsContext);
   const [userPickedView, setUserPickedView] = useState<CalendarViewMode>();
-
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<PackedEvent>();
   const newArr = [];
   useEffect(() => {
     for (const [key, value] of Object.entries(ctx.meetings)) {
@@ -31,8 +33,6 @@ const Calendar = () => {
     );
     setEvents(sortedArray);
   }, [ctx.meetings]);
-  const [events, setEvents] = useState<EventItem[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<PackedEvent>();
 
   const _onLongPressEvent = (event: PackedEvent) => {
     setSelectedEvent(event);
@@ -67,7 +67,7 @@ const Calendar = () => {
     );
   };
   const _onDragCreateEnd = (event) => {
-    console.log(new Date(event.start));
+    // // console.log(new Date(event.start));
     // const randomId = Math.random().toString(36).slice(2, 10);
     // const newEvent = {
     //   id: randomId,
@@ -78,7 +78,12 @@ const Calendar = () => {
     // };
     // setEvents((prev) => [...prev, newEvent]);
   };
-
+  const longPressHandler = (date, event) => {
+    const correctDate = new Date(date).toDateString();
+    navigation.navigate("Add", {
+      date: correctDate,
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <TimelineViewPicker setUserPickedView={setUserPickedView} />
@@ -95,6 +100,7 @@ const Calendar = () => {
         events={events}
         onLongPressEvent={_onLongPressEvent}
         onDragCreateEnd={_onDragCreateEnd}
+        onLongPressBackground={longPressHandler}
         selectedEvent={selectedEvent}
         onEndDragSelectedEvent={setSelectedEvent}
         dragStep={15}

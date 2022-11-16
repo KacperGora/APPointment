@@ -64,13 +64,7 @@ type Navigation = {
   navigate: (
     destination: string,
     params: {
-      date: {
-        year: number;
-        month: number;
-        day: number;
-        timestamp: number;
-        dateString: string;
-      };
+      date: string;
       items?: { title: string; data: string[] }[];
     }
   ) => void;
@@ -92,7 +86,7 @@ const ExpandableCalendarScreen = (props: Props) => {
 
   const dayLongPressHandler = (date: DateData) => {
     navigate.navigate("Add", {
-      date: date,
+      date: date.dateString,
     });
   };
 
