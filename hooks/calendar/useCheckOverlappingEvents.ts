@@ -5,7 +5,7 @@ import { AllMeetings, Meeting } from "../../types";
 function useCheckOverlappingEvents(
   pickedDate: any,
   meetings: AllMeetings[],
-  service: number,
+  serviceDuration: number,
   newMeetingDate: Date
 ) {
   const [isOverlapped, setOverlapped] = useState(false);
@@ -17,28 +17,29 @@ function useCheckOverlappingEvents(
   for (const [key, value] of Object.entries(meetingsAtPickedDate)) {
     newArr.push(...value.data);
   }
-
+  console.log(newArr);
   useEffect(() => {
     setOverlapped(false);
-    if (newMeetingDate.valueOf() !== NaN && service) {
+    if (newMeetingDate.valueOf() !== NaN && serviceDuration) {
       newArr.forEach((meeting) => {
         if (
           areIntervalsOverlapping(
             {
-              start: subHours(meeting.startFullDate, 1),
-              end: subHours(meeting.endFullDate, 1),
+              start: subHours(new Date(meeting.start), 1),
+              end: subHours(new Date(meeting.end), 1),
             },
             {
               start: subHours(newMeetingDate, 1),
-              end: addMinutes(subHours(newMeetingDate, 1), service),
+              end: addMinutes(subHours(newMeetingDate, 1), serviceDuration),
             }
           )
         ) {
+          console.log("s");
           setOverlapped(true);
         }
       });
     }
-  }, [meetingsAtPickedDate, pickedDate, service]);
+  }, [meetingsAtPickedDate, pickedDate, serviceDuration]);
 
   return isOverlapped;
 }

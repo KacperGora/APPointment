@@ -35,11 +35,11 @@ const Calendar: FunctionComponent<Props> = ({ date, setNewDate }) => {
       }}
       scrollable
       style={{ height: 100, paddingBottom: 10 }}
-      calendarHeaderStyle={{ color: "black" }}
+      calendarHeaderStyle={{ color: "black", fontSize: 16 }}
       dateNumberStyle={{ color: "black" }}
-      dateNameStyle={{ color: "black" }}
-      highlightDateNumberStyle={{ color: "black" }}
-      highlightDateNameStyle={{ color: "black" }}
+      dateNameStyle={{ color: "black", fontSize: 10 }}
+      highlightDateNumberStyle={{ color: "black", fontSize: 16 }}
+      highlightDateNameStyle={{ color: "black", fontSize: 10 }}
       disabledDateNameStyle={{ color: "grey" }}
       disabledDateNumberStyle={{ color: "grey" }}
       datesBlacklist={datesBlacklistFunc}

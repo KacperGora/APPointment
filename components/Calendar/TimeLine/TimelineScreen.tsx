@@ -1,148 +1,152 @@
+import {
+  CalendarViewMode,
+  EventItem,
+  PackedEvent,
+  TimelineCalendar,
+} from "@howljs/calendar-kit";
+
 import React, { useContext, useEffect, useState } from "react";
 import {
-  CalendarProvider,
-  CalendarUtils,
-  ExpandableCalendar,
-  LocaleConfig,
-  TimelineList,
-  TimelineProps,
-} from "react-native-calendars";
-import { useNavigation } from "@react-navigation/native";
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { MeetingsContext } from "../../../store/store";
-import { StyleSheet } from "react-native";
-LocaleConfig.locales["pl"] = {
-  monthNames: [
-    "Styczeń",
-    "Luty",
-    "Marzec",
-    "Kwiecień",
-    "Maj",
-    "Czerwiec",
-    "Lipiec",
-    "Sierpień",
-    "Wrzesień",
-    "Październik",
-    "Listopad",
-    "Grudzień",
-  ],
-  monthNamesShort: [
-    "Sty",
-    "Lut",
-    "Mar",
-    "Kwi",
-    "Maj",
-    "Cze",
-    "Lip",
-    "Sie",
-    "Wrz",
-    "Paź",
-    "Lis",
-    "Gru",
-  ],
-  dayNames: [
-    "Poniedziałek",
-    "Wtorek",
-    "Środa",
-    "Czwartek",
-    "Piątek",
-    "Sobota",
-    "Niedziela",
-  ],
-  dayNamesShort: ["Pon", "Wt", "Śr", "Czw", "Pt", "Sb", "Nd"],
-  today: "Dziś",
-};
-LocaleConfig.defaultLocale = "pl";
+import { colors } from "../../colors";
+import TimelineViewPicker from "./TimeLineViewPicker";
 
-const TimelineScreen = () => {
-  const navigation = useNavigation();
+const Calendar = () => {
   const ctx = useContext(MeetingsContext);
-  const events = ctx.meetings;
-  const [eventsByDate, setEventsByDate] = useState(events);
+  const [userPickedView, setUserPickedView] = useState<CalendarViewMode>();
+
+  const newArr = [];
   useEffect(() => {
-    setEventsByDate(events);
-  }, [events]);
-  console.log(eventsByDate);
-  const today = new Date();
-  const getDate = (offset = 0) =>
-    CalendarUtils.getCalendarDateString(
-      new Date().setDate(today.getDate() + offset)
+    for (const [key, value] of Object.entries(ctx.meetings)) {
+      newArr.push(...value);
+    }
+    const sortedArray = newArr.sort(
+      (a, b) => new Date(a.title).getTime() - new Date(b.title).getTime()
     );
+    setEvents(sortedArray);
+  }, [ctx.meetings]);
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<PackedEvent>();
 
-  const [currentDate, setCurrentDate] = useState(getDate);
-  const [visibleDays, setVisibleDays] = useState(1);
-  const INITIAL_TIME = { hour: 9, minutes: 0 };
-  const [selectedLanguage, setSelectedLanguage] = useState(1);
-  const onDateChanged = (date: string) => {
-    setCurrentDate(date);
-  };
-  const onMonthChange = (month: any, updateSource: any) => {
-    console.log("TimelineCalendarScreen onMonthChange: ", month, updateSource);
-  };
-  const marked = {
-    [`${getDate(-1)}`]: { marked: true },
-    [`${getDate()}`]: { marked: true },
-    [`${getDate(1)}`]: { marked: true },
-    [`${getDate(2)}`]: { marked: true },
-    [`${getDate(4)}`]: { marked: true },
+  const _onLongPressEvent = (event: PackedEvent) => {
+    setSelectedEvent(event);
   };
 
-  const approveNewEvent: TimelineProps["onBackgroundLongPressOut"] = (
-    _timeString,
-    timeObject
-  ) => {
-    // console.log(_timeString.split(' ')[0]);
-  };
-  const createNewEvent: TimelineProps["onBackgroundLongPress"] = (
-    timeString,
-    timeObject
-  ) => {
-    console.log(timeObject);
-    navigation.navigate("Add", {
-      date: timeObject,
-    });
+  const _onPressCancel = () => {
+    setSelectedEvent(undefined);
   };
 
-  const timelineProps: Partial<TimelineProps> = {
-    format24h: true,
-    onBackgroundLongPress: createNewEvent,
-    onBackgroundLongPressOut: approveNewEvent,
-    scrollToFirst: true,
-    // start: 0,
-    // end: 24,
-    onEventPress: (event) => console.log(event),
-    unavailableHours: [
-      { start: 0, end: 6 },
-      { start: 22, end: 24 },
-    ],
-    overlapEventsSpacing: 8,
-    rightEdgeSpacing: 24,
-    timelineLeftInset: 100,
+  const _onPressSubmit = () => {
+    setEvents((prevEvents) =>
+      prevEvents.map((ev) => {
+        if (ev.id === selectedEvent?.id) {
+          return { ...ev, ...selectedEvent };
+        }
+        return ev;
+      })
+    );
+    setSelectedEvent(undefined);
   };
+
+  const _renderEditFooter = () => {
+    return (
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.button} onPress={_onPressCancel}>
+          <Text style={styles.btnText}>Anuluj</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={_onPressSubmit}>
+          <Text style={styles.btnText}>Zapisz</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  const _onDragCreateEnd = (event) => {
+    console.log(new Date(event.start));
+    // const randomId = Math.random().toString(36).slice(2, 10);
+    // const newEvent = {
+    //   id: randomId,
+    //   title: randomId,
+    //   start: event.start,
+    //   end: event.end,
+    //   color: "#A3C7D6",
+    // };
+    // setEvents((prev) => [...prev, newEvent]);
+  };
+
   return (
-    <CalendarProvider
-      date={currentDate}
-      onDateChanged={onDateChanged}
-      onMonthChange={onMonthChange}
-      showTodayButton
-      disabledOpacity={0.6}
-      numberOfDays={selectedLanguage}
-    >
-      <ExpandableCalendar firstDay={1} markedDates={marked} />
-
-      <TimelineList
-        events={eventsByDate}
-        timelineProps={timelineProps}
-        showNowIndicator
-        scrollToNow
-        scrollToFirst
-        initialTime={INITIAL_TIME}
+    <SafeAreaView style={styles.container}>
+      <TimelineViewPicker setUserPickedView={setUserPickedView} />
+      <TimelineCalendar
+        viewMode={userPickedView}
+        allowDragToCreate
+        allowPinchToZoom
+        locale="pl"
+        unavailableHours={[
+          { start: 0, end: 7 },
+          { start: 22, end: 24 },
+        ]}
+        isShowHeader
+        events={events}
+        onLongPressEvent={_onLongPressEvent}
+        onDragCreateEnd={_onDragCreateEnd}
+        selectedEvent={selectedEvent}
+        onEndDragSelectedEvent={setSelectedEvent}
+        dragStep={15}
+        onPressDayNum={(date) => console.log(date)}
+        theme={{
+          // @ts-ignore: Unreachable code error
+          dragHourColor: "#001253",
+          dragHourBorderColor: "#001253",
+          dragHourBackgroundColor: "#FFF",
+          editIndicatorColor: "#FFF",
+          dayName: { color: colors.primary },
+          todayName: { color: colors.primary },
+          nowIndicatorColor: colors.primary,
+          todayNumberContainer: { backgroundColor: colors.primary },
+          eventTitle: { fontSize: 14 },
+        }}
       />
-    </CalendarProvider>
+      {!!selectedEvent && _renderEditFooter()}
+    </SafeAreaView>
   );
 };
-export default TimelineScreen;
+
+export default Calendar;
+
 const styles = StyleSheet.create({
-  pickerContainer: {
+  container: { flex: 1, backgroundColor: "#FFF" },
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "#FFF",
+    height: 85,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
     flexDirection: "row",
+    justifyContent: "center",
   },
+  button: {
+    height: 45,
+    paddingHorizontal: 24,
+    backgroundColor: colors.primary,
+    justifyContent: "center",
+    borderRadius: 6,
+    marginHorizontal: 8,
+    marginVertical: 8,
+  },
+  btnText: { fontSize: 16, color: "#FFF", fontWeight: "bold" },
 });

@@ -18,13 +18,15 @@ const HoursComponent: React.FC<ComponentProps> = ({
   const meetings = ctx?.meetings;
   const [availableHours, setAvailableHours] = useState<Hours[]>(hours);
   const excludedTimesAtThisDay: string[] = [];
-  const shortDate: string = pickedDay.split("T")[0];
-  const meetingsAtThisDay: Meeting[] = meetings[shortDate];
+
+  const meetingsAtThisDay: Meeting[] = meetings[pickedDay];
 
   const hourPressHandler = (index: number) => {
     pickHandler(index, availableHours, setAvailableHours);
   };
-  setPickedHour(availableHours.filter((hour) => hour.isActive)[0]?.hour);
+  useEffect(() => {
+    setPickedHour(availableHours.filter((hour) => hour.isActive)[0]?.hour);
+  }, [availableHours]);
 
   useEffect(() => {
     meetingsAtThisDay?.forEach((element) =>

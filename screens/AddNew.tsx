@@ -10,7 +10,7 @@ const HomeContainer = styled(Container)`
   width: 100%;
   flex: 1;
 `;
-const AddNew: FunctionComponent = () => {
+const AddNew = () => {
   return (
     <HomeContainer>
       <StatusBar style="auto" />

@@ -1,34 +1,46 @@
+import { CalendarViewMode, EventItem } from "@howljs/calendar-kit";
+import { doc, setDoc } from "firebase/firestore";
 import { groupBy } from "lodash";
 import React from "react";
 import { useCallback, useState, useEffect } from "react";
 import { CalendarUtils } from "react-native-calendars";
+import { db } from "../firebase/firebase";
 import { AllMeetings, Meeting } from "../types";
 
 interface MeetingsProviderProps {
   children: React.ReactNode;
 }
 interface MeetingContextProps {
-  addMeeting: (meeting: Meeting, pickedDate: string) => void;
+  addMeeting: (meeting: EventItem, pickedDate: string) => void;
   removeMeeting: (meetingId: number) => void;
   meetings: AllMeetings;
+  timelineViewMode: CalendarViewMode;
+  changeTimeLineHandler: (value) => void;
 }
 
 export const MeetingsContext = React.createContext<MeetingContextProps>({
   addMeeting: () => {},
   removeMeeting: () => {},
   meetings: {},
+  timelineViewMode: "threeDays",
+  changeTimeLineHandler: () => {},
 });
 
 const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
   const [meetings, setMeetings] = useState<AllMeetings>([]);
+  const [timelineViewMode, setTimeLineViewMode] =
+    useState<CalendarViewMode>("threeDays");
+  const changeTimeLineHandler = (value) => {
+    setTimeLineViewMode(value);
+  };
+  // useEffect(() => {
+  //   console.log(meetings);
+  //   const meetingsByDate = groupBy(meetings, (e) =>
+  //     CalendarUtils.getCalendarDateString(e)
+  //   );
 
-  useEffect(() => {
-    const meetingsByDate = groupBy(meetings, (e) =>
-      CalendarUtils.getCalendarDateString(e)
-    );
-
-    setMeetings(meetingsByDate);
-  }, []);
+  //   setMeetings(meetingsByDate);
+  // }, []);
 
   const addMeeting = useCallback((newMeeting: Meeting, pickedDate: string) => {
     const newArr = meetings;
@@ -39,6 +51,12 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
       newArr[pickedDate] = [newMeeting];
       setMeetings({ ...newArr });
     }
+    // try {
+    //   const docRef = setDoc(doc(db, "meetings", "meetings"), newArr);
+    //   console.log("Document written with ID: ", docRef);
+    // } catch (e) {
+    //   console.error("Error adding document: ", e);
+    // }
   }, []);
 
   const removeMeeting = () => {};
@@ -49,6 +67,8 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
         addMeeting,
         removeMeeting,
         meetings,
+        timelineViewMode,
+        changeTimeLineHandler,
       }}
     >
       {children}

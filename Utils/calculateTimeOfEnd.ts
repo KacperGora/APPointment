@@ -1,7 +1,7 @@
-import { addHours, addMinutes } from "date-fns";
+import { addHours, addMinutes, subHours } from "date-fns";
 
 function calculateTimeOfEnd(startTime: Date, duration: number) {
-  return addMinutes(startTime, duration);
+  return subHours(addMinutes(startTime, duration), 1);
 }
 
 export default calculateTimeOfEnd;

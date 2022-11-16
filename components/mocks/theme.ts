@@ -11,7 +11,7 @@ export function getTheme() {
     arrowColor: "black",
     arrowStyle: { padding: 0 },
     // knob
-    expandableKnobColor: "red",
+    expandableKnobColor: themeColor,
     // month
     monthTextColor: "black",
     textMonthFontSize: 16,

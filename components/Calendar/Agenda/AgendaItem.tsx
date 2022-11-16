@@ -12,6 +12,7 @@ import {
 import testIDs from "../testIds";
 import CustomButton from "../../UI/CustomButton";
 import { Meeting } from "../../../types";
+import { colors } from "../../colors";
 
 interface ItemProps {
   item: Meeting;
@@ -37,23 +38,21 @@ const AgendaItem = (props: ItemProps) => {
   }
 
   return (
-    <TouchableOpacity
-      onPress={itemPressed}
-      style={styles.item}
-      testID={testIDs.agenda.ITEM}
-    >
-      <View>
-        <Text style={styles.itemHourText}>{`${
-          item.startHourStr
-        }-${item.endHour.slice(0, 5)}`}</Text>
-        <Text style={styles.itemDurationText}>{item.duration} minut</Text>
-      </View>
-      <View style={styles.itemDetails}>
-        <Text style={styles.itemTitleText}>{item.name}</Text>
-        <Text style={styles.itemDetailText}>{item.serviceName}</Text>
-      </View>
-      <View style={styles.itemButtonContainer}>
-        <CustomButton onPress={buttonPressed}>Więcej</CustomButton>
+    <TouchableOpacity onPress={itemPressed} style={styles.item}>
+      <View style={styles.container}>
+        <View>
+          <Text style={styles.itemHourText}>{`${
+            item.startHourStr
+          }-${item.endHour.slice(0, 5)}`}</Text>
+          <Text style={styles.itemDurationText}>{item.duration} minut</Text>
+        </View>
+        <View style={styles.itemDetails}>
+          <Text style={styles.itemTitleText}>{item.title}</Text>
+          <Text style={styles.itemDetailText}>{item.serviceName}</Text>
+        </View>
+        <View style={styles.itemButtonContainer}>
+          <CustomButton onPress={buttonPressed}>Więcej</CustomButton>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -62,13 +61,20 @@ const AgendaItem = (props: ItemProps) => {
 export default React.memo(AgendaItem);
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    width: "100%",
+    paddingBottom: 4,
+  },
   itemDetailText: {
     fontSize: 12,
     alignSelf: "center",
   },
   itemDetails: {
     justifyContent: "center",
-
+    alignContent: "center",
     width: 150,
   },
   item: {

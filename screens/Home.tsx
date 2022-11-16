@@ -7,6 +7,7 @@ import { colors } from "../components/colors";
 import ExpandableCalendarScreen from "../components/Calendar/CalendarScreen/ExpandableCalendarScreen";
 import TimelineCalendarScreen from "../components/Calendar/TimeLine/TimelineList";
 import TimelineScreen from "../components/Calendar/TimeLine/TimelineScreen";
+import SalonMain from "./Salon/SalonMain";
 
 const HomeContainer = styled(Container)`
   background-color: ${colors.graylight};
@@ -18,10 +19,8 @@ const Home: FunctionComponent = () => {
     <HomeContainer>
       <StatusBar style="auto" />
       <HomeContainer>
-        {/* <TimelineCalendarScreen /> */}
-        <TimelineScreen />
+        <ExpandableCalendarScreen />
       </HomeContainer>
-      {/* <ExpandableCalendarScreen /> */}
     </HomeContainer>
   );
 };

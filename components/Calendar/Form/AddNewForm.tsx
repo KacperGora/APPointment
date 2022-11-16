@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useContext, useState } from "react";
-import { Text, View, Alert, DefaultSectionT } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Calendar from "./Calendar";
 import calculateTimeOfEnd from "../../../Utils/calculateTimeOfEnd";
@@ -14,15 +14,18 @@ import Services from "./Services";
 import WarningText from "./WarningText";
 import Inputs from "./Inputs";
 import useSortData from "../../../hooks/calendar/useSortData";
-import { subHours } from "date-fns";
+import { collection, addDoc, getDocs, setDoc, doc } from "firebase/firestore";
 import useSetColorForEvent from "../../../hooks/calendar/useSetColorForEvent";
+import { db } from "../../../firebase/firebase";
+import { EventItem } from "@howljs/calendar-kit";
 
 type RouteProps = {
   params: {
     date: {
-      date: string;
+      date?: string;
       hour: number;
       minutes: number;
+      dateString: string;
     };
   };
 };
@@ -36,62 +39,67 @@ type ServiceDetails = {
 };
 const AddNewForm = () => {
   const ctx = useContext(MeetingsContext);
+
   const navigation = useNavigation<Navigate>();
   const route = useRoute<RouteProp<RouteProps>>();
-  const dateString = route.params.date;
-  const [pickedDate, setPickedDate] = useState(dateString.date);
+  const dateString = route.params?.date.date || route.params?.date.dateString;
+
+  const [pickedDate, setPickedDate] = useState(dateString);
   const [pickedHour, setPickedHour] = useState("");
   const [pickedService, setPickedService] = useState<ServiceDetails | any>({});
   const [userTypedName, setUserTypedName] = useState("");
   const [userTypedLastName, setUserTypedLastName] = useState("");
   const sortedEvents = useSortData();
   const color = useSetColorForEvent(pickedService);
-  const fullDate = new Date(pickedDate + "T" + pickedHour + ":00.000Z");
+  const fullDate = pickedDate + "T" + pickedHour + ":00.000Z";
 
-  const data = {
-    id: new Date().toISOString() + Math.random(),
-    start: `${pickedDate} ${pickedHour}`,
-    end: ` ${pickedDate} ${calculateTimeOfEnd(
-      fullDate,
-      pickedService?.duration
-    ).toLocaleTimeString()}`,
-    title: `${userTypedName}  ${userTypedLastName}`,
-    summary: `${pickedService?.name} ${pickedService?.price}`,
+  const data: EventItem = {
+    id: new Date(pickedDate)?.toISOString() + Math.random(),
     color: color,
-    name: userTypedName,
-    lastName: userTypedLastName,
-    startDayStr: pickedDate,
-    startHourStr: pickedHour,
-    startFullDate: fullDate,
+    title: `${userTypedName}  ${userTypedLastName}`,
     serviceName: pickedService?.name,
-    endFullDate: calculateTimeOfEnd(fullDate, pickedService?.duration),
+    duration: pickedService?.duration,
+    start: fullDate,
+    end:
+      pickedDate +
+      "T" +
+      calculateTimeOfEnd(
+        new Date(fullDate),
+        pickedService?.duration
+      ).toLocaleTimeString() +
+      ".000Z",
+    startHourStr: pickedHour,
     endHour: calculateTimeOfEnd(
-      fullDate,
+      new Date(fullDate),
       pickedService?.duration
     ).toLocaleTimeString(),
-    duration: pickedService?.duration,
-    excludedTimes: calculateEventDuration(pickedService?.duration, fullDate),
+    excludedTimes: calculateEventDuration(
+      pickedService?.duration,
+      new Date(fullDate)
+    ),
   };
 
   const isOverlapped = useCheckOverlappingEvents(
     pickedDate,
     sortedEvents,
     data.duration,
-    data.startFullDate
+    new Date(data.start)
   );
+
   const isEmpty = Object.values(data).some(
     (x) => x === undefined || x === "" || x === "Invalid Date"
   );
 
   const submitHandler = () => {
     ctx?.addMeeting(data, pickedDate.split("T")[0]);
+
     navigation.navigate("Home");
   };
 
   return (
     <SafeAreaView>
       <Calendar date={pickedDate} setNewDate={setPickedDate} />
-      <Text>{new Date(pickedDate).toLocaleDateString()} </Text>
+
       <View style={{ height: 250 }}>
         <HoursComponent pickedDay={pickedDate} setPickedHour={setPickedHour} />
         <Services getServices={setPickedService} />
@@ -104,7 +112,7 @@ const AddNewForm = () => {
         <WarningText>Termin zajety, wybierz proszę inny.</WarningText>
       )}
       {!isOverlapped && (
-        <MeetingDetails date={fullDate} service={pickedService} />
+        <MeetingDetails date={new Date(fullDate)} service={pickedService} />
       )}
 
       <ButtonBox disabled={isOverlapped} onPress={submitHandler} />
