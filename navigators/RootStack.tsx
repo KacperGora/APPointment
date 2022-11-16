@@ -2,7 +2,11 @@ import React, { FunctionComponent } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Welcome from "../screens/Welcome";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  DefaultTheme,
+  useNavigation,
+} from "@react-navigation/native";
 import Home from "../screens/Home";
 import { colors } from "../components/colors";
 import AddNew from "../screens/AddNew";
@@ -13,6 +17,10 @@ import SalonIncomings from "../components/Salon/SalonIncomings/SalonIncomings";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import TimelineScreen from "../components/Calendar/TimeLine/TimelineScreen";
+import { Text } from "react-native";
+import { color } from "react-native-reanimated";
+import ToggleCalendarView from "../components/Header/ToggleCalendarView";
+
 
 export type RootStackParam = {
   Welcome: undefined;
@@ -76,6 +84,7 @@ const RootStack: FunctionComponent = () => {
               borderBottomWidth: 0,
               elevation: 0,
             },
+
             headerTintColor: colors.secondary,
             headerRightContainerStyle: {
               padding: 25,
@@ -96,21 +105,20 @@ const RootStack: FunctionComponent = () => {
             component={Home}
             options={{
               headerTitle: "",
+              // headerStyle: { height: 120 },
               headerLeft: () => null,
-              headerStyle: { height: 120 },
-              headerRight: () => (
-                <MaterialCommunityIcons
-                  name="timeline-clock-outline"
-                  size={24}
-                  color="black"
-                />
-              ),
+              headerRight: () => <ToggleCalendarView />,
             }}
           />
           <Stack.Screen
             name="Timeline"
             component={TimelineScreen}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: false,
+              // headerTitle: "",
+              // // headerStyle: { height: 90 },
+              // headerRight: () => <ToggleTimelineDays />,
+            }}
           />
           <Stack.Screen
             name="Add"
