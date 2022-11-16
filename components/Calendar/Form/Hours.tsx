@@ -9,17 +9,21 @@ import { Hours, Meeting } from "../../../types";
 type ComponentProps = {
   pickedDay: string;
   setPickedHour: any;
+  worker: string;
 };
 const HoursComponent: React.FC<ComponentProps> = ({
   pickedDay,
   setPickedHour,
+  worker,
 }) => {
   const ctx = useContext(MeetingsContext);
   const meetings = ctx?.meetings;
   const [availableHours, setAvailableHours] = useState<Hours[]>(hours);
   const excludedTimesAtThisDay: string[] = [];
 
-  const meetingsAtThisDay: Meeting[] = meetings[pickedDay];
+  const meetingsAtThisDay: Meeting[] = meetings[pickedDay].filter(
+    (meeting) => meeting.worker === worker
+  );
 
   const hourPressHandler = (index: number) => {
     pickHandler(index, availableHours, setAvailableHours);
@@ -36,7 +40,7 @@ const HoursComponent: React.FC<ComponentProps> = ({
       (item) => !excludedTimesAtThisDay.includes(item.hour)
     );
     setAvailableHours(res);
-  }, [pickedDay]);
+  }, [pickedDay, worker]);
 
   return (
     <ScrollView horizontal={true}>

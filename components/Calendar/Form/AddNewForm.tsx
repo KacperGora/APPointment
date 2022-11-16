@@ -104,7 +104,11 @@ const AddNewForm = () => {
     <SafeAreaView>
       <Calendar date={pickedDate} setNewDate={setPickedDate} />
       <View style={{ height: 250 }}>
-        <HoursComponent pickedDay={pickedDate} setPickedHour={setPickedHour} />
+        <HoursComponent
+          pickedDay={pickedDate}
+          setPickedHour={setPickedHour}
+          worker={worker}
+        />
         <Services getServices={setPickedService} />
       </View>
       <Inputs
