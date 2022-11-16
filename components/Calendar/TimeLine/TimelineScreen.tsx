@@ -24,9 +24,10 @@ const Calendar = ({ navigation }) => {
   const [userPickedView, setUserPickedView] = useState<CalendarViewMode>();
   const [events, setEvents] = useState<EventItem[]>([]);
   const [filteredEvents, setFilteredEvents] = useState(events);
-
+  console.log(events);
   const [selectedEvent, setSelectedEvent] = useState<PackedEvent>();
-  const [worker, setWorker] = useState("");
+  const [worker, setWorker] = useState("all");
+  console.log(worker);
   const newArr = [];
   useEffect(() => {
     for (const [key, value] of Object.entries(ctx.meetings)) {
@@ -43,7 +44,7 @@ const Calendar = ({ navigation }) => {
     } else {
       setFilteredEvents(events);
     }
-  }, [worker]);
+  }, [worker, events]);
 
   const _onLongPressEvent = (event: PackedEvent) => {
     setSelectedEvent(event);
