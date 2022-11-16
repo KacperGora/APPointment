@@ -41,7 +41,7 @@ type Props = StackScreenProps<RootStackParam, "Welcome">;
 const Welcome: FunctionComponent<Props> = ({ navigation }) => {
   return (
     <>
-      <StatusBar style="light" />
+      <StatusBar style="auto" />
 
       <WelcomeContainer>
         <TopSection>

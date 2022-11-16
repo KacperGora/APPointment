@@ -37,7 +37,7 @@ export default Services;
 const styles = StyleSheet.create({
   serviceBox: {
     margin: 4,
-    borderBottomWidth: 1,
+
     justifyContent: "space-around",
     flexDirection: "row",
     flexWrap: "wrap",

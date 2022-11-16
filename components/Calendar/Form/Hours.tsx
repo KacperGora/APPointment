@@ -39,7 +39,7 @@ const HoursComponent: React.FC<ComponentProps> = ({
   }, [pickedDay]);
 
   return (
-    <ScrollView style={[styles.hourBox]} horizontal={true}>
+    <ScrollView horizontal={true}>
       {availableHours.map((hour, index) => (
         <Pressable
           key={index}
@@ -68,9 +68,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 12,
     textAlign: "center",
-  },
-  hourBox: {
-    borderBottomWidth: 1,
-    borderBottomColor: "purple",
   },
 });

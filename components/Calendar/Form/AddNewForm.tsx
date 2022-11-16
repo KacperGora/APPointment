@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Calendar from "./Calendar";
 import calculateTimeOfEnd from "../../../Utils/calculateTimeOfEnd";
@@ -18,6 +18,9 @@ import { collection, addDoc, getDocs, setDoc, doc } from "firebase/firestore";
 import useSetColorForEvent from "../../../hooks/calendar/useSetColorForEvent";
 import { db } from "../../../firebase/firebase";
 import { EventItem } from "@howljs/calendar-kit";
+
+import TimelineWorkerPicker from "../TimeLine/TimelineWorkerPicker";
+import { colors } from "../../colors";
 
 type RouteProps = {
   params: {
@@ -38,16 +41,33 @@ const AddNewForm = () => {
   const navigation = useNavigation<Navigate>();
   const route = useRoute<RouteProp<RouteProps>>();
   const dateString = route.params?.date;
-  console.log(dateString);
+
   const [pickedDate, setPickedDate] = useState(dateString);
   const [pickedHour, setPickedHour] = useState("");
   const [pickedService, setPickedService] = useState<ServiceDetails | any>({});
   const [userTypedName, setUserTypedName] = useState("");
   const [userTypedLastName, setUserTypedLastName] = useState("");
   const sortedEvents = useSortData();
+  const [worker, setWorker] = useState("Justi");
+
   const color = useSetColorForEvent(pickedService);
   const fullDate = pickedDate + "T" + pickedHour + ":00.000Z";
-
+  const endFullDate =
+    pickedDate +
+    "T" +
+    calculateTimeOfEnd(
+      new Date(fullDate),
+      pickedService?.duration
+    ).toLocaleTimeString() +
+    ".000Z";
+  const endHour = calculateTimeOfEnd(
+    new Date(fullDate),
+    pickedService?.duration
+  ).toLocaleTimeString();
+  const excludedTimes = calculateEventDuration(
+    pickedService?.duration,
+    new Date(fullDate)
+  );
   const data: EventItem = {
     id: new Date(pickedDate)?.toISOString() + Math.random(),
     color: color,
@@ -55,25 +75,13 @@ const AddNewForm = () => {
     serviceName: pickedService?.name,
     duration: pickedService?.duration,
     start: fullDate,
-    end:
-      pickedDate +
-      "T" +
-      calculateTimeOfEnd(
-        new Date(fullDate),
-        pickedService?.duration
-      ).toLocaleTimeString() +
-      ".000Z",
+    end: endFullDate,
     startHourStr: pickedHour,
-    endHour: calculateTimeOfEnd(
-      new Date(fullDate),
-      pickedService?.duration
-    ).toLocaleTimeString(),
-    excludedTimes: calculateEventDuration(
-      pickedService?.duration,
-      new Date(fullDate)
-    ),
+    endHour,
+    excludedTimes,
+    worker,
   };
-
+  
   const isOverlapped = useCheckOverlappingEvents(
     pickedDate,
     sortedEvents,
@@ -94,7 +102,6 @@ const AddNewForm = () => {
   return (
     <SafeAreaView>
       <Calendar date={pickedDate} setNewDate={setPickedDate} />
-
       <View style={{ height: 250 }}>
         <HoursComponent pickedDay={pickedDate} setPickedHour={setPickedHour} />
         <Services getServices={setPickedService} />
@@ -103,6 +110,10 @@ const AddNewForm = () => {
         setUserTypedLastName={setUserTypedLastName}
         setUserTypedName={setUserTypedName}
       />
+      <View style={styles.workerPickerContainer}>
+        <Text style={styles.workerPickerText}>Pracownik:</Text>
+        <TimelineWorkerPicker setWorker={setWorker} addingEvent />
+      </View>
       {isOverlapped && (
         <WarningText>Termin zajety, wybierz proszę inny.</WarningText>
       )}
@@ -116,3 +127,18 @@ const AddNewForm = () => {
 };
 
 export default AddNewForm;
+const styles = StyleSheet.create({
+  workerPickerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    minWidth: "100%",
+    padding: 20,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: colors.gray,
+  },
+  workerPickerText: {
+    fontWeight: "500",
+    marginRight: 20,
+  },
+});

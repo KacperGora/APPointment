@@ -114,7 +114,7 @@ const RootStack: FunctionComponent = () => {
             name="Timeline"
             component={TimelineScreen}
             options={{
-              headerShown: false,
+              // headerShown: false,
               // headerTitle: "",
               // // headerStyle: { height: 90 },
               // headerRight: () => <ToggleTimelineDays />,

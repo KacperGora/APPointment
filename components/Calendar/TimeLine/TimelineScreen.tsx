@@ -4,7 +4,6 @@ import {
   PackedEvent,
   TimelineCalendar,
 } from "@howljs/calendar-kit";
-import { addDays } from "date-fns/esm";
 
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -16,23 +15,35 @@ import {
 } from "react-native";
 import { MeetingsContext } from "../../../store/store";
 import { colors } from "../../colors";
+import TimelineEventContent from "./TimelineEventContent";
 import TimelineViewPicker from "./TimeLineViewPicker";
+import TimelineWorkerPicker from "./TimelineWorkerPicker";
 
 const Calendar = ({ navigation }) => {
   const ctx = useContext(MeetingsContext);
   const [userPickedView, setUserPickedView] = useState<CalendarViewMode>();
   const [events, setEvents] = useState<EventItem[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState(events);
+
   const [selectedEvent, setSelectedEvent] = useState<PackedEvent>();
+  const [worker, setWorker] = useState("");
   const newArr = [];
   useEffect(() => {
     for (const [key, value] of Object.entries(ctx.meetings)) {
       newArr.push(...value);
     }
-    const sortedArray = newArr.sort(
-      (a, b) => new Date(a.title).getTime() - new Date(b.title).getTime()
-    );
-    setEvents(sortedArray);
+
+    setEvents(newArr);
   }, [ctx.meetings]);
+
+  useEffect(() => {
+    setFilteredEvents(events);
+    if (worker !== "all") {
+      setFilteredEvents(events.filter((event) => event.worker === worker));
+    } else {
+      setFilteredEvents(events);
+    }
+  }, [worker]);
 
   const _onLongPressEvent = (event: PackedEvent) => {
     setSelectedEvent(event);
@@ -86,18 +97,28 @@ const Calendar = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <TimelineViewPicker setUserPickedView={setUserPickedView} />
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          padding: 20,
+        }}
+      >
+        <TimelineWorkerPicker setWorker={setWorker} />
+        <TimelineViewPicker setUserPickedView={setUserPickedView} />
+      </View>
       <TimelineCalendar
         viewMode={userPickedView}
         allowDragToCreate
         allowPinchToZoom
         locale="pl"
+        renderEventContent={(event) => <TimelineEventContent event={event} />}
         unavailableHours={[
           { start: 0, end: 7 },
           { start: 22, end: 24 },
         ]}
         isShowHeader
-        events={events}
+        events={filteredEvents}
         onLongPressEvent={_onLongPressEvent}
         onDragCreateEnd={_onDragCreateEnd}
         onLongPressBackground={longPressHandler}

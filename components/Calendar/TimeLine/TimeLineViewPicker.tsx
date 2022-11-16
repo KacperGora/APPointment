@@ -26,19 +26,12 @@ const TimelineViewPicker = ({ setUserPickedView }) => {
     }
   };
   return (
-    <View
-      style={{
-        alignItems: "flex-end",
-        padding: 20,
-      }}
-    >
-      <ModalDropdown
-        onSelect={onSelectHandler}
-        options={["Dzień", "Trzy dni", "Dni pracujące", "Pełny tydzień"]}
-        animated={false}
-        defaultValue={"Pełny Tydzień"}
-      />
-    </View>
+    <ModalDropdown
+      onSelect={onSelectHandler}
+      options={["Dzień", "Trzy dni", "Dni pracujące", "Pełny tydzień"]}
+      animated={false}
+      defaultValue={"Pełny Tydzień"}
+    />
   );
 };
 
