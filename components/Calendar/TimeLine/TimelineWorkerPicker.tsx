@@ -16,11 +16,11 @@ const TimelineWorkerPicker: React.FC<TimelineWorkerPickerProps> = ({
         break;
       }
       case "Justi": {
-        setWorker("Justi");
+        setWorker("Justyna");
         break;
       }
       case "Monia": {
-        setWorker("Monia");
+        setWorker("Monika");
         break;
       }
 
@@ -32,8 +32,8 @@ const TimelineWorkerPicker: React.FC<TimelineWorkerPickerProps> = ({
     <ModalDropdown
       onSelect={onSelectHandler}
       options={addingEvent ? ["Justi", "Monia"] : ["Wszyscy", "Justi", "Monia"]}
-      animated={false}
-      defaultValue={addingEvent ? "Just" : "Wszyscy"}
+      defaultValue={addingEvent ? "Justi" : "Wszyscy"}
+      // dropdownStyle={{ height: "auto" }}
     />
   );
 };

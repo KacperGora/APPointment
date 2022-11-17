@@ -9,12 +9,13 @@ import {
   CalendarUtils,
 } from "react-native-calendars";
 import testIDs from "../testIds";
-import { getTheme, themeColor, lightThemeColor } from "../../mocks/theme";
+
 import { LocaleConfig } from "react-native-calendars";
 import Agenda from "../Agenda/Agenda";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 import { groupBy } from "lodash";
+import { getTheme, themeColor, lightThemeColor } from "./calendarThemes";
 
 LocaleConfig.locales["pl"] = {
   monthNames: [
@@ -89,17 +90,20 @@ const ExpandableCalendarScreen = (props: Props) => {
       date: date.dateString,
     });
   };
+  useEffect(() => {
+    const getData = async () => {
+      const q = query(collection(db, "meetings"));
+      const meetings = [];
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id);
+          console.log(doc.data());
+        });
+      });
+    };
+    getData();
+  }, []);
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
-  // useEffect(() => {
-  //   const meetingsByDate = groupBy(nar, (e) =>
-  //     CalendarUtils.getCalendarDateString(e.startDayStr)
-  //   );
-
-  //   console.log(meetingsByDate);
-  // }, []);
   return (
     // @ts-ignore: Unreachable code error
     <CalendarProvider

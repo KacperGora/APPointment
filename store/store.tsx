@@ -1,5 +1,5 @@
 import { CalendarViewMode, EventItem } from "@howljs/calendar-kit";
-import { doc, setDoc } from "firebase/firestore";
+import { arrayUnion, doc, setDoc } from "firebase/firestore";
 import { groupBy } from "lodash";
 import React from "react";
 import { useCallback, useState, useEffect } from "react";
@@ -33,16 +33,10 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
   const changeTimeLineHandler = (value) => {
     setTimeLineViewMode(value);
   };
-  // useEffect(() => {
-  //   console.log(meetings);
-  //   const meetingsByDate = groupBy(meetings, (e) =>
-  //     CalendarUtils.getCalendarDateString(e)
-  //   );
-
-  //   setMeetings(meetingsByDate);
-  // }, []);
 
   const addMeeting = useCallback((newMeeting: Meeting, pickedDate: string) => {
+    console.log(typeof newMeeting);
+    console.log(newMeeting);
     const newArr = meetings;
     if (newArr[pickedDate]) {
       newArr[pickedDate] = [...newArr[pickedDate], newMeeting];
@@ -51,11 +45,15 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
       newArr[pickedDate] = [newMeeting];
       setMeetings({ ...newArr });
     }
-    // try {
-    //   const docRef = setDoc(doc(db, "meetings", "meetings"), newArr);
-    //   console.log("Document written with ID: ", docRef);
-    // } catch (e) {
-    //   console.error("Error adding document: ", e);
+    // for (const [key, value] of Object.entries(newArr)) {
+    try {
+      const docRef = setDoc(doc(db, "meetings", pickedDate), {
+        meetings: arrayUnion(...meetings[pickedDate] ,newMeeting),
+      });
+      // console.log("Document written with ID: ", docRef);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
     // }
   }, []);
 

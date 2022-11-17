@@ -17,10 +17,9 @@ import SalonIncomings from "../components/Salon/SalonIncomings/SalonIncomings";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import TimelineScreen from "../components/Calendar/TimeLine/TimelineScreen";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { color } from "react-native-reanimated";
 import ToggleCalendarView from "../components/Header/ToggleCalendarView";
-
 
 export type RootStackParam = {
   Welcome: undefined;
@@ -113,17 +112,34 @@ const RootStack: FunctionComponent = () => {
           <Stack.Screen
             name="Timeline"
             component={TimelineScreen}
-            options={{
-              // headerShown: false,
-              // headerTitle: "",
-              // // headerStyle: { height: 90 },
-              // headerRight: () => <ToggleTimelineDays />,
-            }}
+            options={
+              {
+                // headerShown: false,
+                // headerTitle: "",
+                // // headerStyle: { height: 90 },
+                // headerRight: () => <ToggleTimelineDays />,
+              }
+            }
           />
           <Stack.Screen
             name="Add"
             component={AddNew}
-            options={{ headerShown: false }}
+            options={{
+              headerBackTitle: "Umów wizytę",
+              headerBackTitleStyle: {
+                fontSize: 24,
+                fontWeight: "600",
+              },
+              headerTitle: "",
+              // headerTitle: "Umów wizytę",
+              headerTitleStyle: {
+                fontSize: 24,
+              },
+              // headerLeftLabelVisible: false,
+              headerStyle: {
+                backgroundColor: colors.graylight,
+              },
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>

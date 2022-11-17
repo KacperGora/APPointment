@@ -4,6 +4,7 @@ import {
   PackedEvent,
   TimelineCalendar,
 } from "@howljs/calendar-kit";
+import { addDays } from "date-fns";
 
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -45,7 +46,7 @@ const Calendar = ({ navigation }) => {
       setFilteredEvents(events);
     }
   }, [worker, events]);
-
+  console.log(events[0].worker);
   const _onLongPressEvent = (event: PackedEvent) => {
     setSelectedEvent(event);
   };
@@ -79,19 +80,20 @@ const Calendar = ({ navigation }) => {
     );
   };
   const _onDragCreateEnd = (event) => {
-    // // console.log(new Date(event.start));
-    // const randomId = Math.random().toString(36).slice(2, 10);
-    // const newEvent = {
-    //   id: randomId,
-    //   title: randomId,
-    //   start: event.start,
-    //   end: event.end,
-    //   color: "#A3C7D6",
-    // };
-    // setEvents((prev) => [...prev, newEvent]);
+    console.log(new Date(event.start));
+    const randomId = Math.random().toString(36).slice(2, 10);
+    const newEvent = {
+      id: randomId,
+      title: randomId,
+      start: event.start,
+      end: event.end,
+      color: "#A3C7D6",
+    };
+    setEvents((prev) => [...prev, newEvent]);
   };
   const longPressHandler = (date, event) => {
-    const correctDate = new Date(date).toDateString();
+    const correctDate = addDays(new Date(date), 1).toISOString().split("T")[0];
+
     navigation.navigate("Add", {
       date: correctDate,
     });
@@ -112,8 +114,11 @@ const Calendar = ({ navigation }) => {
         viewMode={userPickedView}
         allowDragToCreate
         allowPinchToZoom
+        overlapEventsSpacing={4}
         locale="pl"
-        renderEventContent={(event) => <TimelineEventContent event={event} />}
+        renderEventContent={(event, timeIntervalHeight) => (
+          <TimelineEventContent event={event} />
+        )}
         unavailableHours={[
           { start: 0, end: 7 },
           { start: 22, end: 24 },
@@ -121,11 +126,13 @@ const Calendar = ({ navigation }) => {
         isShowHeader
         events={filteredEvents}
         onLongPressEvent={_onLongPressEvent}
-        onDragCreateEnd={_onDragCreateEnd}
+        // onDragCreateEnd={_onDragCreateEnd}
         onLongPressBackground={longPressHandler}
         selectedEvent={selectedEvent}
+        onPressEvent={_onDragCreateEnd}
         onEndDragSelectedEvent={setSelectedEvent}
         dragStep={15}
+        scrollToNow
         onPressDayNum={(date) => console.log(date)}
         theme={{
           // @ts-ignore: Unreachable code error

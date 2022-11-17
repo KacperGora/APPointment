@@ -29,8 +29,10 @@ const TimelineViewPicker = ({ setUserPickedView }) => {
     <ModalDropdown
       onSelect={onSelectHandler}
       options={["Dzień", "Trzy dni", "Dni pracujące", "Pełny tydzień"]}
-      animated={false}
+      animated={true}
       defaultValue={"Pełny Tydzień"}
+      isFullWidth={true}
+      dropdownStyle={{ height: "auto" }}
     />
   );
 };

@@ -1,41 +1,39 @@
-import { Text, View, Pressable, StyleSheet } from "react-native";
-import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import pickHandler from "../../../Utils/pickHandler";
-import { servicesDetails } from "../../../data";
 import { colors } from "../../colors";
-import { Service } from "../../../types";
-type ServiceProps = {
-  getServices: Dispatch<SetStateAction<any>>;
-};
-
-const Services: React.FC<ServiceProps> = ({ getServices }) => {
-  const [services, setServices] = useState<Service>(servicesDetails);
+const workers = [];
+const Workers = ({ getWorkers }) => {
+  const [workers, setWorkers] = useState([
+    { name: "Justyna", isActive: true },
+    { name: "Monika", isActive: false },
+  ]);
   const servicePressHandler = (index: number) => {
-    pickHandler(index, services, setServices);
+    pickHandler(index, workers, setWorkers);
   };
   useEffect(() => {
-    getServices(services.filter((service) => service.isActive === true)[0]);
-  }, [services]);
+    getWorkers(workers.filter((worker) => worker.isActive === true)[0]);
+  }, [workers]);
 
   return (
     <View style={styles.serviceBox}>
-      {services.map((service, index) => (
+      {workers.map((worker, index) => (
         <Pressable
           key={index}
           onPress={() => servicePressHandler(index)}
           style={[
             styles.serviceContainer,
-            service.isActive ? styles.active : null,
+            worker.isActive ? styles.active : null,
           ]}
         >
-          <Text style={styles.singleService}>{service.name}</Text>
+          <Text style={styles.singleService}>{worker.name}</Text>
         </Pressable>
       ))}
     </View>
   );
 };
 
-export default Services;
+export default Workers;
 
 const styles = StyleSheet.create({
   serviceBox: {

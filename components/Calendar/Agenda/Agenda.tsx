@@ -9,7 +9,6 @@ const Agenda = () => {
   const items = ctx?.meetings;
   const [sortedEvents, setSortedEvents] = useState<DefaultSectionT | any>([]);
   const newArr: DefaultSectionT[] = [];
-
   const renderItem = useCallback(({ item }: any) => {
     return <AgendaItem item={item} />;
   }, []);

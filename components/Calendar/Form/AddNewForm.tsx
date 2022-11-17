@@ -21,6 +21,8 @@ import { EventItem } from "@howljs/calendar-kit";
 
 import TimelineWorkerPicker from "../TimeLine/TimelineWorkerPicker";
 import { colors } from "../../colors";
+import { subHours } from "date-fns";
+import Workers from "./Workers";
 
 type RouteProps = {
   params: {
@@ -35,6 +37,10 @@ type ServiceDetails = {
   name: string;
   price: string;
 };
+type WorkerDetails = {
+  name: string;
+  isActive: boolean;
+};
 const AddNewForm = () => {
   const ctx = useContext(MeetingsContext);
 
@@ -45,10 +51,13 @@ const AddNewForm = () => {
   const [pickedDate, setPickedDate] = useState(dateString);
   const [pickedHour, setPickedHour] = useState("");
   const [pickedService, setPickedService] = useState<ServiceDetails | any>({});
+  const [pickedWorker, setPickedWorker] = useState<WorkerDetails>({
+    name: "Justyna",
+    isActive: true,
+  });
   const [userTypedName, setUserTypedName] = useState("");
   const [userTypedLastName, setUserTypedLastName] = useState("");
   const sortedEvents = useSortData();
-  const [worker, setWorker] = useState("Justi");
 
   const color = useSetColorForEvent(pickedService);
   const fullDate = pickedDate + "T" + pickedHour + ":00.000Z";
@@ -60,8 +69,9 @@ const AddNewForm = () => {
       pickedService?.duration
     ).toLocaleTimeString() +
     ".000Z";
+
   const endHour = calculateTimeOfEnd(
-    new Date(fullDate),
+    subHours(new Date(fullDate), 2),
     pickedService?.duration
   ).toLocaleTimeString();
   const excludedTimes = calculateEventDuration(
@@ -79,35 +89,35 @@ const AddNewForm = () => {
     startHourStr: pickedHour,
     endHour,
     excludedTimes,
-    worker,
+    worker: pickedWorker?.name,
   };
-
+  // console.log(new Date(subHours(new Date(fullDate), 1)).toISOString());
+  // console.log(new Date(subHours(new Date(endFullDate), 1)).toISOString());
   const isOverlapped = useCheckOverlappingEvents(
     pickedDate,
     sortedEvents,
     data.duration,
-    new Date(data.start),
-    worker
+    new Date(data?.start),
+    pickedWorker?.name
   );
-
+  console.log(isOverlapped);
   const isEmpty = Object.values(data).some(
     (x) => x === undefined || x === "" || x === "Invalid Date"
   );
 
   const submitHandler = () => {
-    ctx?.addMeeting(data, pickedDate.split("T")[0]);
-
+    !isEmpty && ctx?.addMeeting(data, pickedDate.split("T")[0]);
     navigation.navigate("Home");
   };
 
   return (
-    <SafeAreaView>
+    <>
       <Calendar date={pickedDate} setNewDate={setPickedDate} />
       <View style={{ height: 250 }}>
         <HoursComponent
           pickedDay={pickedDate}
           setPickedHour={setPickedHour}
-          worker={worker}
+          worker={pickedWorker?.name}
         />
         <Services getServices={setPickedService} />
       </View>
@@ -115,10 +125,7 @@ const AddNewForm = () => {
         setUserTypedLastName={setUserTypedLastName}
         setUserTypedName={setUserTypedName}
       />
-      <View style={styles.workerPickerContainer}>
-        <Text style={styles.workerPickerText}>Pracownik:</Text>
-        <TimelineWorkerPicker setWorker={setWorker} addingEvent />
-      </View>
+      <Workers getWorkers={setPickedWorker} />
       {isOverlapped && (
         <WarningText>Termin zajety, wybierz proszę inny.</WarningText>
       )}
@@ -127,7 +134,7 @@ const AddNewForm = () => {
       )}
 
       <ButtonBox disabled={isOverlapped} onPress={submitHandler} />
-    </SafeAreaView>
+    </>
   );
 };
 
@@ -145,5 +152,10 @@ const styles = StyleSheet.create({
   workerPickerText: {
     fontWeight: "500",
     marginRight: 20,
+  },
+  headingText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    margin: 12,
   },
 });

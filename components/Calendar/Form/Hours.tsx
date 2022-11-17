@@ -21,7 +21,7 @@ const HoursComponent: React.FC<ComponentProps> = ({
   const [availableHours, setAvailableHours] = useState<Hours[]>(hours);
   const excludedTimesAtThisDay: string[] = [];
 
-  const meetingsAtThisDay: Meeting[] = meetings[pickedDay].filter(
+  const meetingsAtThisDay: Meeting[] = meetings[pickedDay]?.filter(
     (meeting) => meeting.worker === worker
   );
 
@@ -43,7 +43,7 @@ const HoursComponent: React.FC<ComponentProps> = ({
   }, [pickedDay, worker]);
 
   return (
-    <ScrollView horizontal={true}>
+    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
       {availableHours.map((hour, index) => (
         <Pressable
           key={index}
@@ -58,13 +58,21 @@ const HoursComponent: React.FC<ComponentProps> = ({
 };
 export default HoursComponent;
 const styles = StyleSheet.create({
-  active: { backgroundColor: "#f954a4c5" },
+  active: {
+    borderWidth: 2,
+    borderColor: colors.primary,
+    shadowColor: colors.greydark,
+    shadowOffset: { width: 1, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
+    transform: [{ scaleX: 1.05 }],
+  },
   container: {
     margin: 6,
     padding: 12,
     borderRadius: 10,
-    borderColor: colors.primary,
-    borderWidth: 1,
+    borderColor: colors.greydark,
+    borderWidth: 0.5,
     height: 50,
   },
   hour: {
