@@ -7,21 +7,25 @@ import { DefaultSectionT } from "react-native";
 const Agenda = () => {
   const ctx = useContext(MeetingsContext);
   const items = ctx?.meetings;
-  const [sortedEvents, setSortedEvents] = useState<DefaultSectionT | any>([]);
-  const newArr: DefaultSectionT[] = [];
+  const [sortedEvents, setSortedEvents] = useState<DefaultSectionT | any>(
+    items
+  );
+
+  useEffect(() => {
+    setSortedEvents(items);
+  }, [items]);
+
+  const meetings = [];
+  useEffect(() => {
+    for (const [key, value] of Object.entries(items)) {
+      meetings.push({ title: key, data: [...value] });
+      setSortedEvents(meetings);
+    }
+  }, [items]);
+
   const renderItem = useCallback(({ item }: any) => {
     return <AgendaItem item={item} />;
   }, []);
-
-  useEffect(() => {
-    for (const [key, value] of Object.entries(items)) {
-      newArr.push({ key: key, data: [...value] });
-    }
-    const sortedArray = newArr.sort(
-      (a, b) => new Date(a.title).getTime() - new Date(b.title).getTime()
-    );
-    setSortedEvents(sortedArray);
-  }, [items]);
 
   return (
     <AgendaList

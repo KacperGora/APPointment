@@ -1,5 +1,5 @@
 import { CalendarViewMode, EventItem } from "@howljs/calendar-kit";
-import { arrayUnion, doc, setDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { groupBy } from "lodash";
 import React from "react";
 import { useCallback, useState, useEffect } from "react";
@@ -16,6 +16,7 @@ interface MeetingContextProps {
   meetings: AllMeetings;
   timelineViewMode: CalendarViewMode;
   changeTimeLineHandler: (value) => void;
+  fetchMeetings: (data) => void;
 }
 
 export const MeetingsContext = React.createContext<MeetingContextProps>({
@@ -24,6 +25,7 @@ export const MeetingsContext = React.createContext<MeetingContextProps>({
   meetings: {},
   timelineViewMode: "threeDays",
   changeTimeLineHandler: () => {},
+  fetchMeetings: (data) => {},
 });
 
 const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
@@ -34,30 +36,41 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
     setTimeLineViewMode(value);
   };
 
-  const addMeeting = useCallback((newMeeting: Meeting, pickedDate: string) => {
-    console.log(typeof newMeeting);
-    console.log(newMeeting);
-    const newArr = meetings;
-    if (newArr[pickedDate]) {
-      newArr[pickedDate] = [...newArr[pickedDate], newMeeting];
-      setMeetings(newArr);
-    } else {
-      newArr[pickedDate] = [newMeeting];
-      setMeetings({ ...newArr });
-    }
-    // for (const [key, value] of Object.entries(newArr)) {
-    try {
-      const docRef = setDoc(doc(db, "meetings", pickedDate), {
-        meetings: arrayUnion(...meetings[pickedDate] ,newMeeting),
-      });
-      // console.log("Document written with ID: ", docRef);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-    // }
-  }, []);
+  const addMeeting = useCallback(
+    async (newMeeting: Meeting, pickedDate: string) => {
+      const newArr = meetings;
+      if (newArr[pickedDate]) {
+        newArr[pickedDate] = [...newArr[pickedDate], newMeeting];
+        setMeetings(newArr);
+      } else {
+        newArr[pickedDate] = [newMeeting];
+        setMeetings({ ...newArr });
+      }
+
+      try {
+        const meetingsRef = doc(db, "meetings", pickedDate);
+        const docSnap = await getDoc(meetingsRef);
+        if (docSnap.exists()) {
+          await updateDoc(meetingsRef, {
+            meetings: arrayUnion(...meetings[pickedDate], newMeeting),
+          });
+        } else {
+          setDoc(doc(db, "meetings", pickedDate), {
+            meetings: [newMeeting],
+          });
+        }
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+      // }
+    },
+    []
+  );
 
   const removeMeeting = () => {};
+  const fetchMeetings = (data) => {
+    setMeetings(data);
+  };
 
   return (
     <MeetingsContext.Provider
@@ -67,6 +80,7 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
         meetings,
         timelineViewMode,
         changeTimeLineHandler,
+        fetchMeetings,
       }}
     >
       {children}

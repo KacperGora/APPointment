@@ -13,24 +13,23 @@ function useCheckOverlappingEvents(
   const meetingsAtPickedDate = meetings.filter(
     (meeting: AllMeetings) => meeting.key === pickedDate
   );
-console.log(meetingsAtPickedDate);
+
   const newArr: Meeting[] = [];
   for (const [key, value] of Object.entries(meetingsAtPickedDate)) {
     newArr.push(...value.data);
   }
-  console.log(newArr);
-  console.log(worker);
+
   const filtredArray = newArr.filter((meeting) => meeting.worker === worker);
-console.log(filtredArray);
+
   useEffect(() => {
     setOverlapped(false);
     if (filtredArray.valueOf() !== NaN && serviceDuration) {
-      filtredArray.forEach((meeting) => {
+      filtredArray?.forEach((meeting) => {
         if (
           areIntervalsOverlapping(
             {
-              start: subHours(new Date(meeting.start), 1),
-              end: subHours(new Date(meeting.end), 1),
+              start: subHours(new Date(meeting?.start), 1),
+              end: subHours(new Date(meeting?.end), 1),
             },
             {
               start: subHours(newMeetingDate, 1),

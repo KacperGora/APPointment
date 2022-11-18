@@ -96,11 +96,11 @@ const AddNewForm = () => {
   const isOverlapped = useCheckOverlappingEvents(
     pickedDate,
     sortedEvents,
-    data.duration,
+    data?.duration,
     new Date(data?.start),
     pickedWorker?.name
   );
-  console.log(isOverlapped);
+
   const isEmpty = Object.values(data).some(
     (x) => x === undefined || x === "" || x === "Invalid Date"
   );

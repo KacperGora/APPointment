@@ -25,28 +25,27 @@ const Calendar = ({ navigation }) => {
   const [userPickedView, setUserPickedView] = useState<CalendarViewMode>();
   const [events, setEvents] = useState<EventItem[]>([]);
   const [filteredEvents, setFilteredEvents] = useState(events);
-  console.log(events);
+
   const [selectedEvent, setSelectedEvent] = useState<PackedEvent>();
   const [worker, setWorker] = useState("all");
-  console.log(worker);
+
   const newArr = [];
   useEffect(() => {
     for (const [key, value] of Object.entries(ctx.meetings)) {
       newArr.push(...value);
     }
-
     setEvents(newArr);
   }, [ctx.meetings]);
 
   useEffect(() => {
     setFilteredEvents(events);
     if (worker !== "all") {
-      setFilteredEvents(events.filter((event) => event.worker === worker));
+      setFilteredEvents(events.filter((event) => event?.worker === worker));
     } else {
       setFilteredEvents(events);
     }
   }, [worker, events]);
-  console.log(events[0].worker);
+
   const _onLongPressEvent = (event: PackedEvent) => {
     setSelectedEvent(event);
   };
@@ -98,6 +97,7 @@ const Calendar = ({ navigation }) => {
       date: correctDate,
     });
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <View

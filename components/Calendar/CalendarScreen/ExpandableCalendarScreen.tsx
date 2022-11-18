@@ -1,4 +1,10 @@
-import React, { useRef, useCallback, useEffect, useState } from "react";
+import React, {
+  useRef,
+  useCallback,
+  useEffect,
+  useState,
+  useContext,
+} from "react";
 import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -12,10 +18,17 @@ import testIDs from "../testIds";
 
 import { LocaleConfig } from "react-native-calendars";
 import Agenda from "../Agenda/Agenda";
-import { collection, getDocs, onSnapshot, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+} from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 import { groupBy } from "lodash";
 import { getTheme, themeColor, lightThemeColor } from "./calendarThemes";
+import { MeetingsContext } from "../../../store/store";
 
 LocaleConfig.locales["pl"] = {
   monthNames: [
@@ -47,15 +60,16 @@ LocaleConfig.locales["pl"] = {
     "Gru",
   ],
   dayNames: [
+    "Niedziela",
     "Poniedziałek",
     "Wtorek",
     "Środa",
     "Czwartek",
     "Piątek",
     "Sobota",
-    "Niedziela",
+    ,
   ],
-  dayNamesShort: ["Pon", "Wt", "Śr", "Czw", "Pt", "Sb", "Nd"],
+  dayNamesShort: ["Nd", "Pon", "Wt", "Śr", "Czw", "Pt", "Sb"],
   // @ts-ignore: Unreachable code error
   today: "Dziś",
 };
@@ -78,6 +92,7 @@ const ExpandableCalendarScreen = (props: Props) => {
   const { weekView } = props;
   const navigate = useNavigation<Navigation>();
   const theme = useRef(getTheme());
+  const ctx = useContext(MeetingsContext);
   const todayBtnTheme = useRef({
     todayButtonTextColor: themeColor,
   });
@@ -90,22 +105,26 @@ const ExpandableCalendarScreen = (props: Props) => {
       date: date.dateString,
     });
   };
+
   useEffect(() => {
+    const controller = new AbortController();
+    const fetchedMeetings = [];
     const getData = async () => {
       const q = query(collection(db, "meetings"));
-      const meetings = [];
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          console.log(doc.id);
-          console.log(doc.data());
+          for (const [key, value] of Object.entries(doc.data())) {
+            fetchedMeetings[doc.id] = [...value];
+          }
         });
+        ctx.fetchMeetings(fetchedMeetings);
       });
     };
     getData();
+    return () => controller.abort();
   }, []);
 
   return (
-    // @ts-ignore: Unreachable code error
     <CalendarProvider
       date={new Date().toDateString()}
       onMonthChange={onMonthChange}
@@ -119,13 +138,12 @@ const ExpandableCalendarScreen = (props: Props) => {
       ) : (
         <ExpandableCalendar
           initialDate={new Date().toDateString()}
-          // @ts-ignore: Unreachable code error
           initialPosition={ExpandableCalendar.positions.OPEN}
           onDayLongPress={dayLongPressHandler}
           calendarStyle={styles.calendar}
           theme={theme.current}
           disableAllTouchEventsForDisabledDays
-          firstDay={0}
+          firstDay={1}
           animateScroll
           closeOnDayPress={true}
           disabledDaysIndexes={[6]}
