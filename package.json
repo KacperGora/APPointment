@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@freakycoder/react-native-helpers": "^2.0.2",
-    "@howljs/calendar-kit": "^1.5.0",
+    "@howljs/calendar-kit": "^1.5.3",
     "@react-native-firebase/app": "^16.4.3",
     "@react-navigation/bottom-tabs": "^6.4.0",
     "@react-navigation/drawer": "^6.5.0",

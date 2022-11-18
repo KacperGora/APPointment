@@ -3,19 +3,15 @@ import {
   EventItem,
   PackedEvent,
   TimelineCalendar,
+  UnavailableItemProps,
 } from "@howljs/calendar-kit";
 import { addDays } from "date-fns";
-
-import React, { useContext, useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import { MeetingsContext } from "../../../store/store";
 import { colors } from "../../colors";
+import CustomUnavailableItem from "./CustomUnavailableItem";
+import EditFooter from "./EditFooter";
 import TimelineEventContent from "./TimelineEventContent";
 import TimelineViewPicker from "./TimeLineViewPicker";
 import TimelineWorkerPicker from "./TimelineWorkerPicker";
@@ -25,7 +21,6 @@ const Calendar = ({ navigation }) => {
   const [userPickedView, setUserPickedView] = useState<CalendarViewMode>();
   const [events, setEvents] = useState<EventItem[]>([]);
   const [filteredEvents, setFilteredEvents] = useState(events);
-
   const [selectedEvent, setSelectedEvent] = useState<PackedEvent>();
   const [worker, setWorker] = useState("all");
 
@@ -50,11 +45,11 @@ const Calendar = ({ navigation }) => {
     setSelectedEvent(event);
   };
 
-  const _onPressCancel = () => {
+  const onPressCancel = () => {
     setSelectedEvent(undefined);
   };
 
-  const _onPressSubmit = () => {
+  const onPressSubmit = () => {
     setEvents((prevEvents) =>
       prevEvents.map((ev) => {
         if (ev.id === selectedEvent?.id) {
@@ -66,47 +61,33 @@ const Calendar = ({ navigation }) => {
     setSelectedEvent(undefined);
   };
 
-  const _renderEditFooter = () => {
-    return (
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.button} onPress={_onPressCancel}>
-          <Text style={styles.btnText}>Anuluj</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={_onPressSubmit}>
-          <Text style={styles.btnText}>Zapisz</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
+  const _renderEditFooter = () => {};
   const _onDragCreateEnd = (event) => {
     console.log(new Date(event.start));
-    const randomId = Math.random().toString(36).slice(2, 10);
-    const newEvent = {
-      id: randomId,
-      title: randomId,
-      start: event.start,
-      end: event.end,
-      color: "#A3C7D6",
-    };
-    setEvents((prev) => [...prev, newEvent]);
+    // const randomId = Math.random().toString(36).slice(2, 10);
+    // const newEvent = {
+    //   id: randomId,
+    //   title: randomId,
+    //   start: event.start,
+    //   end: event.end,
+    //   color: "#A3C7D6",
+    // };
+    // setEvents((prev) => [...prev, newEvent]);
   };
   const longPressHandler = (date, event) => {
     const correctDate = addDays(new Date(date), 1).toISOString().split("T")[0];
 
-    navigation.navigate("Add", {
-      date: correctDate,
-    });
+    // navigation.navigate("Add", {
+    //   date: correctDate,
+    // });
   };
-
+  const _renderCustomUnavailableItem = useCallback(
+    (props: UnavailableItemProps) => <CustomUnavailableItem {...props} />,
+    []
+  );
   return (
     <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          padding: 20,
-        }}
-      >
+      <View style={styles.timelineMenuContainer}>
         <TimelineWorkerPicker setWorker={setWorker} />
         <TimelineViewPicker setUserPickedView={setUserPickedView} />
       </View>
@@ -116,9 +97,7 @@ const Calendar = ({ navigation }) => {
         allowPinchToZoom
         overlapEventsSpacing={4}
         locale="pl"
-        renderEventContent={(event, timeIntervalHeight) => (
-          <TimelineEventContent event={event} />
-        )}
+        renderEventContent={(event) => <TimelineEventContent event={event} />}
         unavailableHours={[
           { start: 0, end: 7 },
           { start: 22, end: 24 },
@@ -131,8 +110,10 @@ const Calendar = ({ navigation }) => {
         selectedEvent={selectedEvent}
         onPressEvent={_onDragCreateEnd}
         onEndDragSelectedEvent={setSelectedEvent}
+        renderCustomUnavailableItem={_renderCustomUnavailableItem}
         dragStep={15}
         scrollToNow
+        start={1}
         onPressDayNum={(date) => console.log(date)}
         theme={{
           // @ts-ignore: Unreachable code error
@@ -146,8 +127,14 @@ const Calendar = ({ navigation }) => {
           todayNumberContainer: { backgroundColor: colors.primary },
           eventTitle: { fontSize: 14 },
         }}
+       
       />
-      {!!selectedEvent && _renderEditFooter()}
+      {!!selectedEvent ? (
+        <EditFooter
+          onPressCancel={onPressCancel}
+          onPressSubmit={onPressSubmit}
+        />
+      ) : null}
     </SafeAreaView>
   );
 };
@@ -156,32 +143,9 @@ export default Calendar;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FFF" },
-  footer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "#FFF",
-    height: 85,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    elevation: 3,
+  timelineMenuContainer: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    padding: 20,
   },
-  button: {
-    height: 45,
-    paddingHorizontal: 24,
-    backgroundColor: colors.primary,
-    justifyContent: "center",
-    borderRadius: 6,
-    marginHorizontal: 8,
-    marginVertical: 8,
-  },
-  btnText: { fontSize: 16, color: "#FFF", fontWeight: "bold" },
 });

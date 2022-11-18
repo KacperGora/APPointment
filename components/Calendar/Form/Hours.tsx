@@ -19,11 +19,11 @@ const HoursComponent: React.FC<ComponentProps> = ({
   const ctx = useContext(MeetingsContext);
   const meetings = ctx?.meetings;
   const [availableHours, setAvailableHours] = useState<Hours[]>(hours);
-  const excludedTimesAtThisDay: string[] = [];
+  // const excludedTimesAtThisDay: string[] = [];
 
-  const meetingsAtThisDay: Meeting[] = meetings[pickedDay]?.filter(
-    (meeting) => meeting.worker === worker
-  );
+  // const meetingsAtThisDay: Meeting[] = meetings[pickedDay]?.filter(
+  //   (meeting) => meeting.worker === worker
+  // );
 
   const hourPressHandler = (index: number) => {
     pickHandler(index, availableHours, setAvailableHours);
@@ -32,15 +32,15 @@ const HoursComponent: React.FC<ComponentProps> = ({
     setPickedHour(availableHours.filter((hour) => hour.isActive)[0]?.hour);
   }, [availableHours]);
 
-  useEffect(() => {
-    meetingsAtThisDay?.forEach((element) =>
-      excludedTimesAtThisDay.push(...element.excludedTimes)
-    );
-    const res = hours.filter(
-      (item) => !excludedTimesAtThisDay.includes(item.hour)
-    );
-    setAvailableHours(res);
-  }, [pickedDay, worker]);
+  // useEffect(() => {
+  //   meetingsAtThisDay?.forEach((element) =>
+  //     excludedTimesAtThisDay.push(...element.excludedTimes)
+  //   );
+  //   const res = hours.filter(
+  //     (item) => !excludedTimesAtThisDay.includes(item.hour)
+  //   );
+  //   setAvailableHours(res);
+  // }, [pickedDay, worker]);
 
   return (
     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

@@ -9,7 +9,7 @@ import {
 } from "@react-navigation/native";
 import Home from "../screens/Home";
 import { colors } from "../components/colors";
-import AddNew from "../screens/AddNew";
+
 import MeetingsProvider from "../store/store";
 import SalonSummary from "../components/Salon/SalonSummary/SalonSummary";
 import SalonCustomers from "../components/Salon/SalonCustomers/SalonCustomers";
@@ -20,6 +20,7 @@ import TimelineScreen from "../components/Calendar/TimeLine/TimelineScreen";
 import { Text, View } from "react-native";
 import { color } from "react-native-reanimated";
 import ToggleCalendarView from "../components/Header/ToggleCalendarView";
+import AddMeetingForm from "../components/Calendar/Form/AddMeetingForm";
 
 export type RootStackParam = {
   Welcome: undefined;
@@ -112,18 +113,15 @@ const RootStack: FunctionComponent = () => {
           <Stack.Screen
             name="Timeline"
             component={TimelineScreen}
-            options={
-              {
-                // headerShown: false,
-                // headerTitle: "",
-                // // headerStyle: { height: 90 },
-                // headerRight: () => <ToggleTimelineDays />,
-              }
-            }
+            options={{
+              // headerShown: false,
+              headerTitle: "",
+              headerStyle: { backgroundColor: colors.white },
+            }}
           />
           <Stack.Screen
             name="Add"
-            component={AddNew}
+            component={AddMeetingForm}
             options={{
               headerBackTitle: "Umów wizytę",
               headerBackTitleStyle: {

@@ -3,21 +3,20 @@ import { Text, View, StyleSheet } from "react-native";
 import { colors } from "../../colors";
 
 const TimelineEventContent = ({ event }) => {
-  // const worker = event.worker;
+  const worker = event.worker;
   console.log(event);
   return (
     <View style={[{ backgroundColor: event.color }, styles.container]}>
-    
       <View
         style={[
           styles.workerBatch,
-          // {
-          //   backgroundColor:
-          //     worker === "Monia" ? colors.accent : colors.primary,
-          // },
+          {
+            backgroundColor:
+              worker === "Monia" ? colors.accent : colors.primary,
+          },
         ]}
       >
-        {/* <Text style={styles.workerBatchText}>{event.worker?.slice(0, 1)}</Text> */}
+        <Text style={styles.workerBatchText}>{event.worker?.slice(0, 1)}</Text>
       </View>
       <Text style={styles.text}>{event.title}</Text>
       <Text style={styles.text}> {event.serviceName}</Text>
@@ -29,12 +28,12 @@ const TimelineEventContent = ({ event }) => {
 };
 export default TimelineEventContent;
 const styles = StyleSheet.create({
-  // test: {
-  //   width: 2,
-  //   height: "100%",
-  //   backgroundColor: "red",
-  //   opacity: 0.5
-  // },
+  test: {
+    width: 2,
+    height: "100%",
+    backgroundColor: "red",
+    opacity: 0.5,
+  },
   container: {
     alignSelf: "center",
     shadowColor: "black",

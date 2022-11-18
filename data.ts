@@ -1,5 +1,5 @@
 export const hours = [
-  { hour: "09:00", isActive: false },
+  { hour: "09:00", isActive: true },
   { hour: "09:15", isActive: false },
   { hour: "09:30", isActive: false },
   { hour: "09:45", isActive: false },
@@ -32,7 +32,7 @@ export const hours = [
 export const servicesDetails = [
   {
     name: "Manicure Klasyczny",
-    isActive: false,
+    isActive: true,
     duration: 90,
     price: "40PLN",
   },

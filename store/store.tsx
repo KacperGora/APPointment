@@ -62,7 +62,6 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
       } catch (e) {
         console.error("Error adding document: ", e);
       }
-      // }
     },
     []
   );
