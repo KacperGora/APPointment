@@ -1,40 +1,37 @@
 import { AgendaList } from "react-native-calendars";
-import React, { useContext, useCallback, useState, useEffect } from "react";
-import { MeetingsContext } from "../../../store/store";
-import AgendaItem from "./AgendaItem";
-import { DefaultSectionT } from "react-native";
+import React, { useCallback } from "react";
+import AgendaItem from "./AgendaListItem";
+import { StyleSheet, Text, View } from "react-native";
+import Spinner from "../../UI/Spinner/Spinner";
 
-const Agenda = () => {
-  const ctx = useContext(MeetingsContext);
-  const items = ctx?.meetings;
-  const [sortedEvents, setSortedEvents] = useState<DefaultSectionT | any>(
-    items
-  );
-
-  useEffect(() => {
-    setSortedEvents(items);
-  }, [items]);
-
-  const meetings = [];
-  useEffect(() => {
-    for (const [key, value] of Object.entries(items)) {
-      meetings.push({ title: key, data: [...value] });
-      setSortedEvents(meetings);
-    }
-  }, [items]);
-
+const Agenda = ({ agendaEvents, isLoading }) => {
   const renderItem = useCallback(({ item }: any) => {
     return <AgendaItem item={item} />;
   }, []);
 
   return (
-    <AgendaList
-      sections={sortedEvents}
-      renderItem={renderItem}
-      scrollToNextEvent={sortedEvents.length > 0 ? true : false}
-      dayFormat={"dd.MM.yyyy"}
-      avoidDateUpdates={false}
-    />
+    <View style={styles.container}>
+      {agendaEvents[0] && (
+        <AgendaList
+          style={{ backgroundColor: "white" }}
+          sections={agendaEvents}
+          renderItem={renderItem}
+          scrollToNextEvent={agendaEvents.length > 0 ? true : false}
+          dayFormat={"dd.MM.yyyy"}
+          avoidDateUpdates={false}
+        />
+      )}
+      {!agendaEvents[0] && !isLoading && <Text>Nie masz żadnych spotkań</Text>}
+      {isLoading && <Spinner />}
+    </View>
   );
 };
 export default Agenda;
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Alert } from "react-native";
+import { View, Alert, Text } from "react-native";
 import Calendar from "./Calendar";
 import calculateTimeOfEnd from "../../../Utils/calculateTimeOfEnd";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { MeetingsContext } from "../../../store/store";
+import { MeetingsContext } from "../../../store/CalendarStore";
 import MeetingDetails from "./MeetingDetails";
 import ButtonBox from "./ButtonsBox";
 import HoursComponent from "./Hours";
@@ -17,7 +17,9 @@ import { EventItem } from "@howljs/calendar-kit";
 import { subHours } from "date-fns";
 import Workers from "./Workers";
 import getEventExcludedTimes from "../../../Utils/getEventExcludedTimes";
-
+import Animated, { FadeInUp, FadeOutUp } from "react-native-reanimated";
+import * as Progress from "react-native-progress";
+import { colors } from "../../colors";
 type RouteProps = {
   params: {
     date: string;
@@ -47,7 +49,6 @@ const AddMeetingForm = () => {
   const [userTypedName, setUserTypedName] = useState("");
   const [userTypedLastName, setUserTypedLastName] = useState("");
   const sortedEvents = useSortData();
-
   const color = useSetColorForEvent(pickedService);
 
   const startFullDate = pickedDate + "T" + pickedHour + ":00.000Z";
@@ -59,7 +60,7 @@ const AddMeetingForm = () => {
   );
 
   const endFullDate = pickedDate + "T" + endHour + ".000Z";
-  const endISO = new Date(subHours(new Date(endFullDate), 1)).toISOString();
+  const endISODate = new Date(subHours(new Date(endFullDate), 1)).toISOString();
 
   const excludedTimes = getEventExcludedTimes(
     pickedService?.duration,
@@ -71,8 +72,9 @@ const AddMeetingForm = () => {
     title: `${userTypedName}  ${userTypedLastName}`,
     serviceName: pickedService?.name,
     serviceDuration: pickedService?.duration,
+    servicePrice: +pickedService?.price?.split("PLN")[0],
     start: startISO,
-    end: endISO,
+    end: endISODate,
     startHourStr: pickedHour,
     endHour: endHour.slice(0, 5),
     excludedTimes,
@@ -87,10 +89,14 @@ const AddMeetingForm = () => {
     pickedWorker?.name
   );
 
-  const isEmpty = Object.values(data).some(
-    (x) => x === undefined || x === "" || x === "Invalid Date"
-  );
+  const isEmpty =
+    userTypedName.trim().length === 0 ||
+    (userTypedLastName.trim().length === 0 &&
+      Object.values(data).some(
+        (x) => x === undefined || x.length === 0 || x === "Invalid Date"
+      ));
 
+  const isLoading = ctx.isLoading;
   const submitHandler = () => {
     if (isEmpty) {
       Alert.alert(
@@ -100,36 +106,48 @@ const AddMeetingForm = () => {
       return;
     } else {
       ctx?.addMeeting(data, pickedDate.split("T")[0]);
-      navigation.navigate("Home");
+
+      !isLoading && navigation.navigate("Home");
     }
   };
 
   return (
     <>
-      <Calendar date={pickedDate} setNewDate={setPickedDate} />
-      <View style={{ height: 250 }}>
-        <HoursComponent
-          pickedDay={pickedDate}
-          setPickedHour={setPickedHour}
-          worker={pickedWorker?.name}
+      {isLoading ? (
+        <Progress.Circle
+          size={150}
+          indeterminate={true}
+          color={colors.primary}
+          borderWidth={10}
         />
-        <Services getServices={setPickedService} />
-      </View>
-      <Inputs
-        setUserTypedLastName={setUserTypedLastName}
-        setUserTypedName={setUserTypedName}
-      />
-      <Workers getWorkers={setPickedWorker} />
-      {isOverlapped ? (
-        <WarningText>Termin zajety, wybierz proszę inny.</WarningText>
-      ) : null}
-      {!isOverlapped && !isEmpty ? (
-        <MeetingDetails
-          date={new Date(startFullDate)}
-          service={pickedService}
-        />
-      ) : null}
-      <ButtonBox disabled={isOverlapped} onPress={submitHandler} />
+      ) : (
+        <>
+          <Calendar date={pickedDate} setNewDate={setPickedDate} />
+          <View>
+            <HoursComponent
+              pickedDay={pickedDate}
+              setPickedHour={setPickedHour}
+              worker={pickedWorker?.name}
+            />
+            <Services getPickedService={setPickedService} />
+          </View>
+          <Inputs
+            setUserTypedLastName={setUserTypedLastName}
+            setUserTypedName={setUserTypedName}
+          />
+          <Workers getWorkers={setPickedWorker} />
+          {isOverlapped ? (
+            <WarningText>Termin zajety, wybierz proszę inny.</WarningText>
+          ) : null}
+          {!isOverlapped && !isEmpty ? (
+            <MeetingDetails
+              date={new Date(startFullDate)}
+              service={pickedService}
+            />
+          ) : null}
+          <ButtonBox disabled={isOverlapped} onPress={submitHandler} />
+        </>
+      )}
     </>
   );
 };

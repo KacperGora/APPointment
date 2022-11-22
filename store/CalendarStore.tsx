@@ -1,9 +1,7 @@
 import { CalendarViewMode, EventItem } from "@howljs/calendar-kit";
 import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { groupBy } from "lodash";
 import React from "react";
-import { useCallback, useState, useEffect } from "react";
-import { CalendarUtils } from "react-native-calendars";
+import { useCallback, useState } from "react";
 import { db } from "../firebase/firebase";
 import { AllMeetings, Meeting } from "../types";
 
@@ -17,6 +15,7 @@ interface MeetingContextProps {
   timelineViewMode: CalendarViewMode;
   changeTimeLineHandler: (value) => void;
   fetchMeetings: (data) => void;
+  isLoading: boolean;
 }
 
 export const MeetingsContext = React.createContext<MeetingContextProps>({
@@ -26,10 +25,12 @@ export const MeetingsContext = React.createContext<MeetingContextProps>({
   timelineViewMode: "threeDays",
   changeTimeLineHandler: () => {},
   fetchMeetings: (data) => {},
+  isLoading: false,
 });
 
 const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
-  const [meetings, setMeetings] = useState<AllMeetings>([]);
+  const [meetings, setMeetings] = useState<AllMeetings>({});
+  const [isLoading, setIsLoading] = useState(false);
   const [timelineViewMode, setTimeLineViewMode] =
     useState<CalendarViewMode>("threeDays");
   const changeTimeLineHandler = (value) => {
@@ -46,8 +47,8 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
         newArr[pickedDate] = [newMeeting];
         setMeetings({ ...newArr });
       }
-
       try {
+        setIsLoading(true);
         const meetingsRef = doc(db, "meetings", pickedDate);
         const docSnap = await getDoc(meetingsRef);
         if (docSnap.exists()) {
@@ -61,6 +62,8 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
         }
       } catch (e) {
         console.error("Error adding document: ", e);
+      } finally {
+        setIsLoading(false);
       }
     },
     []
@@ -80,6 +83,7 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
         timelineViewMode,
         changeTimeLineHandler,
         fetchMeetings,
+        isLoading,
       }}
     >
       {children}

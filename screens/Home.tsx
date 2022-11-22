@@ -1,24 +1,15 @@
-import React, { FunctionComponent } from "react";
-import { StatusBar } from "expo-status-bar";
-import styled from "styled-components/native";
-
-import { Container } from "../components/shared";
-import { colors } from "../components/colors";
+import React, { useContext, useEffect } from "react";
+import { View } from "react-native";
+import { ExpandableCalendar } from "react-native-calendars";
 import ExpandableCalendarScreen from "../components/Calendar/CalendarScreen/ExpandableCalendarScreen";
+import useFetchEvents from "../hooks/calendar/useFetchEvents";
+import { MeetingsContext } from "../store/CalendarStore";
 
-const HomeContainer = styled(Container)`
-  background-color: ${colors.graylight};
-  width: 100%;
-  flex: 1;
-`;
-const Home: FunctionComponent = () => {
+const Home = () => {
   return (
-    <HomeContainer>
-      <StatusBar style="dark" />
-      <HomeContainer>
-        <ExpandableCalendarScreen />
-      </HomeContainer>
-    </HomeContainer>
+    <View>
+      <ExpandableCalendarScreen />
+    </View>
   );
 };
 

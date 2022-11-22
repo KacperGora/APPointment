@@ -1,5 +1,5 @@
 import { Dimensions, Text, View } from "react-native";
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
   LineChart,
   BarChart,
@@ -8,64 +8,69 @@ import {
   ContributionGraph,
   StackedBarChart,
 } from "react-native-chart-kit";
+
+import { MeetingsContext } from "../../../store/CalendarStore";
+
+import { TextInput } from "react-native-gesture-handler";
+import { colors } from "../../colors";
+import TargetSlider from "../../Settings/Targets/TargetSlider";
+import { daysToWeeks } from "date-fns";
+import { SaloonContext } from "../../../store/SaloonStore";
+import moment from "moment";
+import { SafeAreaView } from "react-native-safe-area-context";
+const screenWidth = Dimensions.get("screen").width;
 function SalonSummary() {
+  const meetingCtx = useContext(MeetingsContext);
+  const targetCtx = useContext(SaloonContext);
+  const events = meetingCtx.meetings;
+
+  const todayString = new Date().toISOString().split("T")[0];
+
+  const sevenDaysBefore = moment().subtract(7, "days");
+
+  console.log(sevenDaysBefore);
+  const initialDailyValue = 0;
+  const todayMeetingPrices = [];
+  events[todayString]?.forEach((event) =>
+    todayMeetingPrices.push(event.servicePrice)
+  );
+  const todayEarnings = todayMeetingPrices.reduce(
+    (accumulator, currVal) => accumulator + currVal,
+    initialDailyValue
+  );
+  const todayPrecentage: number = +(
+    todayEarnings / targetCtx.dailyTarget
+  ).toFixed(2);
+
+  const data = {
+    labels: ["Dziś", "Tydzień", "Miesiąc"], // optional
+    colors: ["#6e5318", "#268102", "#e32e2"],
+    data: [todayPrecentage, 0.6, 0.8],
+  };
   const chartConfig = {
-    backgroundGradientFrom: "#1E2923",
+    backgroundGradientFrom: "#efeeee",
     backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#08130D",
+    backgroundGradientTo: "#e3e3e3",
     backgroundGradientToOpacity: 0.5,
-    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-    strokeWidth: 2, // optional, default 3
+    color: (opacity = 1) => `rgba(96, 151, 261, ${opacity})`,
+    strokeWidth: 3, // optional, default 3
     barPercentage: 0.5,
     useShadowColorFromDataset: false, // optional
   };
+
+
   return (
-    <View>
-      <Text>Bezier Line Chart</Text>
-      <LineChart
-        data={{
-          labels: ["Sty", "Luty", "Mar", "Kwi", "Maj", "Cze"],
-          datasets: [
-            {
-              data: [
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-              ],
-            },
-          ],
-        }}
-        width={Dimensions.get("window").width} // from react-native
+    <SafeAreaView>
+      <ProgressChart
+        data={data}
+        width={screenWidth}
         height={220}
-        yAxisLabel="$"
-        yAxisSuffix="k"
-        yAxisInterval={1} // optional, defaults to 1
-        chartConfig={{
-          backgroundColor: "#a8907a",
-          backgroundGradientFrom: "#fb8c00",
-          backgroundGradientTo: "#ffa726",
-          decimalPlaces: 2, // optional, defaults to 2dp
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          style: {
-            borderRadius: 16,
-          },
-          propsForDots: {
-            r: "1",
-            strokeWidth: "5",
-            stroke: "#ffa726",
-          },
-        }}
-        bezier
-        style={{
-          marginVertical: 8,
-          borderRadius: 16,
-        }}
+        strokeWidth={16}
+        radius={50}
+        chartConfig={chartConfig}
+        hideLegend={false}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

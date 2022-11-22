@@ -1,4 +1,5 @@
 import { Platform } from "react-native";
+import { colors } from "../../colors";
 
 export const themeColor = "#B8336A";
 export const lightThemeColor = "#f2f7f7";
@@ -11,7 +12,7 @@ export function getTheme() {
     arrowColor: "black",
     arrowStyle: { padding: 0 },
     // knob
-    expandableKnobColor: "red",
+    expandableKnobColor: colors.primary,
     // month
     monthTextColor: "black",
     textMonthFontSize: 16,

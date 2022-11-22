@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     width: 150,
   },
   active: {
+    backgroundColor: 'white',
     borderWidth: 2,
     borderColor: colors.primary,
     shadowColor: colors.greydark,

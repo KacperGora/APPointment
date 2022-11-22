@@ -35,7 +35,7 @@ const BackgroundImage = styled.ImageBackground`
   flex: 1;
   justify-content: "center";
 `;
-import { RootStackParam } from "../navigators/RootStack";
+import { RootStackParam } from "../types";
 import { StackScreenProps } from "@react-navigation/stack";
 type Props = StackScreenProps<RootStackParam, "Welcome">;
 const Welcome: FunctionComponent<Props> = ({ navigation }) => {

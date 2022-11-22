@@ -1,34 +1,18 @@
-import React, {
-  useRef,
-  useCallback,
-  useEffect,
-  useState,
-  useContext,
-} from "react";
-import { StyleSheet } from "react-native";
+import React, { useRef, useEffect, useContext } from "react";
+import { StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
   ExpandableCalendar,
   CalendarProvider,
-  WeekCalendar,
   DateData,
-  CalendarUtils,
 } from "react-native-calendars";
-import testIDs from "../testIds";
-
 import { LocaleConfig } from "react-native-calendars";
 import Agenda from "../Agenda/Agenda";
-import {
-  collection,
-  doc,
-  getDocs,
-  onSnapshot,
-  query,
-} from "firebase/firestore";
-import { db } from "../../../firebase/firebase";
-import { groupBy } from "lodash";
 import { getTheme, themeColor, lightThemeColor } from "./calendarThemes";
-import { MeetingsContext } from "../../../store/store";
+import { MeetingsContext } from "../../../store/CalendarStore";
+import useFetchEvents from "../../../hooks/calendar/useFetchEvents";
+import useSetMarkedDates from "../../../hooks/calendar/useSetMarkedDates";
+import useGetSortedAgendaEvents from "../../../hooks/calendar/useGetSortedAgendaEvents";
 
 LocaleConfig.locales["pl"] = {
   monthNames: [
@@ -80,25 +64,23 @@ type Navigation = {
     destination: string,
     params: {
       date: string;
-      items?: { title: string; data: string[] }[];
     }
   ) => void;
 };
-interface Props {
-  weekView?: boolean;
-}
 
-const ExpandableCalendarScreen = (props: Props) => {
-  const { weekView } = props;
+const ExpandableCalendarScreen = () => {
   const navigate = useNavigation<Navigation>();
   const theme = useRef(getTheme());
   const ctx = useContext(MeetingsContext);
+  const sortedEvents = useGetSortedAgendaEvents();
+  const markedDates = useSetMarkedDates();
   const todayBtnTheme = useRef({
     todayButtonTextColor: themeColor,
   });
-  const onMonthChange = useCallback((dateString: DateData) => {
-    console.log("ExpandableCalendarScreen onMonthChange: ", dateString);
-  }, []);
+  const { data, error, isLoading } = useFetchEvents();
+  useEffect(() => {
+    ctx.fetchMeetings(data);
+  }, [data]);
 
   const dayLongPressHandler = (date: DateData) => {
     navigate.navigate("Add", {
@@ -106,36 +88,14 @@ const ExpandableCalendarScreen = (props: Props) => {
     });
   };
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const fetchedMeetings = [];
-    const getData = async () => {
-      const q = query(collection(db, "meetings"));
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          for (const [key, value] of Object.entries(doc.data())) {
-            fetchedMeetings[doc.id] = [...value];
-          }
-        });
-        ctx.fetchMeetings(fetchedMeetings);
-      });
-    };
-    getData();
-    return () => controller.abort();
-  }, []);
-
   return (
-    <CalendarProvider
-      date={new Date().toDateString()}
-      onMonthChange={onMonthChange}
-      showTodayButton
-      disabledOpacity={0.5}
-      numberOfDays={1}
-      theme={todayBtnTheme.current}
-    >
-      {weekView ? (
-        <WeekCalendar testID={testIDs.weekCalendar.CONTAINER} firstDay={1} />
-      ) : (
+    <View>
+      <CalendarProvider
+        date={new Date().toDateString()}
+        showTodayButton
+        disabledOpacity={0.2}
+        theme={todayBtnTheme.current}
+      >
         <ExpandableCalendar
           initialDate={new Date().toDateString()}
           initialPosition={ExpandableCalendar.positions.OPEN}
@@ -145,12 +105,14 @@ const ExpandableCalendarScreen = (props: Props) => {
           disableAllTouchEventsForDisabledDays
           firstDay={1}
           animateScroll
+          scrollEnabled
           closeOnDayPress={true}
           disabledDaysIndexes={[6]}
+          markedDates={markedDates}
         />
-      )}
-      <Agenda />
-    </CalendarProvider>
+        <Agenda agendaEvents={sortedEvents} isLoading={isLoading} />
+      </CalendarProvider>
+    </View>
   );
 };
 

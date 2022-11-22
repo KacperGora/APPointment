@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { DefaultSectionT } from "react-native";
-import { MeetingsContext } from "../../store/store";
+import { MeetingsContext } from "../../store/CalendarStore";
 
 const useSortData = () => {
   const ctx = useContext(MeetingsContext);

@@ -8,7 +8,7 @@ import {
 import { addDays } from "date-fns";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
-import { MeetingsContext } from "../../../store/store";
+import { MeetingsContext } from "../../../store/CalendarStore";
 import { colors } from "../../colors";
 import CustomUnavailableItem from "./CustomUnavailableItem";
 import EditFooter from "./EditFooter";

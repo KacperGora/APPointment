@@ -37,26 +37,25 @@ const Calendar: FunctionComponent<Props> = ({ date, setNewDate }) => {
       style={{
         height: 80,
         width: "100%",
-        margin: 24,
-        borderBottomColor: colors.gray,
-        borderBottomWidth: .5,
       }}
       calendarAnimation={{ type: "sequence", duration: 30 }}
       daySelectionAnimation={{
         type: "border",
-
         duration: 200,
         borderWidth: 1,
-        animType: LayoutAnimation.configureNext(
-          LayoutAnimation.Presets.easeInEaseOut
-        ),
 
         borderHighlightColor: colors.primary,
       }}
       scrollable
       dateNumberStyle={{ color: "black" }}
-      dateNameStyle={{ color: "black", fontSize: 10 }}
-      highlightDateNameStyle={{ color: "black", fontSize: 10 }}
+      dateNameStyle={{ color: "gray", fontSize: 10 }}
+      highlightDateNameStyle={{ color: "white", fontSize: 10 }}
+      highlightDateNumberStyle={{ color: "white" }}
+      highlightDateContainerStyle={{
+        backgroundColor: colors.primary,
+        opacity: 0.6,
+      }}
+      calendarHeaderStyle={{ color: colors.greydark, paddingVertical: 12 }}
       disabledDateNameStyle={{ color: "grey" }}
       disabledDateNumberStyle={{ color: "grey" }}
       datesBlacklist={datesBlacklistFunc}

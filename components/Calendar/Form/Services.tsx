@@ -4,34 +4,40 @@ import pickHandler from "../../../Utils/pickHandler";
 import { servicesDetails } from "../../../data";
 import { colors } from "../../colors";
 import { Service } from "../../../types";
+import Separator from "./Separator";
 type ServiceProps = {
-  getServices: Dispatch<SetStateAction<any>>;
+  getPickedService: Dispatch<SetStateAction<any>>;
 };
 
-const Services: React.FC<ServiceProps> = ({ getServices }) => {
+const Services: React.FC<ServiceProps> = ({ getPickedService }) => {
   const [services, setServices] = useState<Service>(servicesDetails);
   const servicePressHandler = (index: number) => {
     pickHandler(index, services, setServices);
   };
   useEffect(() => {
-    getServices(services.filter((service) => service.isActive === true)[0]);
+    getPickedService(
+      services.filter((service) => service.isActive === true)[0]
+    );
   }, [services]);
 
   return (
-    <View style={styles.serviceBox}>
-      {services.map((service, index) => (
-        <Pressable
-          key={index}
-          onPress={() => servicePressHandler(index)}
-          style={[
-            styles.serviceContainer,
-            service.isActive ? styles.active : null,
-          ]}
-        >
-          <Text style={styles.singleService}>{service.name}</Text>
-        </Pressable>
-      ))}
-    </View>
+    <>
+      {/* <Separator>Wybierz usługę</Separator> */}
+      <View style={styles.serviceBox}>
+        {services.map((service, index) => (
+          <Pressable
+            key={index}
+            onPress={() => servicePressHandler(index)}
+            style={[
+              styles.serviceContainer,
+              service.isActive ? styles.active : null,
+            ]}
+          >
+            <Text style={styles.singleService}>{service.name}</Text>
+          </Pressable>
+        ))}
+      </View>
+    </>
   );
 };
 
@@ -56,12 +62,13 @@ const styles = StyleSheet.create({
     width: 150,
   },
   active: {
+    backgroundColor: colors.white,
     borderWidth: 2,
     borderColor: colors.primary,
     shadowColor: colors.greydark,
-    shadowOffset: { width: 2, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
+    shadowOffset: { width: 4, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
     transform: [{ scaleX: 1.05 }],
   },
   singleService: {

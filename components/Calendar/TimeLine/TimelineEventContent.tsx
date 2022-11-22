@@ -4,7 +4,7 @@ import { colors } from "../../colors";
 
 const TimelineEventContent = ({ event }) => {
   const worker = event.worker;
-  console.log(event);
+
   return (
     <View style={[{ backgroundColor: event.color }, styles.container]}>
       <View
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     position: "relative",
     bottom: 21,
-    // marginTop: 4,
+    marginTop: 4,
   },
 
   workerBatch: {

@@ -1,7 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { subHours } from "date-fns";
+import { colors } from "../../colors";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 interface MeetingDetailProps {
   date: Date;
   service: {
@@ -19,20 +22,25 @@ const MeetingDetails: React.FC<MeetingDetailProps> = ({ date, service }) => {
   return (
     <View>
       <View>
-        <Text style={styles.summaryText}>Podsumowanie planowanej wizyty</Text>
+        <Text style={styles.summaryText}>Podsumowanie</Text>
       </View>
       <View style={styles.detailsContainer}>
-        <Text>
-          <Text style={styles.detailHeading}>Data:</Text> {dateString}
-        </Text>
-        <Text>
-          <Text style={styles.detailHeading}>Godzina:</Text> {hourString}
-        </Text>
-        <Text>
-          <Text style={styles.detailHeading}>Usługa:</Text> {service?.name}
-        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Ionicons
+            name="calendar-outline"
+            size={24}
+            color={colors.greydark}
+            style={{ marginRight: 12 }}
+          />
+          <Text> {dateString}</Text>
+          <Text> {hourString}</Text>
+        </View>
+
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text>{service?.name}</Text>
+        </View>
         <Text style={styles.priceText}>{service?.price}</Text>
-        <Text>{service?.duration} minut</Text>
+        <Text style={styles.durationText}>{service?.duration} minut</Text>
       </View>
     </View>
   );
@@ -43,8 +51,8 @@ const styles = StyleSheet.create({
   summaryText: {
     fontSize: 18,
     fontWeight: "bold",
-    textAlign: "center",
-    marginTop: 15,
+    textAlign: "left",
+    margin: 12,
   },
   detailsContainer: {
     alignItems: "flex-start",
@@ -53,11 +61,16 @@ const styles = StyleSheet.create({
   detailHeading: {
     textTransform: "uppercase",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 24,
+    marginRight: 12,
   },
   priceText: {
     fontSize: 24,
     fontWeight: "bold",
     textDecorationLine: "underline",
+  },
+  durationText: {
+    color: "gray",
+    opacity: 0.6,
   },
 });

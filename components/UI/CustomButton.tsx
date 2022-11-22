@@ -54,6 +54,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 6,
+    shadowColor: "black",
+    shadowOpacity: 0.25,
+    shadowOffset: { height: 4, width: 4 },
+    shadowRadius: 3,
+
   },
   pressed: {
     opacity: 0.7,
