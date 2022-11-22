@@ -80,7 +80,7 @@ const ExpandableCalendarScreen = () => {
   const { data, error, isLoading } = useFetchEvents();
   useEffect(() => {
     ctx.fetchMeetings(data);
-  }, [data]);
+  }, [data, ctx.meetings]);
 
   const dayLongPressHandler = (date: DateData) => {
     navigate.navigate("Add", {

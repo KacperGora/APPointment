@@ -17,21 +17,27 @@ const Targets = () => {
   console.log(targetCtx.dailyTarget);
   return (
     <View>
-      <TargetSlider
-        targetTypeString={"dzienny"}
-        targetTypeState={targetCtx.dailyTarget}
-        sliderHandler={dailyTargetHandler}
-      />
-      <TargetSlider
-        targetTypeString={"tygodniowy"}
-        targetTypeState={targetCtx.weeklyTarget}
-        sliderHandler={weeklyTargetHandler}
-      />
-      <TargetSlider
-        targetTypeString={"miesięczny"}
-        targetTypeState={targetCtx.monthlyTarget}
-        sliderHandler={monthlyTargetHandler}
-      />
+      <View style={{ margin: 12 }}>
+        <TargetSlider
+          targetTypeString={"dzienny"}
+          targetTypeState={targetCtx.dailyTarget}
+          sliderHandler={dailyTargetHandler}
+        />
+      </View>
+      <View style={{ margin: 12 }}>
+        <TargetSlider
+          targetTypeString={"tygodniowy"}
+          targetTypeState={targetCtx.weeklyTarget}
+          sliderHandler={weeklyTargetHandler}
+        />
+      </View>
+      <View style={{ margin: 12 }}>
+        <TargetSlider
+          targetTypeString={"miesięczny"}
+          targetTypeState={targetCtx.monthlyTarget}
+          sliderHandler={monthlyTargetHandler}
+        />
+      </View>
     </View>
   );
 };

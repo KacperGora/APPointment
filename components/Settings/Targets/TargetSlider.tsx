@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, Button } from "react-native";
 import Slider from "@react-native-community/slider";
 import { colors } from "../../colors";
 import SaloonStoreProvider, { SaloonContext } from "../../../store/SaloonStore";
@@ -19,6 +19,7 @@ const TargetSlider = ({ targetTypeString, targetTypeState, sliderHandler }) => {
           onValueChange={sliderHandler}
         />
         <TextInput value={targetTypeState.toString()} />
+        <Button title="Ok" />
       </View>
     </View>
   );
