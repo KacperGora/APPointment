@@ -11,7 +11,6 @@ const useFetchEvents = () => {
     setIsLoading(true);
     const fetchedMeetings = [];
 
-    console.log(isLoading);
     setError(null);
     const q = query(collection(db, "meetings"));
     const unsubscribe = onSnapshot(

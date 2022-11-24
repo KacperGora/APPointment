@@ -11,7 +11,7 @@ const HomeContainer = styled(Container)`
   width: 100%;
   flex: 1;
 `;
-const Home: FunctionComponent = () => {
+const CalendarScreen: FunctionComponent = () => {
   return (
     <HomeContainer>
       <StatusBar style="dark" />
@@ -20,4 +20,4 @@ const Home: FunctionComponent = () => {
   );
 };
 
-export default Home;
+export default CalendarScreen;

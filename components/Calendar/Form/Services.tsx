@@ -22,7 +22,6 @@ const Services: React.FC<ServiceProps> = ({ getPickedService }) => {
 
   return (
     <>
-      {/* <Separator>Wybierz usługę</Separator> */}
       <View style={styles.serviceBox}>
         {services.map((service, index) => (
           <Pressable

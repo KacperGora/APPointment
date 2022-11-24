@@ -6,7 +6,7 @@ import SaloonStoreProvider, { SaloonContext } from "../../../store/SaloonStore";
 import SaloonProvider from "../../../store/SaloonStore";
 const TargetSlider = ({ targetTypeString, targetTypeState, sliderHandler }) => {
   return (
-    <View>
+    <View style={{ marginHorizontal: 12 }}>
       <Text>Ustaw {targetTypeString} cel</Text>
       <View style={{ flexDirection: "row" }}>
         <Slider
@@ -18,8 +18,6 @@ const TargetSlider = ({ targetTypeString, targetTypeState, sliderHandler }) => {
           maximumTrackTintColor="#000000"
           onValueChange={sliderHandler}
         />
-        <TextInput value={targetTypeState.toString()} />
-        <Button title="Ok" />
       </View>
     </View>
   );

@@ -6,7 +6,6 @@ import { SaloonContext } from "../../store/SaloonStore";
 const useGetPercentage = () => {
   const meetingCtx = useContext(MeetingsContext);
   const targetCtx = useContext(SaloonContext);
-
   const events = meetingCtx.meetings;
 
   const todayString = new Date().toISOString().split("T")[0];
@@ -14,6 +13,7 @@ const useGetPercentage = () => {
 
   const thisWeekNumber = moment().weeks();
   const thisMonthNumber = new Date().getMonth() + 1;
+  //today
   const todayMeetingPrices = [];
   todaysMeetings.forEach((meeting) =>
     todayMeetingPrices.push(meeting.servicePrice)
@@ -25,7 +25,7 @@ const useGetPercentage = () => {
   const todayPercentage: number = +(
     todayEarnings / targetCtx.dailyTarget
   ).toFixed(2);
-
+  //week
   const meetingsThisWeek = [];
   for (const [key, value] of Object.entries(events)) {
     if (moment(key).weeks() === thisWeekNumber) {
@@ -43,6 +43,8 @@ const useGetPercentage = () => {
   const weeklyPercentage = +(
     totalAmountThisWeek / targetCtx.weeklyTarget
   ).toFixed(2);
+
+  //month
   const meetingsThisMonth = [];
   for (const [key, value] of Object.entries(events)) {
     if (key.includes(thisMonthNumber.toString(), 5)) {

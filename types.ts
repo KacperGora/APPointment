@@ -49,3 +49,6 @@ export type RootStackParam = {
     date: string;
   };
 };
+export type Navigation = {
+  navigate: (param: string) => void;
+};

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View } from "react-native";
+import { Button, Text, View } from "react-native";
 import { SaloonContext } from "../../../store/SaloonStore";
 import TargetSlider from "./TargetSlider";
 
@@ -16,13 +16,14 @@ const Targets = () => {
   };
   console.log(targetCtx.dailyTarget);
   return (
-    <View>
-      <View style={{ margin: 12 }}>
+    <View style={{ backgroundColor: "white", flex: 1 }}>
+      <View style={{ margin: 12, flexDirection: "row", alignItems: "center" }}>
         <TargetSlider
           targetTypeString={"dzienny"}
           targetTypeState={targetCtx.dailyTarget}
           sliderHandler={dailyTargetHandler}
         />
+        <Text>{targetCtx.dailyTarget}</Text>
       </View>
       <View style={{ margin: 12 }}>
         <TargetSlider

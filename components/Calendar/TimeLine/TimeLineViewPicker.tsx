@@ -3,7 +3,6 @@ import { Text, View, StyleSheet } from "react-native";
 import ModalDropdown from "react-native-modal-dropdown";
 const TimelineViewPicker = ({ setUserPickedView }) => {
   const onSelectHandler = (e: any, val: any) => {
-    console.log(val);
     switch (val) {
       case "Dzień": {
         setUserPickedView("day");

@@ -9,6 +9,7 @@ import { addDays } from "date-fns";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import { MeetingsContext } from "../../../store/CalendarStore";
+import { SaloonContext } from "../../../store/SaloonStore";
 import { colors } from "../../colors";
 import CustomUnavailableItem from "./CustomUnavailableItem";
 import EditFooter from "./EditFooter";
@@ -18,6 +19,8 @@ import TimelineWorkerPicker from "./TimelineWorkerPicker";
 
 const Calendar = ({ navigation }) => {
   const ctx = useContext(MeetingsContext);
+  const SaloonCtx = useContext(SaloonContext);
+  const unavailableHours = SaloonCtx.unavailableHours;
   const [userPickedView, setUserPickedView] = useState<CalendarViewMode>();
   const [events, setEvents] = useState<EventItem[]>([]);
   const [filteredEvents, setFilteredEvents] = useState(events);
@@ -61,9 +64,8 @@ const Calendar = ({ navigation }) => {
     setSelectedEvent(undefined);
   };
 
-  const _renderEditFooter = () => {};
   const _onDragCreateEnd = (event) => {
-    console.log(new Date(event.start));
+    console.log(event);
     // const randomId = Math.random().toString(36).slice(2, 10);
     // const newEvent = {
     //   id: randomId,
@@ -74,9 +76,8 @@ const Calendar = ({ navigation }) => {
     // };
     // setEvents((prev) => [...prev, newEvent]);
   };
-  const longPressHandler = (date, event) => {
+  const longPressHandler = (date) => {
     const correctDate = addDays(new Date(date), 1).toISOString().split("T")[0];
-
     // navigation.navigate("Add", {
     //   date: correctDate,
     // });
@@ -85,12 +86,15 @@ const Calendar = ({ navigation }) => {
     (props: UnavailableItemProps) => <CustomUnavailableItem {...props} />,
     []
   );
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.timelineMenuContainer}>
-        <TimelineWorkerPicker setWorker={setWorker} />
-        <TimelineViewPicker setUserPickedView={setUserPickedView} />
-      </View>
+      {ctx.toolsShown ? (
+        <View style={[styles.timelineMenuContainer]}>
+          <TimelineWorkerPicker setWorker={setWorker} />
+          <TimelineViewPicker setUserPickedView={setUserPickedView} />
+        </View>
+      ) : null}
       <TimelineCalendar
         viewMode={userPickedView}
         allowDragToCreate
@@ -98,22 +102,18 @@ const Calendar = ({ navigation }) => {
         overlapEventsSpacing={4}
         locale="pl"
         renderEventContent={(event) => <TimelineEventContent event={event} />}
-        unavailableHours={[
-          { start: 0, end: 7 },
-          { start: 22, end: 24 },
-        ]}
-        isShowHeader
+        unavailableHours={unavailableHours}
         events={filteredEvents}
         onLongPressEvent={_onLongPressEvent}
-        // onDragCreateEnd={_onDragCreateEnd}
+        // onPressEvent={_onDragCreateEnd}
+        onDragCreateEnd={_onDragCreateEnd}
         onLongPressBackground={longPressHandler}
         selectedEvent={selectedEvent}
-        onPressEvent={_onDragCreateEnd}
         onEndDragSelectedEvent={setSelectedEvent}
         renderCustomUnavailableItem={_renderCustomUnavailableItem}
         dragStep={15}
         scrollToNow
-        start={1}
+        // holidays={["2022-11-05", "2022-11-02"]}
         onPressDayNum={(date) => console.log(date)}
         theme={{
           // @ts-ignore: Unreachable code error
@@ -127,7 +127,6 @@ const Calendar = ({ navigation }) => {
           todayNumberContainer: { backgroundColor: colors.primary },
           eventTitle: { fontSize: 14 },
         }}
-       
       />
       {!!selectedEvent ? (
         <EditFooter

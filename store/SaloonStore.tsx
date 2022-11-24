@@ -1,9 +1,16 @@
 import { CalendarViewMode, EventItem } from "@howljs/calendar-kit";
-import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import React from "react";
 import { useCallback, useState } from "react";
 import { db } from "../firebase/firebase";
-import { AllMeetings, Meeting } from "../types";
 interface SaloonProviderProps {
   children: React.ReactNode;
 }
@@ -12,20 +19,48 @@ interface SaloonContextProps {
   weeklyTarget: number;
   monthlyTarget: number;
   changeTargetHandler: (value: number, type: string) => void;
+  unavailableHours: {};
+  unavailableHoursHandler: (data) => void;
 }
 export const SaloonContext = React.createContext<SaloonContextProps>({
   dailyTarget: 0,
   weeklyTarget: 0,
   monthlyTarget: 0,
   changeTargetHandler: (value: number, type: string) => {},
+  unavailableHoursHandler: (data) => {},
+  unavailableHours: {},
 });
 
 const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
   const [dailyTarget, setDailyTarget] = useState<number>(500);
-  const [weeklyTarget, setWeeklyTarget] = useState<number>(1500);
-  const [monthlyTarget, setMonthlyTarget] = useState<number>(600);
+  const [weeklyTarget, setWeeklyTarget] = useState<number>(1000);
+  const [monthlyTarget, setMonthlyTarget] = useState<number>(1600);
+  const [unavailableHours, setUnavailableHours] = useState({
+    0: [{ start: 0, end: 24 }],
+    1: [
+      { start: 0, end: 7 },
+      { start: 18, end: 24 },
+    ],
+    2: [
+      { start: 0, end: 7 },
+      { start: 18, end: 24 },
+    ],
+    3: [
+      { start: 0, end: 7 },
+      { start: 18, end: 24 },
+    ],
+    4: [
+      { start: 0, end: 7 },
+      { start: 18, end: 24 },
+    ],
+    5: [
+      { start: 0, end: 7 },
+      { start: 18, end: 24 },
+    ],
+    6: [{ start: 0, end: 24 }],
+  });
 
-  const changeTargetHandler = (value: number, type: string) => {
+  const changeTargetHandler = async (value: number, type: string) => {
     switch (type) {
       case "daily": {
         setDailyTarget(value);
@@ -39,10 +74,20 @@ const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
         setMonthlyTarget(value);
       }
     }
+    // const docRef = await addDoc(collection(db, "targets"), {
+    //   daily: "Tokyo",
+    //   weekly: "Japan",
+    // //   monthly: "Honda",
+    // });
+  };
+  const unavailableHoursHandler = (data) => {
+    setUnavailableHours(data);
   };
   return (
     <SaloonContext.Provider
       value={{
+        unavailableHoursHandler,
+        unavailableHours,
         dailyTarget,
         weeklyTarget,
         monthlyTarget,

@@ -14,7 +14,7 @@ interface ItemProps {
 const AgendaListItem = (props: ItemProps) => {
   const { item } = props;
   const [modalVisible, setModalVisible] = useState(false);
-  console.log(modalVisible);
+
   const itemPressed = useCallback(() => {
     setModalVisible(true);
   }, []);

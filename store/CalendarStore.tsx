@@ -16,6 +16,8 @@ interface MeetingContextProps {
   changeTimeLineHandler: (value) => void;
   fetchMeetings: (data) => void;
   isLoading: boolean;
+  toolsShown: boolean;
+  toggleTools: () => void;
 }
 
 export const MeetingsContext = React.createContext<MeetingContextProps>({
@@ -26,17 +28,22 @@ export const MeetingsContext = React.createContext<MeetingContextProps>({
   changeTimeLineHandler: () => {},
   fetchMeetings: (data) => {},
   isLoading: false,
+  toolsShown: false,
+  toggleTools: () => {},
 });
 
 const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
   const [meetings, setMeetings] = useState<AllMeetings>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [toolsShown, setToolsShown] = useState(false);
   const [timelineViewMode, setTimeLineViewMode] =
     useState<CalendarViewMode>("threeDays");
   const changeTimeLineHandler = (value) => {
     setTimeLineViewMode(value);
   };
-
+  const toggleTools = () => {
+    setToolsShown(!toolsShown);
+  };
   const addMeeting = useCallback(
     async (newMeeting: Meeting, pickedDate: string) => {
       const newArr = meetings;
@@ -77,6 +84,8 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
   return (
     <MeetingsContext.Provider
       value={{
+        toggleTools,
+        toolsShown,
         addMeeting,
         removeMeeting,
         meetings,
