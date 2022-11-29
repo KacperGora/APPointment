@@ -2,7 +2,7 @@ import React from "react";
 import ReactNative from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, View, Button } from "react-native";
-import CustomButton from "../../UI/CustomButton";
+import CustomButton from "../../../UI/CustomButton";
 type Navigation = {
   navigate: (destination: string) => void;
 };

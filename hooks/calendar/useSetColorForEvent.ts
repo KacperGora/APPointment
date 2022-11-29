@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 type Service = {
-  name: string;
+  value: string;
   isActive: boolean;
   duration: number;
   price: string;
@@ -10,7 +10,7 @@ const useSetColorForEvent = (service: Service) => {
   const [color, setColor] = useState("red");
 
   useEffect(() => {
-    switch (service?.name) {
+    switch (service?.value) {
       case "Manicure Klasyczny":
         setColor("#A9DEF9");
         break;

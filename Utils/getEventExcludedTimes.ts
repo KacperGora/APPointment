@@ -1,4 +1,4 @@
-import { addHours, addMinutes, subHours } from "date-fns";
+import { addMinutes, subHours } from "date-fns";
 
 function getEventExcludedTimes(duration: number, date: Date) {
   const eventDuration = [];

@@ -1,28 +1,37 @@
 import { AgendaList } from "react-native-calendars";
 import React, { useCallback } from "react";
-import AgendaItem from "./AgendaListItem";
-import { StyleSheet, Text, View } from "react-native";
-import Spinner from "../../UI/Spinner/Spinner";
 
-const Agenda = ({ agendaEvents, isLoading }) => {
+import { StyleSheet, View } from "react-native";
+import Spinner from "../../UI/Spinner/Spinner";
+import NoEventsAgenda from "./NoEventsAgendaScreen";
+import { AgendaProps, Meeting } from "../../../types";
+
+import AgendaItem from "./AgendaItem/AgendaItem";
+
+const Agenda: React.FC<AgendaProps> = ({ agendaEvents, isLoading }) => {
   const renderItem = useCallback(({ item }: any) => {
     return <AgendaItem item={item} />;
   }, []);
 
   return (
-    <View style={styles.container}>
-      {agendaEvents[0] && (
+    <View
+      style={[
+        styles.container,
+        agendaEvents.length > 0 && { alignItems: "stretch" },
+      ]}
+    >
+      {agendaEvents.length !== 0 ? (
         <AgendaList
-          style={{ backgroundColor: "white" }}
           sections={agendaEvents}
           renderItem={renderItem}
           scrollToNextEvent={agendaEvents.length > 0 ? true : false}
           dayFormat={"dd.MM.yyyy"}
           avoidDateUpdates={false}
         />
+      ) : (
+        <NoEventsAgenda />
       )}
-      {!agendaEvents[0] && !isLoading && <Text>Nie masz żadnych spotkań</Text>}
-      {isLoading && <Spinner />}
+      {isLoading ? <Spinner /> : null}
     </View>
   );
 };
@@ -31,7 +40,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
   },
 });

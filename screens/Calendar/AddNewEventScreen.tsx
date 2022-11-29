@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import styled from "styled-components/native";
 import { Container } from "../../components/shared";
 import { colors } from "../../components/colors";
-import AddNewForm from "../../components/Calendar/Form/AddMeetingForm";
+import AddNewForm from "../../components/Calendar/Form/NewMeetingForm";
 
 const HomeContainer = styled(Container)`
   background-color: ${colors.graylight};

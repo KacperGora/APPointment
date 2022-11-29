@@ -5,9 +5,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { colors } from "../components/colors";
 import MeetingsProvider from "../store/CalendarStore";
 import TimelineScreen from "../components/Calendar/TimeLine/TimelineScreen";
-import AddMeetingForm from "../components/Calendar/Form/AddMeetingForm";
+import AddMeetingForm from "../components/Calendar/Form/NewMeetingForm";
 import SaloonProvider from "../store/SaloonStore";
-import AddNewCustomer from "../components/Settings/Customers/AddNewCustomerForm";
+import AddNewCustomer from "../components/Salon/SalonCustomers/AddNewCustomerForm";
 import ToggleCalendarOptions from "../components/Header/ToggleCalendarOptions";
 import RootTab from "./RootTab";
 
@@ -66,21 +66,22 @@ const RootStack: FunctionComponent = () => {
               }}
             />
             <Stack.Screen
-              name="Add"
+              name="AddEvent"
               component={AddMeetingForm}
               options={{
                 presentation: "modal",
                 headerBackTitle: "Umów wizytę",
                 headerBackTitleStyle: {
-                  fontSize: 24,
+                  fontSize: 18,
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
                   fontWeight: "600",
                 },
                 headerTitle: "",
-                headerTitleStyle: {
-                  fontSize: 24,
-                },
+
                 headerStyle: {
-                  backgroundColor: colors.graylight,
+                  backgroundColor: colors.white,
+                  height: 50,
                 },
               }}
             />

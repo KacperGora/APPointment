@@ -1,0 +1,149 @@
+import { collection, onSnapshot, query } from "firebase/firestore";
+import React, { useContext } from "react";
+import { useEffect, useState } from "react";
+import { Alert, Linking } from "react-native";
+import {
+  Button,
+  Dimensions,
+  Modal,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { db } from "../../../firebase/firebase";
+import { colors } from "../../colors";
+import { Ionicons } from "@expo/vector-icons";
+
+import CustomButton from "../../UI/CustomButton";
+import {
+  RectButton,
+  ScrollView,
+  Swipeable,
+  TextInput,
+} from "react-native-gesture-handler";
+import CustomerModalItem from "./CustomerModalItem";
+import AgendaModalItem from "../../Calendar/Agenda/AgenaItem/AgendaModalItemInformation/AgendaModalItem";
+import CustomerListHeading from "./CustomerListHeading";
+import Animated, { useCode } from "react-native-reanimated";
+import { SaloonContext } from "../../../store/SaloonStore";
+const CustomersList = ({ customers, modalVisible, setModalVisible }) => {
+  const renderLeftActions = (progress, dragX) => {
+    return (
+      <RectButton onPress={() => console.log("object")}>
+        <Animated.Text
+          style={[
+            {
+              transform: [{ translateX: -15 }],
+            },
+          ]}
+        >
+          <Ionicons name="trash-outline" size={24} color="red" />
+        </Animated.Text>
+      </RectButton>
+    );
+  };
+  return (
+    <View style={styles.container}>
+      <CustomerListHeading />
+      <ScrollView style={styles.scrollList}>
+        {customers.map((customer) => {
+          return (
+            <Swipeable
+              key={Math.random()}
+              renderRightActions={renderLeftActions}
+            >
+              <View style={styles.row}>
+                <View
+                  style={[
+                    styles.column,
+                    {
+                      width: "45%",
+                      borderRightColor: "gray",
+                      borderRightWidth: 0.2,
+                    },
+                  ]}
+                >
+                  <Text style={styles.meetingDetail}>{customer.fullName}</Text>
+                </View>
+                <View style={styles.column}>
+                  <Text
+                    style={styles.meetingDetail}
+                    onPress={() => {
+                      Linking.openURL(`tel:${customer.phoneNumber}`);
+                    }}
+                  >
+                    {customer.phoneNumber}
+                  </Text>
+                </View>
+
+                <View
+                  style={[
+                    styles.column,
+                    { width: 40, justifyContent: "flex-end" },
+                  ]}
+                >
+                  <Ionicons
+                    name="md-information-circle-outline"
+                    size={24}
+                    color={colors.secondary}
+                    onPress={() => setModalVisible(true)}
+                  />
+                </View>
+              </View>
+            </Swipeable>
+          );
+        })}
+        {modalVisible && (
+          <CustomerModalItem
+            item={customers[0]}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+          />
+        )}
+      </ScrollView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    marginVertical: 12,
+    borderWidth: 1,
+    borderRadius: 12,
+    borderColor: colors.gray,
+    shadowColor: "black",
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    backgroundColor: "white",
+    flex: 1,
+
+    zIndex: -1,
+  },
+  column: {
+    width: "30%",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 4,
+    marginVertical: 12,
+    marginHorizontal: 6,
+  },
+  row: {
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "space-between",
+
+    paddingHorizontal: 6,
+    borderBottomColor: colors.primary,
+    borderBottomWidth: 0.3,
+  },
+
+  meetingDetail: {
+    fontSize: 14,
+    alignSelf: "flex-start",
+  },
+  scrollList: {
+    flex: 1,
+  },
+});
+export default CustomersList;

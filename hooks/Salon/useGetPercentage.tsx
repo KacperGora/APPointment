@@ -15,7 +15,7 @@ const useGetPercentage = () => {
   const thisMonthNumber = new Date().getMonth() + 1;
   //today
   const todayMeetingPrices = [];
-  todaysMeetings.forEach((meeting) =>
+  todaysMeetings?.forEach((meeting) =>
     todayMeetingPrices.push(meeting.servicePrice)
   );
   const todayEarnings = todayMeetingPrices.reduce(
@@ -33,7 +33,7 @@ const useGetPercentage = () => {
     }
   }
   const pricesThisWeek = [];
-  meetingsThisWeek.forEach((meeting) =>
+  meetingsThisWeek?.forEach((meeting) =>
     pricesThisWeek.push(meeting.servicePrice)
   );
   const totalAmountThisWeek = pricesThisWeek.reduce(
@@ -52,7 +52,7 @@ const useGetPercentage = () => {
     }
   }
   const pricesThisMonth = [];
-  meetingsThisMonth.forEach((meeting) =>
+  meetingsThisMonth?.forEach((meeting) =>
     pricesThisMonth.push(meeting.servicePrice)
   );
 
@@ -63,7 +63,7 @@ const useGetPercentage = () => {
   const monthlyPercentage: number = +(
     thisMonthEarnings / targetCtx.monthlyTarget
   ).toFixed(2);
-
+  console.log(todayPercentage, weeklyPercentage, monthlyPercentage);
   return { todayPercentage, weeklyPercentage, monthlyPercentage };
 };
 export default useGetPercentage;

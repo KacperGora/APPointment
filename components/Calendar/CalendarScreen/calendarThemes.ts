@@ -9,12 +9,12 @@ export function getTheme() {
 
   return {
     // arrows
-    arrowColor: "black",
+    arrowColor: "lightgray",
     arrowStyle: { padding: 0 },
     // knob
     expandableKnobColor: colors.primary,
     // month
-    monthTextColor: "black",
+    monthTextColor: "gray",
     textMonthFontSize: 16,
     textMonthFontFamily: "HelveticaNeue",
     textMonthFontWeight: "bold" as "bold",
@@ -24,7 +24,7 @@ export function getTheme() {
     textDayHeaderFontFamily: "HelveticaNeue",
     textDayHeaderFontWeight: "normal" as "normal",
     // dates
-    dayTextColor: "grey",
+    dayTextColor: colors.greydark,
     todayTextColor: "#af0078",
     textDayFontSize: 18,
     textDayFontFamily: "HelveticaNeue",

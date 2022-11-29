@@ -19,7 +19,6 @@ interface ButtonProps {
 const ButtonView = styled.TouchableOpacity`
   align-items: center;
   background-color: ${colors.primary};
-  width: 50%;
   padding: 20px;
   border-radius: 20px;
 `;

@@ -41,9 +41,7 @@ function RootTab() {
         name="Klienci"
         component={SalonCustomers}
         options={{
-          headerTitle: "",
-
-          headerRightContainerStyle: { paddingRight: 12 },
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="people" size={30} color={colors.primary} />
           ),
