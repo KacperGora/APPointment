@@ -28,6 +28,14 @@ export const hours = [
   { value: "15:30", isActive: false },
   { value: "15:45", isActive: false },
   { value: "16:00", isActive: false },
+  { value: "16:15", isActive: false },
+  { value: "16:30", isActive: false },
+  { value: "16:45", isActive: false },
+  { value: "17:00", isActive: false },
+  { value: "17:15", isActive: false },
+  { value: "17:30", isActive: false },
+  { value: "17:45", isActive: false },
+  { value: "18:00", isActive: false },
 ];
 export const salonWorkers = [
   { value: "Justyna", isActive: true },

@@ -3,10 +3,11 @@ import React, { useCallback } from "react";
 
 import { StyleSheet, View } from "react-native";
 import Spinner from "../../UI/Spinner/Spinner";
-import NoEventsAgenda from "./NoEventsAgendaScreen";
+import NoEventsAgenda from "./NoItemsScreen";
 import { AgendaProps, Meeting } from "../../../types";
 
 import AgendaItem from "./AgendaItem/AgendaItem";
+import NoItemsScreen from "./NoItemsScreen";
 
 const Agenda: React.FC<AgendaProps> = ({ agendaEvents, isLoading }) => {
   const renderItem = useCallback(({ item }: any) => {
@@ -29,7 +30,11 @@ const Agenda: React.FC<AgendaProps> = ({ agendaEvents, isLoading }) => {
           avoidDateUpdates={false}
         />
       ) : (
-        <NoEventsAgenda />
+        <NoItemsScreen
+          heading={"Nie masz żadnych spotkań"}
+          description={"Dotknij tutaj aby je dodać"}
+          noAgendaEvents
+        />
       )}
       {isLoading ? <Spinner /> : null}
     </View>

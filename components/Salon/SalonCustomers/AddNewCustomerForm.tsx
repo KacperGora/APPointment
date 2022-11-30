@@ -20,9 +20,9 @@ import { db } from "../../../firebase/firebase";
 import Spinner from "../../UI/Spinner/Spinner";
 import { SaloonContext } from "../../../store/SaloonStore";
 
-const AddNewCustomerForm = ({ hideBottomModal }) => {
+const AddNewCustomerForm = ({ hideBottomModal, customerName, meeting }) => {
   const { inputConfig, additionalInfo, fullName, phoneNumber, resetInputs } =
-    addNewCustomerFormConfiguration();
+    addNewCustomerFormConfiguration(customerName);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const phoneIsValid = validatePhoneNumber(phoneNumber);

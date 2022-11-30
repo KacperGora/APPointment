@@ -25,7 +25,7 @@ interface SaloonContextProps {
   unavailableHoursHandler: (data) => void;
   customers: any[];
   addCustomers: (customer) => void;
-  getCustomers: (data) => void
+  getCustomers: (data) => void;
 }
 export const SaloonContext = React.createContext<SaloonContextProps>({
   dailyTarget: 0,
@@ -70,7 +70,7 @@ const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
   });
 
   const addCustomers = async (data) => {
-    const customerRef = await addDoc(collection(db, "customers"), data);
+    const customerRef = await setDoc(doc(db, "customers", data.fullName), data);
   };
   const getCustomers = (data) => {
     setCustomers(data);

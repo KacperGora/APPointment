@@ -4,27 +4,40 @@ import { subHours } from "date-fns";
 import { colors } from "../../../colors";
 import { Service } from "../../../../types";
 import RegularButton from "../../../Buttons/RegularButton";
+import { validateFullName } from "../../../../Utils/validation/regexValidation";
 interface MeetingDetailProps {
   date: Date;
   service: Service;
   endHour: string;
   worker: string;
+  submitHandler: () => {};
+  customerName: string;
+  showCustomerName: boolean;
 }
 const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
   date,
   service,
   endHour,
   worker,
+  submitHandler,
+  customerName,
+  showCustomerName,
 }) => {
   const properDate = subHours(date, 1);
   const dateString = properDate?.toLocaleDateString();
   const hourString = properDate?.toLocaleTimeString().slice(0, 5);
-  console.log(endHour);
+  const customerNameIsValid = validateFullName(customerName);
+
   return (
     <View style={styles.container}>
       <View style={styles.detailsContainer}>
         <View style={styles.detailSubContainer}>
-          <View>
+          <View
+            style={{
+              marginHorizontal: 12,
+              alignSelf: "baseline",
+            }}
+          >
             <Text
               style={{
                 color: colors.greydark,
@@ -35,24 +48,26 @@ const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
               {dateString}
             </Text>
             <Text style={styles.serviceNameText}>{service?.value}</Text>
+            {customerNameIsValid && showCustomerName && (
+              <Text style={styles.customerText}>{customerName}</Text>
+            )}
             <Text style={styles.workerText}>Pracownik: {worker}</Text>
           </View>
-          <View>
+          <View
+            style={{
+              marginHorizontal: 12,
+            }}
+          >
             <Text style={styles.priceText}>{service?.price}</Text>
             <Text style={styles.hoursText}>
               {hourString} - {endHour.slice(0, 5)}
             </Text>
             <RegularButton
               btnStyles={{
-                paddingHorizontal: 4,
-                paddingVertical: 6,
                 marginVertical: 12,
-                width: 100,
-
-                // height: 30,
               }}
-              textStyles={{ color: "white", fontWeight: "700", fontSize: 12 }}
-              onPress={() => console.log("pressed")}
+              textStyles={{ color: "white", fontWeight: "700", fontSize: 16 }}
+              onPress={submitHandler}
             >
               DODAJ
             </RegularButton>
@@ -79,7 +94,6 @@ const styles = StyleSheet.create({
   serviceNameText: {
     fontSize: 18,
     fontWeight: "600",
-    // marginHorizontal: 12
   },
   workerText: {
     fontSize: 10,
@@ -106,5 +120,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "space-between",
+  },
+  customerText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.greydark,
+    paddingTop: 12,
   },
 });

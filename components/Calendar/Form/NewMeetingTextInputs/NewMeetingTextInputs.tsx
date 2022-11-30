@@ -5,11 +5,17 @@ import React from "react";
 type InputProps = {
   setUserTypedName: any;
   setUserTypedLastName: any;
+  setShowCustomerName: any;
+  fullName: string;
 };
 const TextInputs: React.FC<InputProps> = ({
   setUserTypedName,
   setUserTypedLastName,
+  setShowCustomerName,
+  fullName,
 }) => {
+  const firstName = fullName.split(" ")[0].trim();
+  const lastName = fullName.split(" ")[1].trim();
   return (
     <View style={styles.container}>
       <MaterialIcons name="account-circle" size={24} color={colors.primary} />
@@ -19,14 +25,17 @@ const TextInputs: React.FC<InputProps> = ({
         placeholder="Imię"
         autoCorrect={true}
         onChangeText={setUserTypedName}
+        value={firstName}
         placeholderTextColor="#9d9d9d"
       />
       <TextInput
-        autoCapitalize="characters"
+        autoCapitalize="words"
         style={styles.input}
         placeholder="Nazwisko"
         onChangeText={setUserTypedLastName}
+        value={lastName}
         placeholderTextColor="#9d9d9d"
+        onBlur={() => setShowCustomerName(true)}
       />
     </View>
   );

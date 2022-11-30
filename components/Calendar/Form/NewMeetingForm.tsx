@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { View, Alert, Dimensions, Text, StyleSheet } from "react-native";
+import { View, Alert, Dimensions, Text, StyleSheet, Modal } from "react-native";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { MeetingsContext } from "../../../store/CalendarStore";
 import useCheckOverlappingEvents from "../../../hooks/calendar/useCheckOverlappingEvents";
@@ -23,6 +23,18 @@ import dateFormatter from "../../../Utils/dateFormatter";
 import emptyEventDataChecker from "../../../Utils/emptyEventDataChecker";
 import Spinner from "../../UI/Spinner/Spinner";
 import FormCoreComponent from "./FormCoreComponent/FormCore";
+import AddNewCustomerBottomSheet from "../../Salon/SalonCustomers/AddNewCustomerBottomSheet";
+import NoCustomerModal from "./NoCustomerModal/NoCustomerModal";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "../../../firebase/firebase";
 
 type RouteProps = {
   params: {
@@ -32,6 +44,11 @@ type RouteProps = {
 
 const AddMeetingForm = () => {
   const navigation = useNavigation<Navigation>();
+  const [customerId, setCustomerId] = useState("");
+  const [modalShow, setModalShow] = useState(false);
+  const [bottomSheetShown, setBottomSheetShown] = useState(false);
+  const [dismissAddingCustomer, setDismissAddingCustomer] = useState(false);
+  const [index, setIndex] = useState(0);
   const route = useRoute<RouteProp<RouteProps>>();
   const dateString =
     route.params?.date || new Date().toISOString().split("T")[0];
@@ -71,11 +88,11 @@ const AddMeetingForm = () => {
     pickedService?.duration,
     new Date(startFullDate)
   );
-
+  const fullName = `${userTypedName} ${userTypedLastName}`;
   const data: Meeting = {
     id: new Date(pickedDate)?.toISOString() + Math.random(),
     color: color,
-    title: `${userTypedName}  ${userTypedLastName}`,
+    title: fullName,
     serviceName: pickedService?.value,
     serviceDuration: pickedService?.duration,
     servicePrice: +pickedService?.price?.split("PLN")[0],
@@ -86,6 +103,7 @@ const AddMeetingForm = () => {
     excludedTimes,
     worker: pickedWorker?.value,
   };
+
   const isEmpty = emptyEventDataChecker(data);
   const result = useGetAvailableHours(pickedDate, pickedWorker?.value);
   useEffect(() => {
@@ -99,8 +117,11 @@ const AddMeetingForm = () => {
     pickedWorker?.value
   );
 
-  const submitHandler = () => {
-    if (isEmpty) {
+  const submitHandler = async () => {
+    if (customer.length === 0 && !dismissAddingCustomer) {
+      setModalShow(true);
+      return;
+    } else if (isEmpty) {
       Alert.alert(
         "Nie wprowadzono danych",
         "Uzupełnij brakujące dane i spróbuj ponownie."
@@ -108,9 +129,17 @@ const AddMeetingForm = () => {
       return;
     } else {
       ctx?.addMeeting(data, pickedDate.split("T")[0]);
+
+      const customerRef = doc(db, "customers", fullName);
+
+      await updateDoc(customerRef, {
+        meetings: arrayUnion(data),
+      });
+
       !isLoading && navigation.navigate("Home");
     }
   };
+
   const hourPressHandler = (index: number) => {
     pickHandler(index, availableHours, setAvailableHours);
   };
@@ -120,7 +149,16 @@ const AddMeetingForm = () => {
   const workersPressHandler = (index: number) => {
     pickHandler(index, workers, setWorkers);
   };
-
+  const bottomSheetHandler = () => {
+    setIndex(1);
+    setBottomSheetShown(true);
+    setModalShow(false);
+  };
+  const cancelButtonPressHandler = () => {
+    setModalShow(!modalShow);
+    setDismissAddingCustomer(true);
+  };
+  console.log(customers);
   return (
     <View style={styles.container}>
       {isLoading ? (
@@ -144,17 +182,29 @@ const AddMeetingForm = () => {
             submitHandler={submitHandler}
             endHour={endHour}
             worker={pickedWorker?.value}
+            customerName={fullName}
           />
-          {customer.length === 0 && (
-            <Text onPress={() => console.log("as")}>
-              Chcesz dodać jako klienta?
-            </Text>
+          {bottomSheetShown && (
+            <AddNewCustomerBottomSheet
+              index={index}
+              setIndex={setIndex}
+              customerName={fullName}
+              meeting={data}
+            />
           )}
-          {isOverlapped ? (
+          {isOverlapped && availableHours.length !== 0 ? (
             <WarningText>Termin zajety, wybierz proszę inny.</WarningText>
           ) : null}
         </View>
       )}
+      {modalShow ? (
+        <NoCustomerModal
+          setModalShow={setModalShow}
+          modalShow={modalShow}
+          showBottomSheetHandler={bottomSheetHandler}
+          cancelButtonPressHandler={cancelButtonPressHandler}
+        />
+      ) : null}
     </View>
   );
 };

@@ -1,31 +1,18 @@
-import { collection, onSnapshot, query } from "firebase/firestore";
-import React, { useContext } from "react";
-import { useEffect, useState } from "react";
-import { Alert, Linking } from "react-native";
-import {
-  Button,
-  Dimensions,
-  Modal,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { db } from "../../../firebase/firebase";
+import React from "react";
+import { Linking } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { colors } from "../../colors";
 import { Ionicons } from "@expo/vector-icons";
 
-import CustomButton from "../../UI/CustomButton";
 import {
   RectButton,
   ScrollView,
   Swipeable,
-  TextInput,
 } from "react-native-gesture-handler";
 import CustomerModalItem from "./CustomerModalItem";
-import AgendaModalItem from "../../Calendar/Agenda/AgenaItem/AgendaModalItemInformation/AgendaModalItem";
+
 import CustomerListHeading from "./CustomerListHeading";
-import Animated, { useCode } from "react-native-reanimated";
-import { SaloonContext } from "../../../store/SaloonStore";
+import Animated from "react-native-reanimated";
 const CustomersList = ({ customers, modalVisible, setModalVisible }) => {
   const renderLeftActions = (progress, dragX) => {
     return (

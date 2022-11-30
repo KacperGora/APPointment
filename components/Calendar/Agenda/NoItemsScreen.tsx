@@ -4,28 +4,38 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { useNavigation } from "@react-navigation/native";
 import { Navigation } from "../../../types";
-
-const NoEventsAgendaScreen = () => {
+type NoItemsScreenProps = {
+  heading: string;
+  description: string;
+  noAgendaEvents?: boolean;
+};
+const NoItemsScreen: React.FC<NoItemsScreenProps> = ({
+  heading,
+  description,
+  noAgendaEvents,
+}) => {
   const navigation = useNavigation<Navigation>();
   return (
     <Pressable onPress={() => navigation.navigate("AddEvent")}>
       <View>
-        <Text style={styles.text}>Nie masz żadnych spotkań</Text>
-        <Text style={styles.textDetail}>dodaj nowe aby zobaczyć je tutaj</Text>
-        <View style={styles.icon}>
-          <Ionicons
-            name="add"
-            size={32}
-            color="white"
-            style={{ fontWeight: "700" }}
-          />
-        </View>
+        <Text style={styles.text}>{heading}</Text>
+        <Text style={styles.textDetail}>{description}</Text>
+        {noAgendaEvents ? (
+          <View style={styles.icon}>
+            <Ionicons
+              name="add"
+              size={32}
+              color="white"
+              style={{ fontWeight: "700" }}
+            />
+          </View>
+        ) : null}
       </View>
     </Pressable>
   );
 };
 
-export default NoEventsAgendaScreen;
+export default NoItemsScreen;
 
 const styles = StyleSheet.create({
   text: {

@@ -27,10 +27,10 @@ import { TextInput } from "react-native-gesture-handler";
 import SaloonCustomersListTools from "./SaloonCustomersTools";
 import { SaloonContext } from "../../../store/SaloonStore";
 import useGetCustomers from "../../../hooks/Salon/useGetCustomers";
+import AddNewCustomerBottomSheet from "./AddNewCustomerBottomSheet";
 function SalonCustomers() {
-  const [index, setIndex] = useState(0);
   const salonCtx = useContext(SaloonContext);
-  const snapPoints = useMemo(() => ["3%", "80%"], []);
+  const [index, setIndex] = useState(0);
   const [customers, setCustomers] = useState(salonCtx.customers);
   const [modalVisible, setModalVisible] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -40,10 +40,6 @@ function SalonCustomers() {
     setSearchValue(value);
   };
 
-  const handleSheetChanges = useCallback((index: number) => {
-    // console.log("handleSheetChanges", index);
-  }, []);
-  const bottomSheetRef = useRef<BottomSheet>(null);
   const iconPressHandler = () => {
     if (index === 1) {
       setIndex(0);
@@ -63,18 +59,7 @@ function SalonCustomers() {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       />
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={index}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}
-        handleIndicatorStyle={{ backgroundColor: colors.primary }}
-        backgroundStyle={{ backgroundColor: "transparent" }}
-      >
-        <View style={styles.contentContainer}>
-          <AddNewCustomerForm hideBottomModal={iconPressHandler} />
-        </View>
-      </BottomSheet>
+      <AddNewCustomerBottomSheet index={index} setIndex={setIndex} />
     </SafeAreaView>
   );
 }

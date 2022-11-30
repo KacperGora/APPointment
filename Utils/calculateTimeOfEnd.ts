@@ -1,4 +1,4 @@
-import { addMinutes } from "date-fns";
+import { addMinutes, subHours } from "date-fns";
 
 function calculateTimeOfEnd(startTime: string, duration: number) {
   const startTimeDate = new Date(startTime);
@@ -6,8 +6,9 @@ function calculateTimeOfEnd(startTime: string, duration: number) {
   if (duration === undefined) {
     timeString = new Date(addMinutes(startTimeDate, 90)).toLocaleTimeString();
   } else {
-    timeString = new Date(
-      addMinutes(startTimeDate, duration)
+    timeString = subHours(
+      new Date(addMinutes(startTimeDate, duration)),
+      1
     ).toLocaleTimeString();
   }
 

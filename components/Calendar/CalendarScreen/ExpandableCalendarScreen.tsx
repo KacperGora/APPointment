@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useRef, useEffect, useContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
   ExpandableCalendar,
@@ -68,11 +68,15 @@ const ExpandableCalendarScreen = () => {
   const ctx = useContext(MeetingsContext);
   const { data, error, isLoading } = useFetchEvents();
   const sortedEvents = useGetSortedAgendaEvents();
+  const [sortedData, setSortedData] = useState(sortedEvents);
+  useEffect(() => {
+    setSortedData(sortedEvents);
+  }, [sortedEvents]);
   const markedDates = useSetMarkedDates();
   const todayBtnTheme = useRef({
     todayButtonTextColor: themeColor,
   });
-useGetCustomers()
+  useGetCustomers();
   useEffect(() => {
     ctx.fetchMeetings(data);
   }, [data, ctx.meetings]);
@@ -105,7 +109,7 @@ useGetCustomers()
             disabledDaysIndexes={[6]}
             markedDates={markedDates}
           />
-          <Agenda agendaEvents={sortedEvents} isLoading={isLoading} />
+          <Agenda agendaEvents={sortedData} isLoading={isLoading} />
         </>
       ) : (
         <ErrorComponent />
