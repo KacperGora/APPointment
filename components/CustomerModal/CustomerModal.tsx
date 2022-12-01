@@ -1,7 +1,14 @@
 import React from "react";
 import { Modal, Text, View, StyleSheet, Pressable } from "react-native";
+import { CustomerModalProps } from "../../types";
+import CustomerModalInformation from "./CustomerModalInformation/CustomerModalInformation";
+import CustomerModalPhoneNumber from "./CustomerModalPhoneNumber/CustomerModalPhoneNumber";
 
-const AgendaModalItem = ({ modalVisible, setModalVisible, item }) => {
+const CustomerModal: React.FC<CustomerModalProps> = ({
+  modalVisible,
+  setModalVisible,
+  item,
+}) => {
   return (
     <Modal
       animationType="slide"
@@ -13,10 +20,11 @@ const AgendaModalItem = ({ modalVisible, setModalVisible, item }) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>{item.title}</Text>
-          <Text style={styles.modalText}>Ostatnia wizyta: 2022-11-15</Text>
-          <Text style={styles.modalText}>Wykonano Manciure </Text>
-          <Text style={styles.modalText}>Numer telefonu: 123-123-123</Text>
+          <CustomerModalInformation item={item} style={styles.modalText} />
+          <CustomerModalPhoneNumber
+            style={styles.modalText}
+            phoneNumber={item.phoneNumber}
+          />
           <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={() => setModalVisible(!modalVisible)}
@@ -28,7 +36,7 @@ const AgendaModalItem = ({ modalVisible, setModalVisible, item }) => {
     </Modal>
   );
 };
-export default AgendaModalItem;
+export default CustomerModal;
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,

@@ -4,12 +4,13 @@ import Welcome from "../screens/LandingScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { colors } from "../components/colors";
 import MeetingsProvider from "../store/CalendarStore";
-import TimelineScreen from "../components/Calendar/TimeLine/TimelineScreen";
+import TimelineScreen from "../components/Calendar/TimeLine/Timeline";
 import AddMeetingForm from "../components/Calendar/Form/NewMeetingForm";
 import SaloonProvider from "../store/SaloonStore";
 import AddNewCustomer from "../components/Salon/SalonCustomers/AddNewCustomerForm";
 import ToggleCalendarOptions from "../components/Header/ToggleCalendarOptions";
 import RootTab from "./RootTab";
+import LandingScreen from "../screens/LandingScreen";
 
 const Stack = createStackNavigator();
 
@@ -37,7 +38,7 @@ const RootStack: FunctionComponent = () => {
           >
             <Stack.Screen
               name="Welcome"
-              component={Welcome}
+              component={LandingScreen}
               options={{ headerShown: false }}
             />
 

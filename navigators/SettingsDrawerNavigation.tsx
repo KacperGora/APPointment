@@ -4,7 +4,6 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import ManageTargetsScreen from "../screens/Settings/ManageTargetsScreen";
-import ManageCustomersScreen from "../screens/Settings/ManageCustomersScreen";
 import ManageServicesScreen from "../screens/Settings/ManageServicesScreen";
 import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -31,17 +30,7 @@ const SettingsDrawerNavigation = () => {
           headerTitle: "",
         }}
       />
-      <Drawer.Screen
-        name="Klienci"
-        component={ManageCustomersScreen}
-        options={{
-          drawerIcon: () => (
-            <Ionicons name="people-outline" size={24} color="black" />
-          ),
 
-          headerTitle: "",
-        }}
-      />
       <Drawer.Screen
         name="Usługi"
         component={ManageServicesScreen}

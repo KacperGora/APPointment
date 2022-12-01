@@ -31,31 +31,3 @@ const useSetColorForEvent = (service: Service) => {
 };
 
 export default useSetColorForEvent;
-
-export const servicesDetails = [
-  {
-    name: "Manicure Klasyczny",
-    isActive: false,
-    duration: 90,
-    price: "40PLN",
-  },
-  {
-    name: "Manicure Hybrydowy",
-    isActive: false,
-    duration: 120,
-    price: "80PLN",
-  },
-  {
-    name: "Uzupełnienie żelowe",
-    isActive: false,
-    duration: 150,
-    price: "120PLN",
-  },
-  {
-    name: "Przedłużenie paznokci żelem",
-    isActive: false,
-    duration: 180,
-    price: "140PLN",
-  },
-  { name: "Pedicure", isActive: false, duration: 60, price: "120PLN" },
-];

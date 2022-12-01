@@ -1,18 +1,8 @@
-import { CalendarViewMode, EventItem } from "@howljs/calendar-kit";
-import {
-  addDoc,
-  arrayUnion,
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  query,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
-import React, { useEffect } from "react";
-import { useCallback, useState } from "react";
+import { doc, setDoc } from "firebase/firestore";
+import React from "react";
+import { useState } from "react";
 import { db } from "../firebase/firebase";
+import { NewUserData } from "../types";
 interface SaloonProviderProps {
   children: React.ReactNode;
 }
@@ -23,9 +13,9 @@ interface SaloonContextProps {
   changeTargetHandler: (value: number, type: string) => void;
   unavailableHours: {};
   unavailableHoursHandler: (data) => void;
-  customers: any[];
-  addCustomers: (customer) => void;
-  getCustomers: (data) => void;
+  customers: NewUserData[];
+  addCustomers: (customer: NewUserData) => void;
+  getCustomers: (data: NewUserData[]) => void;
 }
 export const SaloonContext = React.createContext<SaloonContextProps>({
   dailyTarget: 0,
@@ -43,7 +33,7 @@ const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
   const [dailyTarget, setDailyTarget] = useState<number>(500);
   const [weeklyTarget, setWeeklyTarget] = useState<number>(1000);
   const [monthlyTarget, setMonthlyTarget] = useState<number>(1600);
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState<NewUserData[]>([]);
   const [unavailableHours, setUnavailableHours] = useState({
     0: [{ start: 0, end: 24 }],
     1: [
@@ -69,7 +59,7 @@ const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
     6: [{ start: 0, end: 24 }],
   });
 
-  const addCustomers = async (data) => {
+  const addCustomers = async (data: NewUserData) => {
     const customerRef = await setDoc(doc(db, "customers", data.fullName), data);
   };
   const getCustomers = (data) => {
@@ -89,11 +79,6 @@ const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
         setMonthlyTarget(value);
       }
     }
-    // const docRef = await addDoc(collection(db, "targets"), {
-    //   daily: "Tokyo",
-    //   weekly: "Japan",
-    // //   monthly: "Honda",
-    // });
   };
   const unavailableHoursHandler = (data) => {
     setUnavailableHours(data);

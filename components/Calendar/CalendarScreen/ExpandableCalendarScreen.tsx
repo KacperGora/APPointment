@@ -15,7 +15,6 @@ import useGetSortedAgendaEvents from "../../../hooks/calendar/useGetSortedAgenda
 import ErrorComponent from "./ErrorComponent";
 import { Navigation } from "../../../types";
 import useGetCustomers from "../../../hooks/Salon/useGetCustomers";
-import { SaloonContext } from "../../../store/SaloonStore";
 
 LocaleConfig.locales["pl"] = {
   monthNames: [
@@ -101,7 +100,6 @@ const ExpandableCalendarScreen = () => {
             initialPosition={ExpandableCalendar.positions.OPEN}
             onDayLongPress={dayLongPressHandler}
             theme={theme.current}
-            disableAllTouchEventsForDisabledDays
             firstDay={1}
             animateScroll
             scrollEnabled

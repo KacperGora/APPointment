@@ -1,15 +1,19 @@
 import BottomSheet from "@gorhom/bottom-sheet";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import React from "react";
 import { Keyboard, StyleSheet, View } from "react-native";
 import AddNewCustomerForm from "./AddNewCustomerForm";
 import { colors } from "../../colors";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-const AddNewCustomerBottomSheet = ({
+type AddNewCustomerBottomSheetProps = {
+  index: number;
+  setIndex: any;
+  customerName?: string;
+};
+const AddNewCustomerBottomSheet: React.FC<AddNewCustomerBottomSheetProps> = ({
   index,
   setIndex,
   customerName,
-  meeting,
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["3%", "90%"], []);
@@ -40,7 +44,6 @@ const AddNewCustomerBottomSheet = ({
         <AddNewCustomerForm
           hideBottomModal={iconPressHandler}
           customerName={customerName}
-          meeting={meeting}
         />
       </KeyboardAwareScrollView>
     </BottomSheet>
@@ -50,7 +53,6 @@ export default AddNewCustomerBottomSheet;
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-
     borderColor: "lightgray",
     borderWidth: 1,
     borderRadius: 12,

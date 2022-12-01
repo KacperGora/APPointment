@@ -17,7 +17,6 @@ const NewMeetingFormSummary: FunctionComponent<Props> = ({
   setNewDate,
 }) => {
   const [pickedDate, setPickedDate] = useState(date);
-
   const datesBlacklistFunc = (date: { isoWeekday: () => number }) => {
     return date.isoWeekday() === 7;
   };

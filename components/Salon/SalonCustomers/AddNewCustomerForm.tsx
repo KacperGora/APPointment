@@ -20,7 +20,7 @@ import { db } from "../../../firebase/firebase";
 import Spinner from "../../UI/Spinner/Spinner";
 import { SaloonContext } from "../../../store/SaloonStore";
 
-const AddNewCustomerForm = ({ hideBottomModal, customerName, meeting }) => {
+const AddNewCustomerForm = ({ hideBottomModal, customerName }) => {
   const { inputConfig, additionalInfo, fullName, phoneNumber, resetInputs } =
     addNewCustomerFormConfiguration(customerName);
   const [isLoading, setIsLoading] = useState(false);

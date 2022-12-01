@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { View, Alert, Dimensions, Text, StyleSheet, Modal } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { View, Alert, Dimensions, StyleSheet } from "react-native";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { MeetingsContext } from "../../../store/CalendarStore";
 import useCheckOverlappingEvents from "../../../hooks/calendar/useCheckOverlappingEvents";
@@ -25,15 +25,7 @@ import Spinner from "../../UI/Spinner/Spinner";
 import FormCoreComponent from "./FormCoreComponent/FormCore";
 import AddNewCustomerBottomSheet from "../../Salon/SalonCustomers/AddNewCustomerBottomSheet";
 import NoCustomerModal from "./NoCustomerModal/NoCustomerModal";
-import {
-  arrayUnion,
-  collection,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 
 type RouteProps = {
@@ -44,7 +36,6 @@ type RouteProps = {
 
 const AddMeetingForm = () => {
   const navigation = useNavigation<Navigation>();
-  const [customerId, setCustomerId] = useState("");
   const [modalShow, setModalShow] = useState(false);
   const [bottomSheetShown, setBottomSheetShown] = useState(false);
   const [dismissAddingCustomer, setDismissAddingCustomer] = useState(false);
@@ -104,7 +95,7 @@ const AddMeetingForm = () => {
     worker: pickedWorker?.value,
   };
 
-  const isEmpty = emptyEventDataChecker(data);
+  const fromDataIsEmpty = emptyEventDataChecker(data);
   const result = useGetAvailableHours(pickedDate, pickedWorker?.value);
   useEffect(() => {
     setAvailableHours(result);
@@ -118,10 +109,10 @@ const AddMeetingForm = () => {
   );
 
   const submitHandler = async () => {
-    if (customer.length === 0 && !dismissAddingCustomer) {
+    if (customer.length === 0 && !dismissAddingCustomer && !fromDataIsEmpty) {
       setModalShow(true);
       return;
-    } else if (isEmpty) {
+    } else if (fromDataIsEmpty) {
       Alert.alert(
         "Nie wprowadzono danych",
         "Uzupełnij brakujące dane i spróbuj ponownie."
@@ -189,7 +180,6 @@ const AddMeetingForm = () => {
               index={index}
               setIndex={setIndex}
               customerName={fullName}
-              meeting={data}
             />
           )}
           {isOverlapped && availableHours.length !== 0 ? (

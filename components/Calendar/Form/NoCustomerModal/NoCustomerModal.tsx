@@ -10,7 +10,7 @@ const NoCustomerModal = ({
 }) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={modalShow}
       onRequestClose={() => {

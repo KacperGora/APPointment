@@ -10,14 +10,13 @@ import RegularButton from "../../Buttons/RegularButton";
 import { colors } from "../../colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MeetingsContext } from "../../../store/CalendarStore";
-
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 import { Meeting } from "../../../types";
 import Spinner from "../../UI/Spinner/Spinner";
+
 const ErrorComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
-
   const [data, setData] = useState<SectionListData<Meeting>[]>([]);
   const ctx = useContext(MeetingsContext);
   const fetchAgainEvents = () => {

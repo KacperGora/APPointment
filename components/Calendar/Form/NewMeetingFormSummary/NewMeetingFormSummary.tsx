@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { subHours } from "date-fns";
 import { colors } from "../../../colors";
@@ -35,7 +35,6 @@ const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
           <View
             style={{
               marginHorizontal: 12,
-              alignSelf: "baseline",
             }}
           >
             <Text
@@ -47,7 +46,18 @@ const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
             >
               {dateString}
             </Text>
-            <Text style={styles.serviceNameText}>{service?.value}</Text>
+            {service?.value.length < 20 ? (
+              <Text style={styles.serviceNameText}>{service?.value}</Text>
+            ) : (
+              <View>
+                <Text style={styles.serviceNameText}>
+                  {service?.value.substring(0, 21)}
+                </Text>
+                <Text style={styles.serviceNameText}>
+                  {service?.value.substring(21, 27)}
+                </Text>
+              </View>
+            )}
             {customerNameIsValid && showCustomerName && (
               <Text style={styles.customerText}>{customerName}</Text>
             )}
@@ -103,6 +113,7 @@ const styles = StyleSheet.create({
   detailsContainer: {
     marginHorizontal: 12,
     marginVertical: 24,
+    maxWidth: Dimensions.get("screen").width,
   },
   hoursText: {
     fontSize: 10,

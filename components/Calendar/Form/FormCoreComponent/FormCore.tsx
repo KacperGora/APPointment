@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Calendar from "../NewMeetingFormCalendarStrip/NewMeetingFormSummary";
-
 import MeetingDetails from "../NewMeetingFormSummary/NewMeetingFormSummary";
 import TextInputs from "../NewMeetingTextInputs/NewMeetingTextInputs";
 import FormSelectiveOptionsMap from "../FormSelectiveOptionsMap/FormSelectiveOptionsMap";
-
 import NoItemsScreen from "../../Agenda/NoItemsScreen";
+
 const FormCoreComponent = ({
   pickedDate,
   setPickedDate,
@@ -31,7 +30,6 @@ const FormCoreComponent = ({
   return (
     <KeyboardAwareScrollView
       resetScrollToCoords={{ x: 0, y: 0 }}
-      // extraScrollHeight={80}
       style={{
         marginHorizontal: 6,
         marginVertical: 12,

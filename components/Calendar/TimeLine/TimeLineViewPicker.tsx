@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import React from "react";
 import ModalDropdown from "react-native-modal-dropdown";
 const TimelineViewPicker = ({ setUserPickedView }) => {
   const onSelectHandler = (e: any, val: any) => {

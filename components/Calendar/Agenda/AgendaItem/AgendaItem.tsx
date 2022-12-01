@@ -1,11 +1,12 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Meeting } from "../../../../types";
+import { Meeting, NewUserData } from "../../../../types";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import AgendaHourBox from "./AgendaItemHour/AgendaHourBox";
 import AgendaItemDetail from "./AgendaItemDetail/AgendaItemDetail";
 import AgendaItemInformation from "./AgendaItemInformation/AgendaItemInformation";
-import AgendaModalItem from "./AgendaModalItemInformation/AgendaModalItem";
+import { SaloonContext } from "../../../../store/SaloonStore";
+import CustomerModal from "../../../CustomerModal/CustomerModal";
 
 interface ItemProps {
   item: Meeting;
@@ -14,7 +15,11 @@ interface ItemProps {
 const AgendaItem = (props: ItemProps) => {
   const { item } = props;
   const [modalVisible, setModalVisible] = useState(false);
-
+  const salonCtx = useContext(SaloonContext);
+  const customers = salonCtx.customers;
+  const currentCustomer = customers.filter(
+    (customer) => customer.fullName === item.title
+  )[0];
   const itemPressed = useCallback(() => {
     setModalVisible(true);
   }, []);
@@ -29,8 +34,8 @@ const AgendaItem = (props: ItemProps) => {
         </View>
       </TouchableOpacity>
       {modalVisible ? (
-        <AgendaModalItem
-          item={item}
+        <CustomerModal
+          item={currentCustomer}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
         />

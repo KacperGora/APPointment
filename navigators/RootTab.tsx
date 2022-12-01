@@ -12,6 +12,8 @@ import CalendarScreen from "../screens/Calendar/CalendarHomeScreen";
 import { Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Navigation } from "../types";
+import SalonSummaryScreen from "../screens/Saloon/SalonSummaryScreen";
+import SalonCustomersScreen from "../screens/Saloon/SalonCustomersScreen";
 function RootTab() {
   const Tab = createBottomTabNavigator();
   const navigation = useNavigation<Navigation>();
@@ -39,7 +41,7 @@ function RootTab() {
 
       <Tab.Screen
         name="Klienci"
-        component={SalonCustomers}
+        component={SalonCustomersScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
@@ -49,7 +51,7 @@ function RootTab() {
       />
       <Tab.Screen
         name="Analizy"
-        component={SalonSummary}
+        component={SalonSummaryScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (

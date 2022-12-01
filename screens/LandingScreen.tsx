@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import styled from "styled-components/native";
 import { Container } from "../components/shared";
 import { colors } from "../components/colors";
-
+import SendSMS from "react-native-sms";
 import background from "../assets/wh.jpg";
 import { Image, ImageBackground, View } from "react-native";
 import BigText from "../components/Text/BigText";
@@ -38,11 +38,10 @@ const BackgroundImage = styled.ImageBackground`
 import { RootStackParam } from "../types";
 import { StackScreenProps } from "@react-navigation/stack";
 type Props = StackScreenProps<RootStackParam, "Welcome">;
-const Welcome: FunctionComponent<Props> = ({ navigation }) => {
+const LandingScreen: FunctionComponent<Props> = ({ navigation }) => {
   return (
     <>
       <StatusBar style="auto" />
-
       <WelcomeContainer>
         <TopSection>
           <BigText textStyles={{ width: "80%", textAlign: "right" }}>
@@ -69,4 +68,4 @@ const Welcome: FunctionComponent<Props> = ({ navigation }) => {
   );
 };
 
-export default Welcome;
+export default LandingScreen;

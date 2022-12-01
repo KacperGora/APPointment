@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Linking } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { colors } from "../../colors";
@@ -9,11 +9,12 @@ import {
   ScrollView,
   Swipeable,
 } from "react-native-gesture-handler";
-import CustomerModalItem from "./CustomerModalItem";
 
 import CustomerListHeading from "./CustomerListHeading";
 import Animated from "react-native-reanimated";
+import CustomerModal from "../../CustomerModal/CustomerModal";
 const CustomersList = ({ customers, modalVisible, setModalVisible }) => {
+  const [customerPressed, setCustomerPressed] = useState(null);
   const renderLeftActions = (progress, dragX) => {
     return (
       <RectButton onPress={() => console.log("object")}>
@@ -73,7 +74,10 @@ const CustomersList = ({ customers, modalVisible, setModalVisible }) => {
                     name="md-information-circle-outline"
                     size={24}
                     color={colors.secondary}
-                    onPress={() => setModalVisible(true)}
+                    onPress={() => {
+                      setModalVisible(true);
+                      setCustomerPressed(customer);
+                    }}
                   />
                 </View>
               </View>
@@ -81,8 +85,8 @@ const CustomersList = ({ customers, modalVisible, setModalVisible }) => {
           );
         })}
         {modalVisible && (
-          <CustomerModalItem
-            item={customers[0]}
+          <CustomerModal
+            item={customerPressed}
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
           />

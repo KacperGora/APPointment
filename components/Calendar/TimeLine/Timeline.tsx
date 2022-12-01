@@ -17,7 +17,7 @@ import TimelineEventContent from "./TimelineEventContent";
 import TimelineViewPicker from "./TimeLineViewPicker";
 import TimelineWorkerPicker from "./TimelineWorkerPicker";
 
-const Calendar = ({ navigation }) => {
+const Timeline = ({ navigation }) => {
   const ctx = useContext(MeetingsContext);
   const SaloonCtx = useContext(SaloonContext);
   const unavailableHours = SaloonCtx.unavailableHours;
@@ -101,7 +101,9 @@ const Calendar = ({ navigation }) => {
         allowPinchToZoom
         overlapEventsSpacing={4}
         locale="pl"
-        renderEventContent={(event) => <TimelineEventContent event={event} />}
+        renderEventContent={(event) => (
+          <TimelineEventContent event={event} userPickedView={userPickedView} />
+        )}
         unavailableHours={unavailableHours}
         events={filteredEvents}
         onLongPressEvent={_onLongPressEvent}
@@ -112,18 +114,18 @@ const Calendar = ({ navigation }) => {
         onEndDragSelectedEvent={setSelectedEvent}
         renderCustomUnavailableItem={_renderCustomUnavailableItem}
         dragStep={15}
-        scrollToNow
-        // holidays={["2022-11-05", "2022-11-02"]}
+        // holidays={["2022-12-01", "2022-11-02"]}
         onPressDayNum={(date) => console.log(date)}
         theme={{
           // @ts-ignore: Unreachable code error
-          dragHourColor: "#001253",
+          // dragHourColor: "#001253",
           dragHourBorderColor: "#001253",
           dragHourBackgroundColor: "#FFF",
           editIndicatorColor: "#FFF",
           dayName: { color: colors.primary },
           todayName: { color: colors.primary },
           nowIndicatorColor: colors.primary,
+          unavailableBackgroundColor: "lightgray",
           todayNumberContainer: { backgroundColor: colors.primary },
           eventTitle: { fontSize: 14 },
         }}
@@ -138,7 +140,7 @@ const Calendar = ({ navigation }) => {
   );
 };
 
-export default Calendar;
+export default Timeline;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FFF" },

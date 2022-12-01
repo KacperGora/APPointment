@@ -16,6 +16,7 @@ const TextInputs: React.FC<InputProps> = ({
 }) => {
   const firstName = fullName.split(" ")[0].trim();
   const lastName = fullName.split(" ")[1].trim();
+  console.log(fullName);
   return (
     <View style={styles.container}>
       <MaterialIcons name="account-circle" size={24} color={colors.primary} />

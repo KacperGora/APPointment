@@ -1,3 +1,4 @@
+import { FieldValue } from "firebase/firestore";
 import {
   DefaultSectionT,
   KeyboardTypeOptions,
@@ -86,4 +87,17 @@ export type NewCustomerConfigurationFnReturnedValue = {
 export type AgendaProps = {
   agendaEvents: SectionListData<Meeting, DefaultSectionT>[];
   isLoading: boolean;
+};
+
+export type NewUserData = {
+  fullName: string;
+  phoneNumber: string;
+  additionalInfo?: string;
+  meetings: Meeting[];
+  timeStamp: FieldValue;
+};
+export type CustomerModalProps = {
+  modalVisible: boolean;
+  setModalVisible: any;
+  item: NewUserData;
 };

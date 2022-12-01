@@ -1,11 +1,8 @@
 import { AgendaList } from "react-native-calendars";
 import React, { useCallback } from "react";
-
 import { StyleSheet, View } from "react-native";
 import Spinner from "../../UI/Spinner/Spinner";
-import NoEventsAgenda from "./NoItemsScreen";
-import { AgendaProps, Meeting } from "../../../types";
-
+import { AgendaProps } from "../../../types";
 import AgendaItem from "./AgendaItem/AgendaItem";
 import NoItemsScreen from "./NoItemsScreen";
 
