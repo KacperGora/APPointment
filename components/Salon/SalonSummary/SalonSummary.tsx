@@ -13,12 +13,14 @@ import useGetPercentage from "../../../hooks/Salon/useGetPercentage";
 import { colors } from "../../colors";
 import RingChart from "./RingChart";
 import { SaloonContext } from "../../../store/SaloonStore";
+import ServiceCounter from "./ServiceCounter";
 
 function SalonSummary() {
   const targetCtx = useContext(SaloonContext);
   return (
     <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
       <RingChart />
+      <ServiceCounter />
     </SafeAreaView>
   );
 }
