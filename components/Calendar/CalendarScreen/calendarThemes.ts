@@ -1,4 +1,4 @@
-import { Platform } from "react-native";
+import { Platform, Devic } from "react-native";
 import { colors } from "../../colors";
 
 export const themeColor = "#B8336A";
