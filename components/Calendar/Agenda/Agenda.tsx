@@ -1,6 +1,6 @@
 import { AgendaList } from "react-native-calendars";
 import React, { useCallback } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import Spinner from "../../UI/Spinner/Spinner";
 import { AgendaProps } from "../../../types";
 import AgendaItem from "./AgendaItem/AgendaItem";
@@ -22,9 +22,11 @@ const Agenda: React.FC<AgendaProps> = ({ agendaEvents, isLoading }) => {
         <AgendaList
           sections={agendaEvents}
           renderItem={renderItem}
+          collapsable
+          ListEmptyComponent={() => <Text>Abc</Text>}
           scrollToNextEvent={agendaEvents.length > 0 ? true : false}
           dayFormat={"dd.MM.yyyy"}
-          avoidDateUpdates={false}
+          avoidDateUpdates={true}
         />
       ) : (
         <NoItemsScreen

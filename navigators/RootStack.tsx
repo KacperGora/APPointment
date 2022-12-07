@@ -11,6 +11,8 @@ import AddNewCustomer from "../components/Salon/SalonCustomers/AddNewCustomerFor
 import ToggleCalendarOptions from "../components/Header/ToggleCalendarOptions";
 import RootTab from "./RootTab";
 import LandingScreen from "../screens/LandingScreen";
+import { Text } from "react-native";
+import TimelineHeader from "../components/Calendar/TimeLine/TimelineHeader";
 
 const Stack = createStackNavigator();
 
@@ -52,7 +54,9 @@ const RootStack: FunctionComponent = () => {
               component={TimelineScreen}
               options={{
                 // headerShown: false,
-                headerTitle: "",
+                headerTitle: ({ style, tintColor }) => {
+                  return <TimelineHeader color={tintColor} />;
+                },
                 headerLeftLabelVisible: false,
                 headerTintColor: colors.primary,
                 headerRight: () => <ToggleCalendarOptions />,

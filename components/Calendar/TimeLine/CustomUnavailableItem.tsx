@@ -28,9 +28,9 @@ const CustomUnavailableItem = (props: UnavailableItemProps) => {
             y={0}
             x2={0}
             y2={patternSize + 5}
-            stroke={colors.accent}
+            stroke={colors.white}
             strokeWidth={1.5}
-            strokeLinecap="butt"
+            strokeLinecap="square"
           />
         </Pattern>
       </Defs>

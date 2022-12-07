@@ -9,11 +9,12 @@ import SalonCustomers from "../components/Salon/SalonCustomers/SalonCustomers";
 import SalonSummary from "../components/Salon/SalonSummary/SalonSummary";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CalendarScreen from "../screens/Calendar/CalendarHomeScreen";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Navigation } from "../types";
 import SalonSummaryScreen from "../screens/Saloon/SalonSummaryScreen";
 import SalonCustomersScreen from "../screens/Saloon/SalonCustomersScreen";
+import Timeline from "../components/Calendar/TimeLine/Timeline";
 function RootTab() {
   const Tab = createBottomTabNavigator();
   const navigation = useNavigation<Navigation>();
@@ -49,6 +50,16 @@ function RootTab() {
           ),
         }}
       />
+      {/* <Tab.Screen
+        name="timelinetab"
+        component={Timeline}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="people" size={30} color={colors.primary} />
+          ),
+        }}
+      /> */}
       <Tab.Screen
         name="Analizy"
         component={SalonSummaryScreen}

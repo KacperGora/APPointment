@@ -36,13 +36,13 @@ const useGetPercentage = () => {
   meetingsThisWeek?.forEach((meeting) =>
     pricesThisWeek.push(meeting.servicePrice)
   );
-  const totalAmountThisWeek = pricesThisWeek.reduce(
+  const weeklyEarnings = pricesThisWeek.reduce(
     (acc, currVal) => acc + currVal,
     0
   );
-  const weeklyPercentage = +(
-    totalAmountThisWeek / targetCtx.weeklyTarget
-  ).toFixed(2);
+  const weeklyPercentage = +(weeklyEarnings / targetCtx.weeklyTarget).toFixed(
+    2
+  );
 
   //month
   const meetingsThisMonth = [];
@@ -63,7 +63,14 @@ const useGetPercentage = () => {
   const monthlyPercentage: number = +(
     thisMonthEarnings / targetCtx.monthlyTarget
   ).toFixed(2);
-  console.log(todayPercentage, weeklyPercentage, monthlyPercentage);
-  return { todayPercentage, weeklyPercentage, monthlyPercentage };
+
+  return {
+    todayPercentage,
+    weeklyPercentage,
+    monthlyPercentage,
+    thisMonthEarnings,
+    todayEarnings,
+    weeklyEarnings,
+  };
 };
 export default useGetPercentage;

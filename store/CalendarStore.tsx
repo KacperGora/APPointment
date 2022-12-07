@@ -18,6 +18,8 @@ interface MeetingContextProps {
   isLoading: boolean;
   toolsShown: boolean;
   toggleTools: () => void;
+  timelinePeriod: string;
+  getTimelinePeriod: (value) => void;
 }
 
 export const MeetingsContext = React.createContext<MeetingContextProps>({
@@ -30,16 +32,24 @@ export const MeetingsContext = React.createContext<MeetingContextProps>({
   isLoading: false,
   toolsShown: false,
   toggleTools: () => {},
+  timelinePeriod: "",
+  getTimelinePeriod: (value) => {},
 });
 
 const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
   const [meetings, setMeetings] = useState<AllMeetings>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [timelinePeriod, setTimelinePeriod] = useState(
+    new Date().toLocaleString()
+  );
   const [toolsShown, setToolsShown] = useState(false);
   const [timelineViewMode, setTimeLineViewMode] =
     useState<CalendarViewMode>("threeDays");
   const changeTimeLineHandler = (value) => {
     setTimeLineViewMode(value);
+  };
+  const getTimelinePeriod = (value) => {
+    setTimelinePeriod(value);
   };
   const toggleTools = () => {
     setToolsShown(!toolsShown);
@@ -93,6 +103,8 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
         changeTimeLineHandler,
         fetchMeetings,
         isLoading,
+        timelinePeriod,
+        getTimelinePeriod,
       }}
     >
       {children}

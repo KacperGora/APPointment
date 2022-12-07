@@ -1,12 +1,13 @@
 import React from "react";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ManageUnavailableHours from "../../components/Settings/Hours/ManageUnavailableHours";
 
 const ManageUnavailableHoursScreen = () => {
   return (
-    <SafeAreaView>
+    <View style={{ flex: 1 }}>
       <ManageUnavailableHours />
-    </SafeAreaView>
+    </View>
   );
 };
 

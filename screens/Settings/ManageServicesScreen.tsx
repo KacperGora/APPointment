@@ -4,9 +4,9 @@ import ManageServices from "../../components/Settings/Services/ManageServices";
 
 const ManageServicesScreen = () => {
   return (
-    <SafeAreaView>
+    <View style={{ flex: 1 }}>
       <ManageServices />
-    </SafeAreaView>
+    </View>
   );
 };
 

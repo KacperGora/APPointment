@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
   },
   customerNameText: {
     fontWeight: "600",
-
     textAlign: "center",
   },
   workerBatch: {

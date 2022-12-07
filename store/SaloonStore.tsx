@@ -31,8 +31,8 @@ export const SaloonContext = React.createContext<SaloonContextProps>({
 
 const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
   const [dailyTarget, setDailyTarget] = useState<number>(500);
-  const [weeklyTarget, setWeeklyTarget] = useState<number>(1000);
-  const [monthlyTarget, setMonthlyTarget] = useState<number>(1600);
+  const [weeklyTarget, setWeeklyTarget] = useState<number>(3000);
+  const [monthlyTarget, setMonthlyTarget] = useState<number>(8000);
   const [customers, setCustomers] = useState<NewUserData[]>([]);
   const [unavailableHours, setUnavailableHours] = useState({
     0: [{ start: 0, end: 24 }],

@@ -7,27 +7,30 @@ import {
 } from "@howljs/calendar-kit";
 import { addDays } from "date-fns";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { viewModalDropdownData, workersModalDropdownData } from "../../../data";
+import RootTab from "../../../navigators/RootTab";
 import { MeetingsContext } from "../../../store/CalendarStore";
 import { SaloonContext } from "../../../store/SaloonStore";
 import { colors } from "../../colors";
+import ModalDropdownComponent from "../../UI/ModalDropdown/ModalDropdown";
 import CustomUnavailableItem from "./CustomUnavailableItem";
 import EditFooter from "./EditFooter";
 import TimelineEventContent from "./TimelineEventContent";
-import TimelineViewPicker from "./TimeLineViewPicker";
-import TimelineWorkerPicker from "./TimelineWorkerPicker";
 
 const Timeline = ({ navigation }) => {
   const ctx = useContext(MeetingsContext);
   const SaloonCtx = useContext(SaloonContext);
   const unavailableHours = SaloonCtx.unavailableHours;
+
   const [userPickedView, setUserPickedView] = useState<CalendarViewMode>();
   const [events, setEvents] = useState<EventItem[]>([]);
+  const [header, setHeader] = useState("");
   const [filteredEvents, setFilteredEvents] = useState(events);
   const [selectedEvent, setSelectedEvent] = useState<PackedEvent>();
   const [worker, setWorker] = useState("all");
-
   const newArr = [];
+  ctx.getTimelinePeriod(header);
   useEffect(() => {
     for (const [key, value] of Object.entries(ctx.meetings)) {
       newArr.push(...value);
@@ -65,7 +68,7 @@ const Timeline = ({ navigation }) => {
   };
 
   const _onDragCreateEnd = (event) => {
-    console.log(event);
+    console.log(new Date(event.start).toLocaleString());
     // const randomId = Math.random().toString(36).slice(2, 10);
     // const newEvent = {
     //   id: randomId,
@@ -87,15 +90,26 @@ const Timeline = ({ navigation }) => {
     []
   );
 
+  console.log(ctx.timelinePeriod);
   return (
     <SafeAreaView style={styles.container}>
       {ctx.toolsShown ? (
         <View style={[styles.timelineMenuContainer]}>
-          <TimelineWorkerPicker setWorker={setWorker} />
-          <TimelineViewPicker setUserPickedView={setUserPickedView} />
+          <ModalDropdownComponent
+            data={workersModalDropdownData}
+            setHandler={setWorker}
+          />
+          <ModalDropdownComponent
+            data={viewModalDropdownData}
+            setHandler={setUserPickedView}
+          />
         </View>
       ) : null}
       <TimelineCalendar
+        onChange={(e) => {
+          console.log(e.date);
+          ctx.getTimelinePeriod(e.date);
+        }}
         viewMode={userPickedView}
         allowDragToCreate
         allowPinchToZoom
@@ -108,13 +122,13 @@ const Timeline = ({ navigation }) => {
         events={filteredEvents}
         onLongPressEvent={_onLongPressEvent}
         // onPressEvent={_onDragCreateEnd}
-        onDragCreateEnd={_onDragCreateEnd}
+        // onDragCreateEnd={_onDragCreateEnd}
         onLongPressBackground={longPressHandler}
         selectedEvent={selectedEvent}
         onEndDragSelectedEvent={setSelectedEvent}
         renderCustomUnavailableItem={_renderCustomUnavailableItem}
         dragStep={15}
-        // holidays={["2022-12-01", "2022-11-02"]}
+        // holidays={["2022-12-05", "2022-11-02"]}
         onPressDayNum={(date) => console.log(date)}
         theme={{
           // @ts-ignore: Unreachable code error
@@ -127,7 +141,7 @@ const Timeline = ({ navigation }) => {
           nowIndicatorColor: colors.primary,
           unavailableBackgroundColor: "lightgray",
           todayNumberContainer: { backgroundColor: colors.primary },
-          eventTitle: { fontSize: 14 },
+          eventTitle: { fontSize: 12 },
         }}
       />
       {!!selectedEvent ? (

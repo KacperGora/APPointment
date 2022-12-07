@@ -101,3 +101,14 @@ export type CustomerModalProps = {
   setModalVisible: any;
   item: NewUserData;
 };
+export type OpeningHours = {
+  fullName: string;
+  shortName: string;
+  isActive: boolean;
+  disabled: boolean;
+  id: number;
+  hours: {
+    start: string;
+    end: string;
+  };
+}[];

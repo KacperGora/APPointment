@@ -15,6 +15,7 @@ import useGetSortedAgendaEvents from "../../../hooks/calendar/useGetSortedAgenda
 import ErrorComponent from "./ErrorComponent";
 import { Navigation } from "../../../types";
 import useGetCustomers from "../../../hooks/Salon/useGetCustomers";
+import { StatusBar } from "expo-status-bar";
 
 LocaleConfig.locales["pl"] = {
   monthNames: [
@@ -95,15 +96,17 @@ const ExpandableCalendarScreen = () => {
     >
       {!error ? (
         <>
+          <StatusBar style="dark" />
           <ExpandableCalendar
-            initialDate={new Date().toDateString()}
+            // initialDate={new Date().toDateString()}
             initialPosition={ExpandableCalendar.positions.OPEN}
             onDayLongPress={dayLongPressHandler}
             theme={theme.current}
             firstDay={1}
             animateScroll
             scrollEnabled
-            closeOnDayPress={true}
+            // initialScrollIndex={0}
+            closeOnDayPress={false}
             disabledDaysIndexes={[6]}
             markedDates={markedDates}
           />

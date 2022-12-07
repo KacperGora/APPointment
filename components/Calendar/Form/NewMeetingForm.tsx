@@ -149,7 +149,7 @@ const AddMeetingForm = () => {
     setModalShow(!modalShow);
     setDismissAddingCustomer(true);
   };
-  console.log(customers);
+
   return (
     <View style={styles.container}>
       {isLoading ? (

@@ -36,6 +36,18 @@ export const hours = [
   { value: "17:30", isActive: false },
   { value: "17:45", isActive: false },
   { value: "18:00", isActive: false },
+  { value: "18:15", isActive: false },
+  { value: "18:30", isActive: false },
+  { value: "18:45", isActive: false },
+  { value: "19:00", isActive: false },
+  { value: "19:15", isActive: false },
+  { value: "19:30", isActive: false },
+  { value: "19:45", isActive: false },
+  { value: "20:00", isActive: false },
+  { value: "20:15", isActive: false },
+  { value: "20:30", isActive: false },
+  { value: "20:45", isActive: false },
+  { value: "21:00", isActive: false },
 ];
 export const salonWorkers = [
   { value: "Justyna", isActive: true },
@@ -67,4 +79,77 @@ export const servicesDetails = [
     price: "140PLN",
   },
   { value: "Pedicure", isActive: false, duration: 60, price: "120PLN" },
+];
+export const viewModalDropdownData = [
+  { label: "Pełny tydzień", value: "week" },
+  { label: "Dni pracujące", value: "workWeek" },
+  { label: "Trzy dni", value: "threeDays" },
+  { label: "Dzień", value: "day" },
+];
+export const workersModalDropdownData = [
+  { label: "Wszyscy", value: "all" },
+  { label: "Justi", value: "Justyna" },
+  { label: "Monia", value: "Monika" },
+];
+export const stackChartViewData = [
+  { label: "Tydzień", value: "Tydzień" },
+  { label: "Miesiąc", value: "Miesiąc" },
+];
+export const openingHours = [
+  {
+    fullName: "Niedziela",
+    shortName: "Nd.",
+    isActive: false,
+    disabled: false,
+    id: 0,
+    hours: { start: "07:00", end: "16:00" },
+  },
+  {
+    fullName: "Poniedziałek",
+    shortName: "Pon.",
+    isActive: true,
+    disabled: false,
+    id: 1,
+    hours: { start: "07:00", end: "16:00" },
+  },
+  {
+    fullName: "Wtorek",
+    shortName: "Wt.",
+    isActive: false,
+    disabled: false,
+    id: 2,
+    hours: { start: "07:00", end: "16:00" },
+  },
+  {
+    fullName: "Środa",
+    shortName: "Śr.",
+    isActive: false,
+    disabled: false,
+    id: 3,
+    hours: { start: "07:00", end: "16:00" },
+  },
+  {
+    fullName: "Czwartek",
+    shortName: "Czw.",
+    isActive: false,
+    disabled: false,
+    id: 4,
+    hours: { start: "07:00", end: "16:00" },
+  },
+  {
+    fullName: "Piątek",
+    shortName: "Pt.",
+    isActive: false,
+    disabled: false,
+    id: 5,
+    hours: { start: "07:00", end: "16:00" },
+  },
+  {
+    fullName: "Sobota",
+    shortName: "Sb.",
+    isActive: false,
+    disabled: false,
+    id: 6,
+    hours: { start: "07:00", end: "16:00" },
+  },
 ];

@@ -1,4 +1,4 @@
-import { eachHourOfInterval } from "date-fns";
+import { eachHourOfInterval, eachMinuteOfInterval } from "date-fns";
 import React, { SetStateAction, useContext, useEffect, useState } from "react";
 import {
   View,
@@ -8,167 +8,151 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
+import { openingHours } from "../../../data";
 import { SaloonContext } from "../../../store/SaloonStore";
+import RegularButton from "../../Buttons/RegularButton";
+import { hours } from "../../../data";
+import EditHours from "./EditHours";
+
 const HoursSettings = () => {
   const ctx = useContext(SaloonContext);
-  const result = eachHourOfInterval({
-    start: new Date(2022, 11, 23, 7, 0),
-    end: new Date(2022, 11, 23, 23),
+  const [days, setDays] = useState(openingHours);
+
+  const [edit, setEdit] = useState(false);
+  const items = hours.map((hour) => {
+    return { value: hour.value, label: hour.value };
+  });
+  const today = new Date(new Date().setHours(0, 0, 0));
+  const todayEnd = new Date(new Date().setHours(23, 59, 0));
+  // console.log(todayEnd);
+  const end = new Date(
+    new Date().setHours(
+      +days[0].hours.start.split(":")[0],
+      +days[0].hours.start.split(":")[1],
+      0
+    )
+  );
+
+  const result = eachMinuteOfInterval(
+    {
+      start: today,
+      end: end,
+    },
+    { step: 15 }
+  );
+  // console.log(
+  //   result[0].toLocaleTimeString().slice(0, 5),
+  //   result[result.length - 1].toLocaleTimeString().slice(0, 5)
+  // );
+  const yba = {};
+  days.forEach((day, index) => {
+    const todayStart = new Date(new Date().setHours(0, 0, 0));
+    const todayEnd = new Date(new Date().setHours(24, 0, 0));
+    const salonOpen = new Date(
+      new Date().setHours(
+        +day.hours.start.split(":")[0],
+        +day.hours.start.split(":")[1],
+        0
+      )
+    );
+
+    const salonClose = new Date(
+      new Date().setHours(
+        +day.hours.end.split(":")[0],
+        +day.hours.end.split(":")[1],
+        0
+      )
+    );
+
+    const unavStartResult = eachMinuteOfInterval(
+      {
+        start: todayStart,
+        end: salonOpen,
+      },
+      { step: 15 }
+    );
+    const unavEndResult = eachMinuteOfInterval(
+      {
+        start: salonClose,
+        end: todayEnd,
+      },
+      { step: 15 }
+    );
+    let fraction = +unavStartResult[unavStartResult.length - 1]
+      .toLocaleTimeString()
+      .slice(0, 5)
+      .split(":")[1];
+    if (fraction !== 0) fraction = (fraction / 15) * 0.25;
+
+    yba[index] = [
+      {
+        start: 0,
+        end:
+          +unavStartResult[unavStartResult.length - 1]
+            .toLocaleTimeString()
+            .slice(0, 2) + fraction,
+      },
+      {
+        start: +unavEndResult[0].toLocaleTimeString().slice(0, 2),
+        end: +unavEndResult[unavEndResult.length - 1]
+          .toLocaleTimeString()
+          .slice(0, 2),
+      },
+    ];
   });
 
-  const hours = [];
-  result.forEach((res) =>
-    hours.push({
-      label: res.toISOString().split("T")[1].slice(0, 5),
-      value: res.toISOString().split("T")[1].slice(0, 5),
-    })
-  );
-  const [days, setDays] = useState([
-    {
-      fullName: "Niedziela",
-      shortName: "Nd.",
-      isActive: false,
-      disabled: false,
-      id: 0,
-      hours: { start: "07:00", end: "16:00" },
-    },
-    {
-      fullName: "Poniedziałek",
-      shortName: "Pon.",
-      isActive: true,
-      disabled: false,
-      id: 1,
-      hours: { start: "07:00", end: "16:00" },
-    },
-    {
-      fullName: "Wtorek",
-      shortName: "Wt.",
-      isActive: false,
-      disabled: false,
-      id: 2,
-      hours: { start: "07:00", end: "16:00" },
-    },
-    {
-      fullName: "Środa",
-      shortName: "Śr.",
-      isActive: false,
-      disabled: false,
-      id: 3,
-      hours: { start: "07:00", end: "16:00" },
-    },
-    {
-      fullName: "Czwartek",
-      shortName: "Czw.",
-      isActive: false,
-      disabled: false,
-      id: 4,
-      hours: { start: "07:00", end: "16:00" },
-    },
-    {
-      fullName: "Piątek",
-      shortName: "Pt.",
-      isActive: false,
-      disabled: false,
-      id: 5,
-      hours: { start: "07:00", end: "16:00" },
-    },
-    {
-      fullName: "Sobota",
-      shortName: "Sb.",
-      isActive: false,
-      disabled: false,
-      id: 6,
-      hours: { start: "07:00", end: "16:00" },
-    },
-  ]);
-  const unav = {};
-  days.forEach(
-    (day) => (unav[+day.id] = [{ start: day.hours.start, end: day.hours.end }])
-  );
-
-  const disableSpecificDay = (index: number) => {
-    setDays((curr) =>
-      curr.map((day) => {
-        if (day.id === index) {
-          return { ...day, disabled: !day.disabled };
-        }
-        return day;
-      })
-    );
-  };
-  const hourStartChangeHandler = (day, value, index) => {
-    setDays((curr) =>
-      curr.map((day) => {
-        if (day.id === index) {
-          return { ...day, hours: { ...day.hours, start: value } };
-        }
-        return day;
-      })
-    );
-  };
-
-  const hourEndChangeHandler = (day, value, index) => {
-    setDays((curr) =>
-      curr.map((day) => {
-        if (day.id === index) {
-          return { ...day, hours: { ...day.hours, end: value } };
-        }
-        return day;
-      })
-    );
+  const hoursChangeHandler = (
+    daysIndex: number,
+    hourValue: string,
+    flag: string
+  ) => {
+    const dirtyDays = days;
+    flag === "start"
+      ? (dirtyDays[daysIndex].hours.start = hourValue)
+      : (dirtyDays[daysIndex].hours.end = hourValue);
+    setDays(dirtyDays);
   };
   return (
-    <View>
-      <View style={{ marginHorizontal: 4 }}>
-        <Text style={{ alignSelf: "flex-end" }}>Zastosuj do wszystkich</Text>
-        {days.map((day, index) => (
-          <View
-            key={Math.random()}
-            style={[styles.dayContainer, day.disabled && styles.disabled]}
-          >
-            <View
-              style={{
-                marginRight: 12,
-                width: 115,
-              }}
-            >
-              <Text style={styles.dayText}>{day.fullName}:</Text>
-            </View>
-            <View style={{ width: 50 }}>
-              <RNPickerSelect
-                onValueChange={(value) =>
-                  hourStartChangeHandler(day, value, index)
-                }
-                items={hours}
-                placeholder={{}}
-                value={day.hours.start}
-              />
-            </View>
-            <View style={{ width: 25 }}>
-              <Text>do</Text>
-            </View>
-            <View style={{ width: 50 }}>
-              <RNPickerSelect
-                onValueChange={(value) =>
-                  hourEndChangeHandler(day, value, index)
-                }
-                items={hours}
-                placeholder={{}}
-                value={day.hours.end}
-              />
-            </View>
-            <View style={{ width: 75, alignItems: "center" }}>
-              <Pressable
-                style={{ width: 60 }}
-                onPress={() => disableSpecificDay(index)}
-              >
-                {day.disabled ? <Text>Włącz</Text> : <Text> Wyłącz</Text>}
-              </Pressable>
-            </View>
-          </View>
-        ))}
-      </View>
+    <View
+      style={{
+        borderWidth: 1,
+        borderColor: "lightgray",
+        borderRadius: 12,
+        margin: 12,
+        padding: 24,
+        paddingVertical: 36,
+        shadowColor: "lightgray",
+        shadowOffset: { width: 2, height: 4 },
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+        backgroundColor: "white",
+      }}
+    >
+      <EditHours
+        days={days}
+        items={items}
+        hoursChangeHandler={hoursChangeHandler}
+      />
+
+      <RegularButton
+        onPress={() => console.log("pressed")}
+        textStyles={{
+          color: "white",
+          textTransform: "uppercase",
+          fontWeight: "600",
+        }}
+        btnStyles={{
+          marginHorizontal: 6,
+          marginVertical: 12,
+          width: 200,
+          alignSelf: "center",
+        }}
+      >
+        Zatwierdź
+      </RegularButton>
     </View>
   );
 };

@@ -1,46 +1,176 @@
-import React, { useContext } from "react";
-import { Button, Text, View } from "react-native";
+import { doc, setDoc } from "firebase/firestore";
+import React, { useContext, useRef, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { db } from "../../../firebase/firebase";
 import { SaloonContext } from "../../../store/SaloonStore";
+import RegularButton from "../../Buttons/RegularButton";
+import { colors } from "../../colors";
 import TargetSlider from "./TargetSlider";
 
 const Targets = () => {
-  const targetCtx = useContext(SaloonContext);
-  const dailyTargetHandler = (e) => {
-    targetCtx.changeTargetHandler(e.toFixed(), "daily");
+  const salonCtx = useContext(SaloonContext);
+
+  const dailyTargetRef = useRef(salonCtx.dailyTarget);
+  const weeklyTargetRef = useRef(salonCtx.weeklyTarget);
+  const monthlyTargetRef = useRef(salonCtx.monthlyTarget);
+  const [targetText, setTargetText] = useState({
+    daily: salonCtx.dailyTarget.toString(),
+    weekly: salonCtx.weeklyTarget.toString(),
+    monthly: salonCtx.monthlyTarget.toString(),
+  });
+  const targetChangeHandler = (e: number, targetType: string) => {
+    switch (targetType) {
+      case "daily": {
+        dailyTargetRef.current = e;
+        setTargetText((currTarget) => {
+          return {
+            ...currTarget,
+            daily: e.toString(),
+          };
+        });
+        break;
+      }
+      case "weekly": {
+        weeklyTargetRef.current = e;
+        setTargetText((currTarget) => {
+          return {
+            ...currTarget,
+            weekly: e.toString(),
+          };
+        });
+        break;
+      }
+      case "monthly": {
+        monthlyTargetRef.current = e;
+        setTargetText((currTarget) => {
+          return {
+            ...currTarget,
+            monthly: e.toString(),
+          };
+        });
+        break;
+      }
+    }
   };
-  const weeklyTargetHandler = (e) => {
-    targetCtx.changeTargetHandler(e.toFixed(), "weekly");
+
+  const salonTargetData = {
+    dailyTargets: dailyTargetRef.current,
+    weeklyTargets: weeklyTargetRef.current,
+    monthlyTargets: monthlyTargetRef.current,
   };
-  const monthlyTargetHandler = (e) => {
-    targetCtx.changeTargetHandler(e.toFixed(), "monthly");
+  console.log(salonTargetData);
+  const buttonPressHandler = async () => {
+    await setDoc(doc(db, "salon settings", "targets"), salonTargetData);
   };
-  console.log(targetCtx.dailyTarget);
+  // const fetchTargets = () => {
+  //   const q = query(collection(db, "salon settings"));
+  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //     const settings = [];
+  //     querySnapshot.forEach((doc) => {
+  //       settings.push(doc.data());
+  //     });
+  //     salonCtx.changeTargetHandler(settings[0]["dailyTargets"], "daily");
+  //     salonCtx.changeTargetHandler(settings[0]["weeklyTargets"], "weekly");
+  //     salonCtx.changeTargetHandler(settings[0]["monthlyTargets"], "monthly");
+  //   });
+  // };
+  // useEffect(() => {
+  //   fetchTargets();
+  // }, [dailyTargets, weeklyTargets, monthlyTargets]);
+
   return (
-    <View style={{ backgroundColor: "white", flex: 1 }}>
+    <View
+      style={{
+        borderWidth: 1,
+        borderColor: "lightgray",
+        borderRadius: 16,
+        margin: 8,
+        padding: 14,
+        shadowColor: "lightgray",
+        shadowOffset: { width: 2, height: 4 },
+        shadowOpacity: 0.6,
+        shadowRadius: 2,
+        backgroundColor: "white",
+        // width: ScreenWidth - 16,
+      }}
+    >
+      <View style={{ marginHorizontal: 12 }}>
+        <Text
+          style={{ fontSize: 24, fontWeight: "600", color: colors.greydark }}
+        >
+          Ustaw target
+        </Text>
+      </View>
+      <View
+        style={{
+          margin: 12,
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <TargetSlider
+          targetTypeString={"Dzienny"}
+          sliderHandler={(e: number) => targetChangeHandler(e, "daily")}
+          value={+targetText.daily}
+        />
+
+        <Text>{targetText.daily} PLN</Text>
+      </View>
+
       <View style={{ margin: 12, flexDirection: "row", alignItems: "center" }}>
         <TargetSlider
-          targetTypeString={"dzienny"}
-          targetTypeState={targetCtx.dailyTarget}
-          sliderHandler={dailyTargetHandler}
+          targetTypeString={"Tygodniowy"}
+          sliderHandler={(e: number) => targetChangeHandler(e, "weekly")}
+          value={+targetText.weekly}
         />
-        <Text>{targetCtx.dailyTarget}</Text>
+
+        <Text>{weeklyTargetRef.current} PLN</Text>
       </View>
-      <View style={{ margin: 12 }}>
+      <View style={{ margin: 12, flexDirection: "row", alignItems: "center" }}>
         <TargetSlider
-          targetTypeString={"tygodniowy"}
-          targetTypeState={targetCtx.weeklyTarget}
-          sliderHandler={weeklyTargetHandler}
+          targetTypeString={"Miesięczny"}
+          sliderHandler={(e: number) => targetChangeHandler(e, "monthly")}
+          value={+targetText.monthly}
         />
+
+        <Text>{monthlyTargetRef.current} PLN</Text>
       </View>
-      <View style={{ margin: 12 }}>
-        <TargetSlider
-          targetTypeString={"miesięczny"}
-          targetTypeState={targetCtx.monthlyTarget}
-          sliderHandler={monthlyTargetHandler}
-        />
-      </View>
+      <RegularButton
+        textStyles={{
+          color: "white",
+          textTransform: "uppercase",
+          fontSize: 12,
+        }}
+        btnStyles={{
+          // width: "70%",
+          alignSelf: "center",
+          marginHorizontal: 24,
+          // marginVertical: 12,
+        }}
+        onPress={buttonPressHandler}
+        children={"Zatwierdź"}
+      />
     </View>
   );
 };
 
 export default Targets;
+const styles = StyleSheet.create({
+  heading: {
+    fontWeight: "600",
+    fontSize: 16,
+    color: colors.greydark,
+    textAlign: "center",
+    // letterSpacing: 1.2,
+  },
+  headingContainer: {
+    borderColor: colors.accent,
+    borderWidth: 1,
+    borderRadius: 16,
+    backgroundColor: "#fbcd7761",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    width: 110,
+    marginHorizontal: 12,
+  },
+});

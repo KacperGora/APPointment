@@ -4,10 +4,10 @@ import { Text, View } from "react-native";
 import { CalendarContext } from "react-native-calendars";
 import { MeetingsContext } from "../../../store/CalendarStore";
 
-const ServiceCounter = () => {
+const useServiceCounter = () => {
   const ctx = useContext(MeetingsContext);
   const meetings = ctx.meetings;
-  console.log(meetings);
+
   const meetingsServiceThisMonth = [];
   const meetingsServiceThisWeek = [];
   for (const [key, value] of Object.entries(meetings)) {
@@ -21,7 +21,6 @@ const ServiceCounter = () => {
       });
     }
     if (isThisWeek(new Date(key))) {
-    //   console.log(key);
       value.forEach((val) => {
         if (meetingsServiceThisWeek[val.serviceName]) {
           meetingsServiceThisWeek[val.serviceName]++;
@@ -31,13 +30,8 @@ const ServiceCounter = () => {
       });
     }
   }
-  console.log(meetingsServiceThisMonth);
-  console.log(meetingsServiceThisWeek);
-  return (
-    <View>
-      <Text></Text>
-    </View>
-  );
+
+  return { meetingsServiceThisMonth, meetingsServiceThisWeek };
 };
 
-export default ServiceCounter;
+export default useServiceCounter;

@@ -14,13 +14,17 @@ import { colors } from "../../colors";
 import RingChart from "./RingChart";
 import { SaloonContext } from "../../../store/SaloonStore";
 import ServiceCounter from "./ServiceCounter";
+import StackedChart from "./StackedChart";
+import { ScrollView } from "react-native-gesture-handler";
 
 function SalonSummary() {
   const targetCtx = useContext(SaloonContext);
   return (
     <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
-      <RingChart />
-      <ServiceCounter />
+      <ScrollView>
+        <RingChart />
+        <StackedChart />
+      </ScrollView>
     </SafeAreaView>
   );
 }
