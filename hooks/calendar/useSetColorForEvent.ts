@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
+import { SelectiveOptions } from "../../types";
 
-type Service = {
-  value: string;
-  isActive: boolean;
-  duration: number;
-  price: string;
-};
-const useSetColorForEvent = (service: Service) => {
+const useSetColorForEvent = (service: SelectiveOptions) => {
   const [color, setColor] = useState("red");
 
   useEffect(() => {

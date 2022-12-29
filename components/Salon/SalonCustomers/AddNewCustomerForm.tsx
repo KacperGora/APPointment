@@ -1,34 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Dimensions, Keyboard, StyleSheet, Text, View } from "react-native";
+import React, { useContext, useState } from "react";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { colors } from "../../colors";
-import CustomButton from "../../UI/CustomButton";
 import { addNewCustomerFormConfiguration } from "./addNewCustomerFormConfiguration";
 import { Ionicons } from "@expo/vector-icons";
 import {
   validateFullName,
   validatePhoneNumber,
 } from "../../../Utils/validation/regexValidation";
-import {
-  addDoc,
-  collection,
-  onSnapshot,
-  query,
-  serverTimestamp,
-} from "firebase/firestore";
-import { db } from "../../../firebase/firebase";
+import { serverTimestamp } from "firebase/firestore";
 import Spinner from "../../UI/Spinner/Spinner";
 import { SaloonContext } from "../../../store/SaloonStore";
-
-const AddNewCustomerForm = ({ hideBottomModal, customerName }) => {
+import RegularButton from "../../UI/Buttons/RegularButton";
+type FormProps = {
+  hideBottomModal?: () => void;
+  customerName?: string;
+};
+const AddNewCustomerForm: React.FC<FormProps> = ({
+  hideBottomModal,
+  customerName,
+}) => {
   const { inputConfig, additionalInfo, fullName, phoneNumber, resetInputs } =
     addNewCustomerFormConfiguration(customerName);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const phoneIsValid = validatePhoneNumber(phoneNumber);
   const customerCtx = useContext(SaloonContext);
-  const salonCtx = useContext(SaloonContext);
-
   const fullNameInputIsValid = validateFullName(fullName);
   const formIsValid = phoneIsValid && fullNameInputIsValid;
   const userData = {
@@ -59,7 +56,6 @@ const AddNewCustomerForm = ({ hideBottomModal, customerName }) => {
   return (
     <>
       <Text style={styles.heading}>Dodaj nowego klienta</Text>
-
       {isLoading ? (
         <Spinner />
       ) : (
@@ -92,10 +88,18 @@ const AddNewCustomerForm = ({ hideBottomModal, customerName }) => {
           })}
         </View>
       )}
-
-      <CustomButton disabled={!formIsValid} onPress={buttonPressHandler}>
-        Dodaj
-      </CustomButton>
+      <RegularButton
+        btnStyles={{
+          alignSelf: "center",
+          width: "60%",
+          marginVertical: 12,
+          marginHorizontal: 24,
+        }}
+        textStyles={{ color: "white", fontWeight: "700", fontSize: 16 }}
+        onPress={buttonPressHandler}
+        title="DODAJ"
+        primary
+      />
     </>
   );
 };

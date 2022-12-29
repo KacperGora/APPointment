@@ -12,8 +12,10 @@ const SaloonCustomersListTools = ({
         alignItems: "center",
         flexDirection: "row",
         justifyContent: "space-between",
-
-        margin: 12,
+        backgroundColor: "white",
+        paddingHorizontal: 12,
+        width: "100%",
+        height: 50,
       }}
     >
       <View style={{ flexDirection: "row" }}>
@@ -22,7 +24,6 @@ const SaloonCustomersListTools = ({
             borderColor: "lightgray",
             borderWidth: 0.5,
             borderRadius: 12,
-
             width: 150,
             padding: 12,
           }}
@@ -31,7 +32,7 @@ const SaloonCustomersListTools = ({
           placeholderTextColor="gray"
           value={searchInputValue}
         />
-        <Button title="Szukaj" />
+        {/* <Button title="Szukaj" /> */}
       </View>
 
       <View

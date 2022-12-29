@@ -24,9 +24,6 @@ const ManageServices = () => {
         {services.map((service) => {
           return (
             <Pressable
-              onPress={() => {
-                console.log(service.value);
-              }}
               style={({ pressed }) => [
                 {
                   flexDirection: "row",

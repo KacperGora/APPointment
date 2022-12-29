@@ -5,7 +5,7 @@ import Calendar from "../NewMeetingFormCalendarStrip/NewMeetingFormSummary";
 import MeetingDetails from "../NewMeetingFormSummary/NewMeetingFormSummary";
 import TextInputs from "../NewMeetingTextInputs/NewMeetingTextInputs";
 import FormSelectiveOptionsMap from "../FormSelectiveOptionsMap/FormSelectiveOptionsMap";
-import NoItemsScreen from "../../Agenda/NoItemsScreen";
+import NoItemsScreen from "../../../UI/NoMeetingsScreen/NoMeetingsScreen";
 
 const FormCoreComponent = ({
   pickedDate,
@@ -26,15 +26,8 @@ const FormCoreComponent = ({
   worker,
   customerName,
 }) => {
-  const [showCustomerName, setShowCustomerName] = useState(false);
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{ x: 0, y: 0 }}
-      style={{
-        marginHorizontal: 6,
-        marginVertical: 12,
-      }}
-    >
+    <KeyboardAwareScrollView resetScrollToCoords={{ x: 0, y: 0 }}>
       <Calendar date={pickedDate} setNewDate={setPickedDate} />
       {availableHours.length !== 0 ? (
         <>
@@ -55,7 +48,6 @@ const FormCoreComponent = ({
           <TextInputs
             setUserTypedLastName={setUserTypedLastName}
             setUserTypedName={setUserTypedName}
-            setShowCustomerName={setShowCustomerName}
             fullName={customerName}
           />
           {isOverlapped ? null : (
@@ -66,17 +58,14 @@ const FormCoreComponent = ({
               worker={worker}
               submitHandler={submitHandler}
               customerName={customerName}
-              showCustomerName={showCustomerName}
             />
           )}
         </>
       ) : (
-        <View style={{ alignItems: "center", marginTop: 200 }}>
-          <NoItemsScreen
-            heading={`Brak wolnych terminów`}
-            description={"wybierz proszę inny dzień"}
-          />
-        </View>
+        <NoItemsScreen
+          heading={`Brak wolnych terminów`}
+          description={"wybierz proszę inny dzień"}
+        />
       )}
     </KeyboardAwareScrollView>
   );

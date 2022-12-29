@@ -1,21 +1,23 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
-type WarningTextProps = {
-  children: string;
-};
-const WarningText: React.FC<WarningTextProps> = ({ children }) => {
+import { colors } from "../../colors";
+
+const WarningText: React.FC = () => {
   return (
-    <View>
-      <Text style={styles.warningText}>{children}</Text>
+    <View style={{ marginHorizontal: 16 }}>
+      <Text style={styles.warningText}>
+        Termin zajety, wybierz proszę inny.
+      </Text>
     </View>
   );
 };
 const styles = StyleSheet.create({
   warningText: {
-    color: "red",
+    color: colors.primary,
     textAlign: "center",
+    marginVertical: 16,
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 18,
   },
 });
 export default WarningText;

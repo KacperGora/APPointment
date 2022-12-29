@@ -1,10 +1,11 @@
 import { doc, setDoc } from "firebase/firestore";
 import React, { useContext, useRef, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 import { db } from "../../../firebase/firebase";
 import { SaloonContext } from "../../../store/SaloonStore";
-import RegularButton from "../../Buttons/RegularButton";
+
 import { colors } from "../../colors";
+import RegularButton from "../../UI/Buttons/RegularButton";
 import TargetSlider from "./TargetSlider";
 
 const Targets = () => {
@@ -98,7 +99,7 @@ const Targets = () => {
         <Text
           style={{ fontSize: 24, fontWeight: "600", color: colors.greydark }}
         >
-          Ustaw target
+          Ustaw target 
         </Text>
       </View>
       <View
@@ -142,13 +143,12 @@ const Targets = () => {
           fontSize: 12,
         }}
         btnStyles={{
-          // width: "70%",
-          alignSelf: "center",
+          // alignSelf: "center",
           marginHorizontal: 24,
-          // marginVertical: 12,
         }}
         onPress={buttonPressHandler}
-        children={"Zatwierdź"}
+        title="Zatwierdź"
+        primary
       />
     </View>
   );

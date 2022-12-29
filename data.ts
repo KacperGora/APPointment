@@ -1,5 +1,5 @@
 export const hours = [
-  { value: "09:00", isActive: true },
+  { value: "09:00", isActive: false },
   { value: "09:15", isActive: false },
   { value: "09:30", isActive: false },
   { value: "09:45", isActive: false },

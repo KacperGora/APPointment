@@ -30,6 +30,7 @@ const CustomerListHeading = () => {
 export default CustomerListHeading;
 const styles = StyleSheet.create({
   listHeading: {
+    backgroundColor: "white",
     flexDirection: "row",
     width: Dimensions.get("screen").width - 24,
     borderBottomWidth: 0.6,
@@ -38,8 +39,6 @@ const styles = StyleSheet.create({
     // padding: 12,
   },
   column: {
-    // borderWidth: 1,
-    // borderColor: "green",
     width: "30%",
     justifyContent: "center",
     alignItems: "center",

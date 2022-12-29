@@ -1,7 +1,8 @@
+import React from "react";
 import { View, StyleSheet } from "react-native";
 import * as Progress from "react-native-progress";
 import { colors } from "../../colors";
-import React from "react";
+
 const Spinner = () => {
   return (
     <View style={styles.container}>
@@ -17,5 +18,5 @@ const Spinner = () => {
 export default Spinner;
 
 const styles = StyleSheet.create({
-  container: { alignItems: "center", justifyContent: "center", },
+  container: { alignItems: "center", justifyContent: "center" },
 });

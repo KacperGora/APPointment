@@ -13,7 +13,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
 import { openingHours } from "../../../data";
 import { SaloonContext } from "../../../store/SaloonStore";
-import RegularButton from "../../Buttons/RegularButton";
+import RegularButton from "../../UI/Buttons/RegularButton";
 import { hours } from "../../../data";
 import EditHours from "./EditHours";
 
@@ -27,7 +27,6 @@ const HoursSettings = () => {
   });
   const today = new Date(new Date().setHours(0, 0, 0));
   const todayEnd = new Date(new Date().setHours(23, 59, 0));
-  // console.log(todayEnd);
   const end = new Date(
     new Date().setHours(
       +days[0].hours.start.split(":")[0],
@@ -43,10 +42,7 @@ const HoursSettings = () => {
     },
     { step: 15 }
   );
-  // console.log(
-  //   result[0].toLocaleTimeString().slice(0, 5),
-  //   result[result.length - 1].toLocaleTimeString().slice(0, 5)
-  // );
+
   const yba = {};
   days.forEach((day, index) => {
     const todayStart = new Date(new Date().setHours(0, 0, 0));
@@ -150,9 +146,8 @@ const HoursSettings = () => {
           width: 200,
           alignSelf: "center",
         }}
-      >
-        Zatwierdź
-      </RegularButton>
+        title="Zatwierdź"
+      />
     </View>
   );
 };

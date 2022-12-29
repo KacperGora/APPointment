@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Linking } from "react-native";
+import { Linking, StatusBar } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { colors } from "../../colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,7 +12,7 @@ import {
 
 import CustomerListHeading from "./CustomerListHeading";
 import Animated from "react-native-reanimated";
-import CustomerModal from "../../CustomerModal/CustomerModal";
+import CustomerModal from "../../Customer modal/CustomerModal";
 const CustomersList = ({ customers, modalVisible, setModalVisible }) => {
   const [customerPressed, setCustomerPressed] = useState(null);
   const renderLeftActions = (progress, dragX) => {
@@ -98,7 +98,6 @@ const CustomersList = ({ customers, modalVisible, setModalVisible }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 12,
     borderWidth: 1,
     borderRadius: 12,
     borderColor: colors.gray,
@@ -106,10 +105,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 2, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
+    elevation: 1,
     backgroundColor: "white",
     flex: 1,
-
-    zIndex: -1,
   },
   column: {
     width: "30%",

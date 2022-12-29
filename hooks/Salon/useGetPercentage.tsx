@@ -7,10 +7,8 @@ const useGetPercentage = () => {
   const meetingCtx = useContext(MeetingsContext);
   const targetCtx = useContext(SaloonContext);
   const events = meetingCtx.meetings;
-
   const todayString = new Date().toISOString().split("T")[0];
   const todaysMeetings = events[todayString];
-
   const thisWeekNumber = moment().weeks();
   const thisMonthNumber = new Date().getMonth() + 1;
   //today

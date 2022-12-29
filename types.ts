@@ -1,9 +1,14 @@
-import { FieldValue } from "firebase/firestore";
 import {
-  DefaultSectionT,
+  CalendarViewMode,
+  EventItem,
+  PackedEvent,
+  TimelineCalendarHandle,
+} from "@howljs/calendar-kit";
+import { FieldValue } from "firebase/firestore";
+import { Dispatch, ReactNode, SetStateAction } from "react";
+import {
   KeyboardTypeOptions,
   ReturnKeyTypeOptions,
-  SectionListData,
   TextInputProps,
 } from "react-native";
 
@@ -20,6 +25,9 @@ export interface Meeting {
   endHour: string;
   excludedTimes: string[];
   worker: string;
+  height: number;
+  name: string;
+  day: string;
 }
 
 export interface AllMeetings {
@@ -31,12 +39,13 @@ export type MeetingContextProp = {
   removeMeeting: (id: number) => void;
 };
 
-export type Service = {
-  value: string;
-  isActive: boolean;
-  duration: number;
-  price: string;
+export type SelectiveOptions = {
+  value?: string;
+  isActive?: boolean;
+  duration?: number;
+  price?: string;
 };
+
 export type WorkerDetails = {
   value: string;
   isActive: boolean;
@@ -85,7 +94,6 @@ export type NewCustomerConfigurationFnReturnedValue = {
 };
 
 export type AgendaProps = {
-  agendaEvents: SectionListData<Meeting, DefaultSectionT>[];
   isLoading: boolean;
 };
 
@@ -112,3 +120,36 @@ export type OpeningHours = {
     end: string;
   };
 }[];
+export type PickHandlerArgs = {
+  index: number;
+  array: SelectiveOptions[];
+  SetState: any;
+};
+export type TimelineProps = {
+  isLoading: boolean;
+  calendarRef: React.MutableRefObject<TimelineCalendarHandle>;
+  viewMode: CalendarViewMode;
+  setBottomSheetActiveIndex: React.Dispatch<React.SetStateAction<number>>;
+  setBottomSheetVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setBottomSheetDirtyDate: React.Dispatch<React.SetStateAction<string>>;
+  events: EventItem[];
+  selectedEvent: PackedEvent;
+  setMonthName: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedEvent: React.Dispatch<React.SetStateAction<PackedEvent>>;
+  setEditedEventDraft: React.Dispatch<React.SetStateAction<PackedEvent>>;
+  timelineHeaderShown: boolean;
+};
+
+export type BottomSheetProps = {
+  index: number;
+  setIndex: Dispatch<SetStateAction<number>>;
+  children: ReactNode;
+  onCloseBottomSheet?: () => void;
+};
+export type AgendaDayProps = {
+  nameDay: string;
+  day: number;
+  nameMonth: string;
+  item: Meeting;
+  fullDate: XDate;
+};

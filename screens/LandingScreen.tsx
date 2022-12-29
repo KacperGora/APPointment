@@ -1,71 +1,65 @@
 import React, { FunctionComponent } from "react";
-import { StatusBar } from "expo-status-bar";
 import styled from "styled-components/native";
-import { Container } from "../components/shared";
+import { Container, ScreenWidth } from "../components/shared";
 import { colors } from "../components/colors";
-import SendSMS from "react-native-sms";
 import background from "../assets/wh.jpg";
-import { Image, ImageBackground, View } from "react-native";
-import BigText from "../components/Text/BigText";
-import SmallText from "../components/Text/SmallText";
-import RegularText from "../components/Text/RegularText";
-import RegularButton from "../components/Buttons/RegularButton";
+import RegularButton from "../components/UI/Buttons/RegularButton";
+import { RootStackParam } from "../types";
+import { StackScreenProps } from "@react-navigation/stack";
+import BigText from "../components/UI/Text/BigText";
+import RegularText from "../components/UI/Text/RegularText";
+import MyStatusBar from "../components/UI/StatusBar/MyStatusBar";
+type Props = StackScreenProps<RootStackParam, "Welcome">;
+const LandingScreen: FunctionComponent<Props> = ({ navigation }) => {
+  return (
+    <MyStatusBar>
+      <WelcomeContainer>
+        <TopSection>
+          <BigText>Just Beauty</BigText>
+          <RegularText>by Justyna Góra</RegularText>
+        </TopSection>
+        <RegularButton
+          btnStyles={{
+            shadowColor: colors.greydark,
+            shadowOffset: { width: 2, height: 4 },
+            shadowOpacity: 0.4,
+            shadowRadius: 2,
+            marginVertical: 12,
+            elevation: 10,
+          }}
+          textStyles={{ color: colors.white }}
+          onPress={() => {
+            navigation.navigate("Home");
+          }}
+          title="Rozpocznij"
+          primary
+        />
+        <BottomSection>
+          <BackgroundImage source={background} />
+        </BottomSection>
+      </WelcomeContainer>
+    </MyStatusBar>
+  );
+};
+
+export default LandingScreen;
+
 const WelcomeContainer = styled(Container)`
   background-color: ${colors.white};
   justify-content: space-between;
-  width: 100%;
-  height: 100%;
 `;
 const TopSection = styled.View`
-  width: 100%;
   flex: 1;
   justify-content: flex-end;
   align-items: flex-end;
-  max-height: 55%;
   padding: 50px;
-  display: flex;
 `;
 
 const BottomSection = styled.View`
-  width: 100%;
+  width: 120%;
   flex: 1;
 `;
 
 const BackgroundImage = styled.ImageBackground`
   flex: 1;
-  justify-content: "center";
 `;
-import { RootStackParam } from "../types";
-import { StackScreenProps } from "@react-navigation/stack";
-type Props = StackScreenProps<RootStackParam, "Welcome">;
-const LandingScreen: FunctionComponent<Props> = ({ navigation }) => {
-  return (
-    <>
-      <StatusBar style="auto" />
-      <WelcomeContainer>
-        <TopSection>
-          <BigText textStyles={{ width: "80%", textAlign: "right" }}>
-            Just Beauty
-          </BigText>
-          <RegularText textStyles={{ width: "80%", textAlign: "right" }}>
-            by Justyna Góra
-          </RegularText>
-        </TopSection>
-        <RegularButton
-          btnStyles={{ alignSelf: "center" }}
-          textStyles={{ color: colors.white }}
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
-        >
-          Rozpocznij!
-        </RegularButton>
-        <BottomSection>
-          <BackgroundImage source={background} />
-        </BottomSection>
-      </WelcomeContainer>
-    </>
-  );
-};
-
-export default LandingScreen;

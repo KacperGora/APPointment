@@ -2,10 +2,11 @@ import { collection, onSnapshot, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { SectionListData } from "react-native";
 import { db } from "../../firebase/firebase";
-import { AllMeetings, Meeting } from "../../types";
+import { Meeting } from "../../types";
 
 const useFetchEvents = () => {
-  const [data, setData] = useState<SectionListData<Meeting>[]>([]);
+  const [data, setData] = useState<Meeting[]>([]);
+  const [flatData, setFlatData] = useState<Meeting[]>([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -22,21 +23,23 @@ const useFetchEvents = () => {
             fetchedMeetings[doc.id] = [...value];
           }
         });
+        const dirtyData = Object.values(fetchedMeetings).flatMap(
+          (element) => element
+        );
+        setFlatData(dirtyData);
         setData(fetchedMeetings);
         setIsLoading(false);
       },
       (error) => {
         setError(error);
-        console.log(error);
         throw new Error(error.message);
       }
     );
-
     return () => {
       unsubscribe;
     };
   }, []);
 
-  return { data, error, isLoading };
+  return { data, flatData, error, isLoading };
 };
 export default useFetchEvents;

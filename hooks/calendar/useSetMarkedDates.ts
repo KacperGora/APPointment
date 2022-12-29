@@ -5,7 +5,6 @@ import useGetSortedAgendaEvents from "./useGetSortedAgendaEvents";
 const useSetMarkedDates = () => {
   const [markedDates, setMarkedDates] = useState({});
   const sortedEvents = useGetSortedAgendaEvents();
-
   useEffect(() => {
     const marked: MarkedDates = {};
     sortedEvents.length > 0

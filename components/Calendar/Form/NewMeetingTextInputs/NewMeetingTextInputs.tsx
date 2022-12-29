@@ -5,13 +5,11 @@ import React from "react";
 type InputProps = {
   setUserTypedName: any;
   setUserTypedLastName: any;
-  setShowCustomerName: any;
   fullName: string;
 };
 const TextInputs: React.FC<InputProps> = ({
   setUserTypedName,
   setUserTypedLastName,
-  setShowCustomerName,
   fullName,
 }) => {
   const firstName = fullName.split(" ")[0].trim();
@@ -36,7 +34,6 @@ const TextInputs: React.FC<InputProps> = ({
         onChangeText={setUserTypedLastName}
         value={lastName}
         placeholderTextColor="#9d9d9d"
-        onBlur={() => setShowCustomerName(true)}
       />
     </View>
   );
@@ -56,7 +53,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "#ccc",
     padding: 8,
-
     textAlign: "center",
     borderRadius: 5,
     width: "40%",

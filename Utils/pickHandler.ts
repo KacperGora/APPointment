@@ -1,15 +1,6 @@
-type PickHandlerProps = {
-  value: string;
-  isActive: boolean;
-  duration?: number;
-  price?: string;
-};
+import { SelectiveOptions } from "../types";
 
-const pickHandler = (
-  index: number,
-  array: PickHandlerProps[],
-  SetState: any
-) => {
+function pickHandler(index: number, array: SelectiveOptions[], SetState: any) {
   const newArr = [...array];
   const oldIndex = newArr.findIndex((item) => item.isActive);
   if (oldIndex !== -1) {
@@ -24,5 +15,5 @@ const pickHandler = (
   };
 
   SetState(newArr);
-};
+}
 export default pickHandler;

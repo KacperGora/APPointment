@@ -6,12 +6,15 @@ import { Meeting } from "../../types";
 const useGetSortedAgendaEvents = () => {
   const ctx = useContext(MeetingsContext);
   const items = ctx.meetings;
+
   const [sortedEvents, setSortedEvents] = useState<SectionListData<Meeting>[]>(
     []
   );
-
+  const meetings = [];
+  for (let i = -15; i < 85; i++) {
+    
+  }
   useEffect(() => {
-    const meetings = [];
     for (const [key, value] of Object.entries(items)) {
       meetings.push({ title: key, data: [...value] });
       setSortedEvents(meetings);

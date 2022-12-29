@@ -35,7 +35,10 @@ const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
   const [monthlyTarget, setMonthlyTarget] = useState<number>(8000);
   const [customers, setCustomers] = useState<NewUserData[]>([]);
   const [unavailableHours, setUnavailableHours] = useState({
-    0: [{ start: 0, end: 24 }],
+    0: [
+      { start: 0, end: 7 },
+      { start: 18, end: 24 },
+    ],
     1: [
       { start: 0, end: 7 },
       { start: 18, end: 24 },

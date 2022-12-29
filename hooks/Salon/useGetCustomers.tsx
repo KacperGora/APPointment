@@ -15,7 +15,6 @@ const useGetCustomers = () => {
       });
       setCustomers(users);
       salonCtx.getCustomers(users);
-      //
     });
     return () => unsubscribe();
   }, []);

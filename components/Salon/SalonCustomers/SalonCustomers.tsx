@@ -1,17 +1,18 @@
-import { Keyboard } from "react-native";
+import { Keyboard, View } from "react-native";
 import React, { useContext, useState } from "react";
 import CustomersList from "./CustomerList";
-import { SafeAreaView } from "react-native-safe-area-context";
+
 import SaloonCustomersListTools from "./SaloonCustomersTools";
 import { SaloonContext } from "../../../store/SaloonStore";
-import AddNewCustomerBottomSheet from "./AddNewCustomerBottomSheet";
+import AddNewCustomerForm from "./AddNewCustomerForm";
+import BottomSheetForm from "../../BottomSheet/BottomSheetForm";
+
 function SalonCustomers() {
   const salonCtx = useContext(SaloonContext);
   const [index, setIndex] = useState(0);
   const [customers, setCustomers] = useState(salonCtx.customers);
   const [modalVisible, setModalVisible] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [filteredCustomers, setFilteredCustomers] = useState(customers);
 
   const searchInputChangeHandler = (value: string) => {
     setSearchValue(value);
@@ -25,7 +26,7 @@ function SalonCustomers() {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: "white", height: "110%" }}>
+    <>
       <SaloonCustomersListTools
         searchInputValue={searchValue}
         searchInputChangeHandler={searchInputChangeHandler}
@@ -36,8 +37,10 @@ function SalonCustomers() {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       />
-      <AddNewCustomerBottomSheet index={index} setIndex={setIndex} />
-    </SafeAreaView>
+      <BottomSheetForm index={index} setIndex={setIndex}>
+        <AddNewCustomerForm hideBottomModal={iconPressHandler} />
+      </BottomSheetForm>
+    </>
   );
 }
 

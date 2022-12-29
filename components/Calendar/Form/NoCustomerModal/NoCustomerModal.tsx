@@ -1,6 +1,8 @@
 import React from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "../../../colors";
+import ActionButtons from "../../../UI/ActionButtons/ActionButtons";
+import RegularButton from "../../../UI/Buttons/RegularButton";
 
 const NoCustomerModal = ({
   modalShow,
@@ -21,20 +23,17 @@ const NoCustomerModal = ({
         <View style={styles.modalView}>
           <Text style={styles.modalHeader}>Nie znaleziono takiego klienta</Text>
           <Text style={styles.modalText}>Czy chcesz go dodać?</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Pressable
-              style={[styles.button]}
-              onPress={cancelButtonPressHandler}
-            >
-              <Text style={styles.cancelTextStyle}>Powrót</Text>
-            </Pressable>
-            <Pressable
-              onPress={showBottomSheetHandler}
-              style={[styles.button, styles.buttonClose]}
-            >
-              <Text style={styles.textStyle}>Dodaj</Text>
-            </Pressable>
-          </View>
+          <ActionButtons
+            confirmButton={{
+              onPress: showBottomSheetHandler,
+              title: "Dodaj",
+              primary: true,
+            }}
+            dismissButton={{
+              onPress: cancelButtonPressHandler,
+              title: "Powrót",
+            }}
+          />
         </View>
       </View>
     </Modal>
@@ -68,27 +67,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  cancelTextStyle: {
-    color: "black",
-  },
-  button: {
-    borderRadius: 12,
-    padding: 10,
-    marginHorizontal: 12,
-    elevation: 2,
-    borderWidth: 1,
-    borderColor: "lightgray",
-  },
 
-  buttonClose: {
-    backgroundColor: colors.primary,
-    borderWidth: 0,
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
   modalText: {
     marginBottom: 15,
     textAlign: "center",

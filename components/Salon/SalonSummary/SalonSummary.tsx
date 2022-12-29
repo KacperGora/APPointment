@@ -1,31 +1,36 @@
-import { Dimensions, Text, View } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from "react-native-chart-kit";
-import { SafeAreaView } from "react-native-safe-area-context";
-import useGetPercentage from "../../../hooks/Salon/useGetPercentage";
-import { colors } from "../../colors";
-import RingChart from "./RingChart";
-import { SaloonContext } from "../../../store/SaloonStore";
-import ServiceCounter from "./ServiceCounter";
-import StackedChart from "./StackedChart";
+import React, { useRef } from "react";
 import { ScrollView } from "react-native-gesture-handler";
+import CarouselComponent from "./Carousel/CarouselComponent";
+import RingChartCard from "./RingChartCard";
+import BarChartCard from "./StackedChartCard/BarChartCard";
+import {
+  getCarouselBarChartData,
+  getCarouselRingChartData,
+} from "./carouselConfig";
 
 function SalonSummary() {
-  const targetCtx = useContext(SaloonContext);
+  const ringChartData = useRef(getCarouselRingChartData());
+  const barChartData = useRef(getCarouselBarChartData());
+
+  const renderRingChartItem = ({ item }) => {
+    return <RingChartCard item={item} />;
+  };
+  const renderStackChartItem = ({ item }) => {
+    return <BarChartCard item={item} />;
+  };
+
   return (
-    <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
-      <ScrollView>
-        <RingChart />
-        <StackedChart />
-      </ScrollView>
-    </SafeAreaView>
+    <ScrollView style={{ backgroundColor: "white" }}>
+      <CarouselComponent
+        data={ringChartData.current}
+        renderItem={renderRingChartItem}
+      />
+
+      <CarouselComponent
+        data={barChartData.current}
+        renderItem={renderStackChartItem}
+      />
+    </ScrollView>
   );
 }
 

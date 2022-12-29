@@ -2,26 +2,21 @@ import { closestTo, isBefore, parseISO } from "date-fns";
 import { NewUserData } from "../../types";
 
 const getClosestPastCustomerMeeting = (customerData: NewUserData) => {
-  const pastMeetings = [];
-  const pastMeetingsDates = [];
-  customerData.meetings?.forEach((item) => {
-    if (isBefore(parseISO(item.start), new Date())) {
-      pastMeetingsDates.push(new Date(item.start));
-      pastMeetings.push(item);
-    }
-  });
-  if (pastMeetings.length === 0) {
-    return "Nie znaleziono dla tego użytkownika przeszłych wizyt.";
-  } else {
-    const closestPastMeetingDate = closestTo(
-      new Date(),
-      pastMeetingsDates
-    )?.toISOString();
+  const pastMeetings = customerData.meetings.filter((item) =>
+    isBefore(parseISO(item.start), new Date())
+  );
+  const pastMeetingsDates = pastMeetings
+    .filter((item) => isBefore(parseISO(item.start), new Date()))
+    .map((el) => new Date(el.start));
 
-    return pastMeetings?.filter(
-      (meeting) => meeting.start === closestPastMeetingDate
-    )[0];
-  }
+  const closestPastMeetingDate = closestTo(
+    new Date(),
+    pastMeetingsDates
+  )?.toISOString();
+
+  return pastMeetings.length === 0
+    ? "Nie znaleziono dla tego użytkownika przeszłych wizyt."
+    : pastMeetings?.find((meeting) => meeting.start === closestPastMeetingDate);
 };
 
 export default getClosestPastCustomerMeeting;
