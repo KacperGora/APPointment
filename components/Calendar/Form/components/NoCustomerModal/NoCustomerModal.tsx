@@ -1,8 +1,8 @@
 import React from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { colors } from "../../../colors";
-import ActionButtons from "../../../UI/ActionButtons/ActionButtons";
-import RegularButton from "../../../UI/Buttons/RegularButton";
+import { colors } from "../../../../colors";
+import ActionButtons from "../../../../UI/ActionButtons/ActionButtons";
+import RegularButton from "../../../../UI/Buttons/RegularButton";
 
 const NoCustomerModal = ({
   modalShow,

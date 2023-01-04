@@ -33,6 +33,7 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
   useEffect(() => {
     setMeetings(data);
   }, [data]);
+
   const addMeeting = async (newMeeting: Meeting, pickedDate: string) => {
     const newArr = { ...meetings };
     if (newArr[pickedDate]) {
@@ -61,6 +62,7 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
+    console.log(isLoading);
   };
 
   const removeMeeting = () => {};

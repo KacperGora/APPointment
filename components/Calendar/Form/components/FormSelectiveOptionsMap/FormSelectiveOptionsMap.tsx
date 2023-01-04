@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { colors } from "../../../colors";
+import { colors } from "../../../../colors";
 
 const FormSelectiveOptionsMap = ({ data, pressHandler }) => {
   return (
@@ -32,8 +32,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 2, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 5,
-
-    transform: [{ scaleX: 1.05 }],
+    transform: [{ scaleX: 1.052 }],
   },
   container: {
     borderRadius: 10,

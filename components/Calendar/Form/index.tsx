@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Alert, Dimensions, StyleSheet } from "react-native";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { View, Alert } from "react-native";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import { MeetingsContext } from "../../../store/CalendarStore";
 import useCheckOverlappingEvents from "../Timeline/hooks/useCheckOverlappingEvents";
-import WarningText from "./WarningText";
 import useSetColorForEvent from "../../../hooks/calendar/useSetColorForEvent";
 import getEventExcludedTimes from "../../../Utils/getEventExcludedTimes";
 import { hours, salonWorkers } from "../../../data";
@@ -18,14 +17,17 @@ import pickHandler from "../../../Utils/pickHandler";
 import { servicesDetails } from "../../../data";
 import useGetPickedValue from "../../../hooks/calendar/useGetPickedValue";
 import useGetAvailableHours from "../../../hooks/calendar/useGetAvailableHours";
-import { dateFormatter } from "../../../Utils/formatUtilis";
+import { dateFormatter, ISOSplitter } from "../../../Utils/formatUtilis";
 import emptyEventDataChecker from "../../../Utils/emptyEventDataChecker";
 import Spinner from "../../UI/Spinner/Spinner";
-import FormCoreComponent from "./FormCoreComponent/FormCore";
-import NoCustomerModal from "./NoCustomerModal/NoCustomerModal";
+import FormCoreComponent from "./components/FormCoreComponent/FormCore";
+import NoCustomerModal from "./components/NoCustomerModal/NoCustomerModal";
 import useAddMeetingForCustomer from "../../../hooks/calendar/useAddMeetingForCustomer";
 import BottomSheetForm from "../../BottomSheet/BottomSheetForm";
 import AddNewCustomerForm from "../../Salon/SalonCustomers/AddNewCustomerForm";
+import InformationText from "../../UI/InformationText/InformationText";
+import { colors } from "../../colors";
+import { Container } from "../../shared";
 
 type RouteProps = {
   params: {
@@ -40,7 +42,7 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
   const [dismissAddingCustomer, setDismissAddingCustomer] = useState(false);
   const [index, setIndex] = useState(0);
   const route = useRoute<RouteProp<RouteProps>>();
-  const dateString = route.params?.date || timelineDate?.split("T")[0];
+  const dateString = route.params?.date || ISOSplitter(timelineDate, 0);
   const [pickedDate, setPickedDate] = useState(dateString);
   const [pickedHour, setPickedHour] = useState<Hours>();
   const [pickedService, setPickedService] = useState<SelectiveOptions>();
@@ -48,6 +50,7 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
   const color = useSetColorForEvent(pickedService);
   const ctx = useContext(MeetingsContext);
   const isLoading = ctx.isLoading;
+
   const salonCtx = useContext(SaloonContext);
   const customers = salonCtx.customers;
   const [userTypedName, setUserTypedName] = useState("");
@@ -93,7 +96,7 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
     worker: pickedWorker?.value,
     height: 50,
     name: customerFullName,
-    day: startISO.split("T")[0],
+    day: ISOSplitter(startISO, 0),
   };
 
   const fromDataIsEmpty = emptyEventDataChecker(data);
@@ -101,6 +104,7 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
   useEffect(() => {
     setAvailableHours(result);
   }, [result]);
+
   const isOverlapped = useCheckOverlappingEvents(
     pickedDate,
     data?.serviceDuration,
@@ -119,7 +123,7 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
       );
       return;
     } else {
-      ctx?.addMeeting(data, pickedDate.split("T")[0]);
+      ctx?.addMeeting(data, ISOSplitter(pickedDate, 0));
       useAddMeetingForCustomer(customerFullName, data);
       onCloseBottomSheet();
       !isLoading && setIndex(0);
@@ -147,8 +151,15 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
   const hideBottomModalHandler = () => {
     setBottomSheetShown(false);
   };
+  const informationTextStyle = {
+    color: colors.primary,
+    textAlign: "center",
+    marginVertical: 16,
+    fontWeight: "bold",
+    fontSize: 18,
+  };
   return (
-    <View style={styles.container}>
+    <Container>
       {isLoading ? (
         <Spinner />
       ) : (
@@ -173,7 +184,11 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
             customerName={customerFullName}
           />
 
-          {isOverlapped ? <WarningText /> : null}
+          {isOverlapped ? (
+            <InformationText stylingProps={informationTextStyle}>
+              Termin zajety, wybierz proszę inny.
+            </InformationText>
+          ) : null}
         </View>
       )}
       {modalShow ? (
@@ -192,18 +207,8 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
           />
         </BottomSheetForm>
       )}
-    </View>
+    </Container>
   );
 };
 
 export default MeetingForm;
-
-const styles = StyleSheet.create({
-  container: { backgroundColor: "white", flex: 1 },
-  optionsContainer: {
-    backgroundColor: "white",
-    flex: 1,
-    margin: 12,
-    width: Dimensions.get("screen").width - 24,
-  },
-});

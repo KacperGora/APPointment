@@ -1,42 +1,33 @@
-import { addMinutes, areIntervalsOverlapping, subHours } from "date-fns";
-import { useEffect, useState } from "react";
-import useSortData from "../../../../hooks/calendar/useSortData";
-import { AllMeetings, Meeting } from "../../../../types";
+import { addMinutes, areIntervalsOverlapping } from "date-fns";
+import { useContext, useEffect, useState } from "react";
+import { MeetingsContext } from "../../../../store/CalendarStore";
 
 function useCheckOverlappingEvents(
-  pickedDate: any,
+  pickedDate: string,
   serviceDuration: number,
   newMeetingDate: Date,
   worker: string
 ) {
-  const meetings = useSortData();
-
   const [isOverlapped, setOverlapped] = useState(false);
-  const meetingsAtPickedDate = meetings?.filter(
-    (meeting: AllMeetings) => meeting.key === pickedDate
+  const ctx = useContext(MeetingsContext);
+  const meetings = ctx.meetings;
+  const meetingsAtPickedDate = meetings[pickedDate];
+  const employeeMeetingsArray = meetingsAtPickedDate?.filter(
+    (meeting) => meeting.worker === worker
   );
-
-  const newArr: Meeting[] = [];
-  for (const [key, value] of Object.entries(meetingsAtPickedDate)) {
-    newArr.push(...value.data);
-  }
-
-
-  const filteredArray = newArr.filter((meeting) => meeting.worker === worker);
-
   useEffect(() => {
     setOverlapped(false);
-    if (!Number.isNaN(filteredArray.length) && serviceDuration) {
-      filteredArray?.forEach((meeting) => {
+    if (Number.isInteger(employeeMeetingsArray?.length)) {
+      employeeMeetingsArray.forEach((meeting) => {
         if (
           areIntervalsOverlapping(
             {
-              start: subHours(new Date(meeting?.start), 1),
-              end: subHours(new Date(meeting?.end), 1),
+              start: new Date(meeting?.start),
+              end: new Date(meeting?.end),
             },
             {
-              start: subHours(newMeetingDate, 1),
-              end: addMinutes(subHours(newMeetingDate, 1), serviceDuration),
+              start: newMeetingDate,
+              end: addMinutes(newMeetingDate, serviceDuration),
             }
           )
         ) {
@@ -44,7 +35,7 @@ function useCheckOverlappingEvents(
         }
       });
     }
-  }, [meetingsAtPickedDate, pickedDate, serviceDuration]);
+  }, [employeeMeetingsArray, serviceDuration]);
 
   return isOverlapped;
 }

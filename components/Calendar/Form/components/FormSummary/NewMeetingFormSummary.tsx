@@ -1,11 +1,11 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { subHours } from "date-fns";
-import { colors } from "../../../colors";
-import { SelectiveOptions } from "../../../../types";
-import { validateFullName } from "../../../../Utils/validation/regexValidation";
+import { colors } from "../../../../colors";
+import { SelectiveOptions } from "../../../../../types";
+import { validateFullName } from "../../../../../Utils/validation/regexValidation";
 import { FontAwesome5 } from "@expo/vector-icons";
-import RegularButton from "../../../UI/Buttons/RegularButton";
+import RegularButton from "../../../../UI/Buttons/RegularButton";
 import SummaryColumn from "./MeetingFormSummaryColumns/SummaryColumn";
 interface MeetingDetailProps {
   date: Date;

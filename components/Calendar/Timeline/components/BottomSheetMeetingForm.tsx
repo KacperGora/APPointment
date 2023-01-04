@@ -1,6 +1,6 @@
 import React from "react";
 import BottomSheetForm from "../../../BottomSheet/BottomSheetForm";
-import MeetingForm from "../../Form/MeetingForm";
+import MeetingForm from "../../Form";
 
 const BottomSheetMeetingForm = ({
   bottomSheetDirtyDate,

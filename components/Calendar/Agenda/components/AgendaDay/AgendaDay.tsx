@@ -1,57 +1,39 @@
 import React from "react";
-import { FlexAlignType, View } from "react-native";
+import { View } from "react-native";
 import { AgendaDayProps } from "../../../../../types";
-import { colors } from "../../../../colors";
 import SmallText from "../../../../UI/Text/SmallText";
 import AgendaItem from "../AgendaItem/AgendaItem";
-import useGetDailyIncome from "../../hooks/useGetDailyIncome";
+import { ViewRow } from "../../style/Agenda.style";
+import { getAgendaDayConfig } from "../../config/agendaDayConfig";
+import EmptyWeek from "./EmptyWeek";
 
-const AgendaDay: React.FC<AgendaDayProps> = ({
-  nameDay,
-  day,
-  nameMonth,
-  item,
-  fullDate,
-}) => {
-  const dailyIncome = useGetDailyIncome(fullDate);
-  const textStyle: {
-    fontSize: number;
-    color: string;
-    alignSelf: FlexAlignType;
-  } = {
-    fontSize: 12,
-    color: colors.greydark,
-    alignSelf: "flex-end",
-  };
-  return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        width: "100%",
-      }}
-    >
-      <View style={{ width: 50 }}>
-        <SmallText textStyles={textStyle}>{nameDay}</SmallText>
-
-        <SmallText textStyles={textStyle}>
-          {day} {nameMonth}
-        </SmallText>
-        {day !== undefined ? (
-          <SmallText
-            textStyles={{
-              color: colors.secondary,
-              fontSize: 10,
-              alignSelf: "flex-end",
-              marginTop: 8,
-            }}
-          >
-            {dailyIncome[fullDate?.toISOString().split("T")[0]]} PLN
-          </SmallText>
-        ) : null}
-      </View>
-      <AgendaItem item={item} />
-    </View>
+const AgendaDay: React.FC<AgendaDayProps> = (props) => {
+  const { item, emptyWeeks, fullDate } = props;
+  const agendaDayConfig = getAgendaDayConfig(props);
+  const emptyDates = emptyWeeks.filter(
+    (week) => (week.start || week) === fullDate
   );
+  if (item !== undefined) {
+    return (
+      <ViewRow>
+        <View style={{ width: 50 }}>
+          {agendaDayConfig.map((value) => {
+            return (
+              <SmallText key={value.id} textStyles={value.props}>
+                {value.text}
+              </SmallText>
+            );
+          })}
+        </View>
+        <AgendaItem
+          fullDate={props.fullDate}
+          item={item}
+          emptyWeeks={emptyWeeks}
+        />
+      </ViewRow>
+    );
+  } else {
+    return emptyDates.map((date) => <EmptyWeek date={date} />);
+  }
 };
 export default AgendaDay;

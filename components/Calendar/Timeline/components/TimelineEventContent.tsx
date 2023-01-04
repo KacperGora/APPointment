@@ -27,7 +27,7 @@ const TimelineEventContent = ({ event, userPickedView }) => {
             },
           ]}
         >
-          {worker.slice(0, 1)}
+          {worker?.slice(0, 1)}
         </Text>
       </View>
       <View style={{ justifyContent: "center" }}>

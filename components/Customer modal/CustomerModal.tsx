@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal,  View, StyleSheet, Pressable } from "react-native";
+import { Modal, View, StyleSheet, Pressable } from "react-native";
 import { CustomerModalProps } from "../../types";
 import RegularButton from "../UI/Buttons/RegularButton";
 import CustomerModalInformation from "./CustomerModalInformation/CustomerModalInformation";
@@ -24,16 +24,14 @@ const CustomerModal: React.FC<CustomerModalProps> = ({
         style={styles.centeredView}
       >
         <View style={styles.modalView}>
-          <CustomerModalInformation item={item} style={styles.modalText} />
+          <CustomerModalInformation item={item} style={null} />
           <CustomerModalPhoneNumber
-            style={styles.modalText}
+            style={null}
             phoneNumber={item.phoneNumber}
           />
           <RegularButton
             onPress={() => setModalVisible(!modalVisible)}
             title="Powrót"
-            btnStyles={[styles.button, styles.buttonClose]}
-            textStyles={styles.textStyle}
           />
         </View>
       </Pressable>
@@ -46,7 +44,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
   },
   modalView: {
     margin: 20,
@@ -63,22 +60,13 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  button: {
-    borderRadius: 12,
-    padding: 10,
-    elevation: 2,
-  },
 
   buttonClose: {
     // backgroundColor: "#2196F3",
   },
-  textStyle: {
-    color: "black",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
+
+  // modalText: {
+  //   marginBottom: 15,
+  //   textAlign: "center",
+  // },
 });

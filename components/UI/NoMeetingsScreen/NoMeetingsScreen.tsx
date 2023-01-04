@@ -17,31 +17,40 @@ const NoMeetingsScreen: React.FC<NoItemsScreenProps> = ({
 }) => {
   const navigation = useNavigation<Navigation>();
   const pressHandler = () => {
-    () => navigation.navigate(destination);
+    navigation.navigate(destination);
   };
   return (
-    <Pressable
-      style={({ pressed }) => [
-        styles.pressableContainer,
-        pressed && { opacity: 0.4 },
-      ]}
-      onPress={pressHandler}
+    <View
+      style={{
+        alignItems: "center",
+        justifyContent: "center",
+        flex: 1,
+        marginTop: 100,
+      }}
     >
-      <View style={{ justifyContent: "center" }}>
-        <Text style={styles.text}>{heading}</Text>
-        <Text style={styles.textDetail}>{description}</Text>
-        {noAgendaEvents ? (
-          <View style={styles.icon}>
-            <Ionicons
-              name="add"
-              size={32}
-              color="white"
-              style={{ fontWeight: "700" }}
-            />
-          </View>
-        ) : null}
-      </View>
-    </Pressable>
+      <Pressable
+        style={({ pressed }) => [
+          styles.pressableContainer,
+          pressed && { opacity: 0.4 },
+        ]}
+        onPress={pressHandler}
+      >
+        <View style={{ justifyContent: "center" }}>
+          <Text style={styles.text}>{heading}</Text>
+          <Text style={styles.textDetail}>{description}</Text>
+          {noAgendaEvents ? (
+            <View style={styles.icon}>
+              <Ionicons
+                name="add"
+                size={32}
+                color="white"
+                style={{ fontWeight: "700" }}
+              />
+            </View>
+          ) : null}
+        </View>
+      </Pressable>
+    </View>
   );
 };
 
@@ -57,6 +66,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     letterSpacing: 1.2,
     color: "gray",
+    textAlign: "center",
   },
   textDetail: {
     fontSize: 18,

@@ -2,7 +2,8 @@ import "moment";
 import "moment/locale/pl";
 import React, { FunctionComponent, useState } from "react";
 import CalendarStrip from "react-native-calendar-strip";
-import { colors } from "../../../colors";
+import { ISOSplitter } from "../../../../../Utils/formatUtilis";
+import { colors } from "../../../../colors";
 
 const locale = {
   name: "pl",
@@ -22,8 +23,8 @@ const NewMeetingFormSummary: FunctionComponent<Props> = ({
   };
 
   const dateSelectionHandler = (date: moment.Moment) => {
-    setPickedDate(date.toISOString().split("T")[0]);
-    setNewDate(date.toISOString().split("T")[0]);
+    setPickedDate(ISOSplitter(date.toISOString(), 0));
+    setNewDate(ISOSplitter(date.toISOString(), 0));
   };
   return (
     <CalendarStrip
@@ -56,8 +57,8 @@ const NewMeetingFormSummary: FunctionComponent<Props> = ({
       }}
       disabledDateNameStyle={{ color: "grey" }}
       disabledDateNumberStyle={{ color: "grey" }}
-      datesBlacklist={datesBlacklistFunc}
       iconContainer={{ flex: 0.1 }}
+      datesBlacklist={datesBlacklistFunc}
       onDateSelected={dateSelectionHandler}
       selectedDate={new Date(pickedDate)}
     />

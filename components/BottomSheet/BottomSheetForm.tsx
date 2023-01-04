@@ -44,14 +44,8 @@ export default React.memo(BottomSheetForm);
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
+    backgroundColor: "white",
     borderColor: "lightgray",
     borderWidth: 1,
-    borderRadius: 12,
-    elevation: 2,
-    shadowColor: "black",
-    shadowOffset: { width: 2, height: 4 },
-    shadowOpacity: 0.6,
-    backgroundColor: "white",
-    shadowRadius: 4,
   },
 });

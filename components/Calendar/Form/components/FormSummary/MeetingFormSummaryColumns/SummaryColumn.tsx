@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
-import RegularText16 from "../../../../UI/Text/RegularText";
-import SmallText from "../../../../UI/Text/SmallText";
+import RegularText16 from "../../../../../UI/Text/RegularText";
+import SmallText from "../../../../../UI/Text/SmallText";
 
 const SummaryColumn = ({ data }) => {
   return (

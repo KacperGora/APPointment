@@ -7,6 +7,7 @@ import {
 import { FieldValue } from "firebase/firestore";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import {
+  FlexAlignType,
   KeyboardTypeOptions,
   ReturnKeyTypeOptions,
   TextInputProps,
@@ -151,5 +152,11 @@ export type AgendaDayProps = {
   day: number;
   nameMonth: string;
   item: Meeting;
-  fullDate: XDate;
+  fullDate: string;
+  emptyWeeks: any;
+};
+export type AgendaItemProps = {
+  item: Meeting;
+  emptyWeeks: any;
+  fullDate: any;
 };

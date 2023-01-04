@@ -1,11 +1,11 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import * as Progress from "react-native-progress";
 import { colors } from "../../colors";
 
 const Spinner = () => {
   return (
-    <View style={styles.container}>
+    <View style={{ alignItems: "center", justifyContent: "center" }}>
       <Progress.Circle
         size={50}
         indeterminate={true}
@@ -16,7 +16,3 @@ const Spinner = () => {
   );
 };
 export default Spinner;
-
-const styles = StyleSheet.create({
-  container: { alignItems: "center", justifyContent: "center" },
-});

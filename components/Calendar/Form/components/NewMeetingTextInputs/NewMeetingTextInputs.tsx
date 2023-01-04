@@ -1,5 +1,5 @@
 import { View, TextInput, StyleSheet } from "react-native";
-import { colors } from "../../../colors";
+import { colors } from "../../../../colors";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React from "react";
 type InputProps = {
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 6,
     borderBottomColor: "#ccc",

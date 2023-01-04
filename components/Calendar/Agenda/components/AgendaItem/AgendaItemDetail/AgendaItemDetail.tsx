@@ -5,8 +5,8 @@ type Props = {
   item: Meeting;
 };
 const AgendaItemDetail: React.FC<Props> = ({ item }) => {
-  const title = item.title;
-  const serviceName = item.serviceName;
+  const title = item?.title;
+  const serviceName = item?.serviceName;
 
   return (
     <View style={styles.itemDetails}>

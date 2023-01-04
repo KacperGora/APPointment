@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import Calendar from "../NewMeetingFormCalendarStrip/NewMeetingFormSummary";
-import MeetingDetails from "../NewMeetingFormSummary/NewMeetingFormSummary";
+import Calendar from "../NewMeetingFormCalendarStrip/FormCalendarStrip";
+import MeetingDetails from "../FormSummary/NewMeetingFormSummary";
 import TextInputs from "../NewMeetingTextInputs/NewMeetingTextInputs";
 import FormSelectiveOptionsMap from "../FormSelectiveOptionsMap/FormSelectiveOptionsMap";
-import NoItemsScreen from "../../../UI/NoMeetingsScreen/NoMeetingsScreen";
+import NoItemsScreen from "../../../../UI/NoMeetingsScreen/NoMeetingsScreen";
 
 const FormCoreComponent = ({
   pickedDate,
@@ -26,24 +26,27 @@ const FormCoreComponent = ({
   worker,
   customerName,
 }) => {
+  const selectMapConfig = [
+    { id: 1, data: availableHours, pressHandler: hourPressHandler },
+    { id: 2, data: services, pressHandler: servicePressHandler },
+    { id: 3, data: workers, pressHandler: workersPressHandler },
+  ];
   return (
     <KeyboardAwareScrollView resetScrollToCoords={{ x: 0, y: 0 }}>
       <Calendar date={pickedDate} setNewDate={setPickedDate} />
+      
       {availableHours.length !== 0 ? (
         <>
           <View>
-            <FormSelectiveOptionsMap
-              data={availableHours}
-              pressHandler={hourPressHandler}
-            />
-            <FormSelectiveOptionsMap
-              data={services}
-              pressHandler={servicePressHandler}
-            />
-            <FormSelectiveOptionsMap
-              data={workers}
-              pressHandler={workersPressHandler}
-            />
+            {selectMapConfig.map((el) => {
+              return (
+                <FormSelectiveOptionsMap
+                  key={el.id}
+                  data={el.data}
+                  pressHandler={el.pressHandler}
+                />
+              );
+            })}
           </View>
           <TextInputs
             setUserTypedLastName={setUserTypedLastName}

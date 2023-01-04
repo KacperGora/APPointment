@@ -12,7 +12,7 @@ const useSetMarkedDates = () => {
           if (el.data && el.data.length > 0 && el.data.length < 2) {
             marked[el.title] = { marked: true, dotColor: "green" };
           } else if (el.data.length >= 2 && el.data.length < 4) {
-            marked[el.title] = { marked: true, dotColor: "yellow" };
+            marked[el.title] = { marked: true, dotColor: "lightblue" };
           } else if (el.data.length >= 4) {
             marked[el.title] = { marked: true, dotColor: "red" };
           }

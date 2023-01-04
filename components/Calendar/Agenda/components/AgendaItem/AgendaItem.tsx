@@ -1,36 +1,38 @@
 import React, { useCallback, useContext, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Meeting } from "../../../../../types";
+import { StyleSheet, Text, View } from "react-native";
+import { AgendaItemProps } from "../../../../../types";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import AgendaItemDetail from "./AgendaItemDetail/AgendaItemDetail";
 import { SaloonContext } from "../../../../../store/SaloonStore";
 import CustomerModal from "../../../../Customer modal/CustomerModal";
 import AgendaHourBox from "./AgendaItemHour/AgendaHourBox";
+import InformationText from "../../../../UI/InformationText/InformationText";
 
-interface ItemProps {
-  item: Meeting;
-}
-
-const AgendaItem: React.FC<ItemProps> = ({ item }) => {
+const AgendaItem: React.FC<AgendaItemProps> = ({
+  item,
+  emptyWeeks,
+  fullDate,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const salonCtx = useContext(SaloonContext);
   const customers = salonCtx.customers;
   const currentCustomer = customers.find(
-    (customer) => customer.fullName === item.title
+    (customer) => customer.fullName === item?.title
   );
-
   const itemPressed = useCallback(() => {
     setModalVisible(true);
   }, []);
-
+  console.log();
   return (
     <>
+      {/* {item !== undefined ? ( */}
       <TouchableOpacity onPress={itemPressed} style={styles.container}>
         <View style={styles.item}>
           <AgendaItemDetail item={item} />
           <AgendaHourBox item={item} />
         </View>
       </TouchableOpacity>
+
       {modalVisible ? (
         <CustomerModal
           item={currentCustomer}

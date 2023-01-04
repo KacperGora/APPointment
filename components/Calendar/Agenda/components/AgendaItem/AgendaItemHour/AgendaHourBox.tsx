@@ -8,10 +8,10 @@ const AgendaHourBox = ({ item }) => {
     <View style={styles.hoursBox}>
       <View style={{ padding: 6 }}>
         <Text style={styles.itemHourText}>{`${
-          item.startHourStr
-        } ${item.endHour.slice(0, 5)}`}</Text>
+          item?.startHourStr
+        } ${item?.endHour.slice(0, 5)}`}</Text>
         <Text style={styles.itemDurationText}>
-          {item.serviceDuration} minut
+          {item?.serviceDuration} minut
         </Text>
       </View>
       <Feather name="clock" size={20} color="#c7c7c7" />

@@ -1,66 +1,36 @@
-import {
-  Agenda,
-  AgendaEntry,
-  AgendaList,
-  DateData,
-} from "react-native-calendars";
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { AgendaProps, Meeting } from "../../../types";
-import AgendaItem from "./components/AgendaItem/AgendaItem";
-import { MeetingsContext } from "../../../store/CalendarStore";
+import { Agenda } from "react-native-calendars";
+import React, { useEffect, useRef, useState } from "react";
+import { AllMeetings, Meeting } from "../../../types";
 import TimelineScreenHeader from "../../UI/Headers/TimelineScreenHeader";
 import MyStatusBar from "../../UI/StatusBar/MyStatusBar";
 import {
-  getAgendaDays,
   getMonthName,
-  timeToString,
+  ISOSplitter,
   todayDateData,
 } from "../../../Utils/formatUtilis";
 import { getCalendarListTheme } from "../Timeline/themes/themes";
-import XDate from "xdate";
 import AgendaDay from "./components/AgendaDay/AgendaDay";
-import AgendaEmptyDate from "./components/AgendaEmptyDate/AgendaEmptyDate";
+import XDate from "xdate";
+import useSetMarkedDates from "../../../hooks/calendar/useSetMarkedDates";
+import useFetchEvents from "../../../hooks/calendar/useFetchEvents";
+import generateDays from "./helpers/generateDays";
+import { getAgendaDays } from "./helpers/getAgendaDaysName";
+import NoMeetingsScreen from "../../UI/NoMeetingsScreen/NoMeetingsScreen";
+import useGetEmptyWeeks from "./hooks/useGetEmptyWeeks";
 
-const AgendaComponent: React.FC<AgendaProps> = ({ isLoading }) => {
-  const ctx = useContext(MeetingsContext);
-  const meetings = ctx.meetings;
-  const [agendaItems, setAgendaItems] = useState({});
-  const currentMonthName = useCallback(() => {
-    return getMonthName(new Date());
-  }, []);
-  const [monthName, setMonthName] = useState(currentMonthName);
-  const theme = useRef(getCalendarListTheme());
+const AgendaComponent: React.FC = () => {
+  const { data } = useFetchEvents();
+  const markedDates = useSetMarkedDates();
   const agendaRef = useRef<Agenda>();
+  const theme = useRef(getCalendarListTheme());
+  const items = generateDays(todayDateData, data);
+  const [agendaItems, setAgendaItems] = useState<AllMeetings>({});
+  const [monthName, setMonthName] = useState(getMonthName(new Date()));
+  const emptyWeeks = useGetEmptyWeeks(agendaItems);
 
-  const items = {};
-  const loadItems = (day: DateData) => {
-    setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = timeToString(time);
-        items[strTime] = [];
-      }
-    }, 1000);
-  };
   useEffect(() => {
-    for (const [key, value] of Object.entries(meetings)) {
-      items[key] = [...value];
-    }
     setAgendaItems(items);
-  }, [meetings]);
-  const renderItem = (reservation: Meeting) => {
-    return <AgendaItem item={reservation} />;
-  };
-
-  const renderEmptyDate = useCallback(() => {
-    return <AgendaEmptyDate />;
-  }, []);
+  }, [data]);
 
   const changeMonthNameHandler = (date) => {
     setMonthName(getMonthName(date.dateString));
@@ -80,7 +50,18 @@ const AgendaComponent: React.FC<AgendaProps> = ({ isLoading }) => {
         item={item}
         nameDay={nameDay}
         nameMonth={nameMonth}
-        fullDate={date}
+        fullDate={ISOSplitter(date?.toISOString(), 0)}
+        emptyWeeks={emptyWeeks}
+      />
+    );
+  };
+  const renderEmptyDataHandler = () => {
+    return (
+      <NoMeetingsScreen
+        description="Dotknij tutaj aby dodać pierwsze"
+        heading="Brak spotkań"
+        noAgendaEvents
+        destination="Tydzień"
       />
     );
   };
@@ -92,15 +73,15 @@ const AgendaComponent: React.FC<AgendaProps> = ({ isLoading }) => {
         onTodayIconPressHandler={onTodayIconPressHandler}
       />
       <Agenda
+        renderEmptyData={renderEmptyDataHandler}
         onDayChange={changeMonthNameHandler}
         onMonthChange={changeMonthNameHandler}
-        loadItemsForMonth={loadItems}
-        renderEmptyDate={renderEmptyDate}
         items={agendaItems}
         showClosingKnob
         theme={theme.current}
         ref={agendaRef}
         renderDay={renderDayHandler}
+        markedDates={markedDates}
       />
     </MyStatusBar>
   );

@@ -80,21 +80,7 @@ export const servicesDetails = [
   },
   { value: "Pedicure", isActive: false, duration: 60, price: "120PLN" },
 ];
-export const viewModalDropdownData = [
-  { label: "Pełny tydzień", value: "week" },
-  { label: "Dni pracujące", value: "workWeek" },
-  { label: "Trzy dni", value: "threeDays" },
-  { label: "Dzień", value: "day" },
-];
-export const workersModalDropdownData = [
-  { label: "Wszyscy", value: "all" },
-  { label: "Justi", value: "Justyna" },
-  { label: "Monia", value: "Monika" },
-];
-export const stackChartViewData = [
-  { label: "Tydzień", value: "Tydzień" },
-  { label: "Miesiąc", value: "Miesiąc" },
-];
+
 export const openingHours = [
   {
     fullName: "Niedziela",

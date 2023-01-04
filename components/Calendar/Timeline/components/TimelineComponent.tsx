@@ -52,6 +52,7 @@ const TimelineComponent: React.FC<TimelineProps> = (props) => {
   };
 
   const longPressHandler = (date: string | number | Date) => {
+    // console.log(date);
     const correctDate = addDays(new Date(date), 1).toISOString().split("T")[0];
     setBottomSheetDirtyDate(correctDate);
     setBottomSheetActiveIndex(1);

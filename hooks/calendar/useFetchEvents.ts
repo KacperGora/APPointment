@@ -5,7 +5,7 @@ import { db } from "../../firebase/firebase";
 import { Meeting } from "../../types";
 
 const useFetchEvents = () => {
-  const [data, setData] = useState<Meeting[]>([]);
+  const [data, setData] = useState({});
   const [flatData, setFlatData] = useState<Meeting[]>([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);

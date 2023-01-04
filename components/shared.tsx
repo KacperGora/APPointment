@@ -1,16 +1,16 @@
 import styled from "styled-components/native";
 import { colors } from "./colors";
-import { Dimensions, Platform, StatusBar } from "react-native";
+import { Dimensions } from "react-native";
 
 export const Container = styled.View`
   flex: 1;
   align-items: center;
   background-color: ${colors.white};
 `;
-export const ContainerA = styled.View`
+export const TextContainer = styled.View`
   flex: 1;
-  justify-content: "center";
-  padding-top: 24px;
+  justify-content: center;
+  padding: 0px 12px 24px 24px;
 `;
 export const SafeAreaContainer = styled.SafeAreaView`
   flex: 1;
@@ -39,6 +39,7 @@ export const CardHeadingContainer = styled.View`
 
 export const ScreenWidth = Dimensions.get("screen").width;
 export const ScreenHeight = Dimensions.get("screen").height;
+
 export const getCalendarLocale = () => {
   return {
     monthNames: [
