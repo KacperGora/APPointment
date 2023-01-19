@@ -11,7 +11,7 @@ import SalonSummaryScreen from "../../screens/Saloon/SalonSummaryScreen";
 import SettingsDrawerNavigation from "../SettingsDrawerNavigation";
 import { MaterialIcons } from "@expo/vector-icons";
 import AgendaComponent from "../../components/Calendar/Agenda";
-import Timeline from "../../components/Calendar";
+import Timeline from "../../components/Calendar/Timeline";
 import { CalendarViewMode } from "@howljs/calendar-kit";
 import { AgendaProps } from "../../types";
 import { FC } from "react";

@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native";
-import useSetFontSizeForTimelineEvents from "../../../../hooks/calendar/useSetFontSizeForTimelineEvent";
+import useSetFontSizeForTimelineEvents from "../hooks/useSetFontSizeForTimelineEvent";
 
 const TimelineEventContent = ({ event, userPickedView }) => {
   const worker = event.worker;

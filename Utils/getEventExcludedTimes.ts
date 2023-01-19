@@ -5,9 +5,7 @@ function getEventExcludedTimes(duration: number, date: Date) {
 
   for (let i = 0; i < duration; i += 15) {
     eventDuration.push(
-      subHours(new Date(addMinutes(date, i)), 1)
-        .toLocaleTimeString()
-        .slice(0, 5)
+      new Date(addMinutes(date, i)).toLocaleTimeString().slice(0, 5)
     );
   }
 

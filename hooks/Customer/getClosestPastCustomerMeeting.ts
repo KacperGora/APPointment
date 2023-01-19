@@ -14,9 +14,9 @@ const getClosestPastCustomerMeeting = (customerData: NewUserData) => {
     pastMeetingsDates
   )?.toISOString();
 
-  return pastMeetings.length === 0
-    ? "Nie znaleziono dla tego użytkownika przeszłych wizyt."
-    : pastMeetings?.find((meeting) => meeting.start === closestPastMeetingDate);
+  return pastMeetings?.find(
+    (meeting) => meeting.start === closestPastMeetingDate
+  );
 };
 
 export default getClosestPastCustomerMeeting;

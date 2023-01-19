@@ -1,6 +1,7 @@
 import React from "react";
 import { Linking, Text } from "react-native";
 import { phoneNumberFormatter } from "../../../Utils/formatUtilis";
+import PhoneLink from "../../UI/Text/PhoneLink";
 import SmallText from "../../UI/Text/SmallText";
 
 const CustomerModalPhoneNumber = ({ style, phoneNumber }) => {
@@ -8,13 +9,7 @@ const CustomerModalPhoneNumber = ({ style, phoneNumber }) => {
   return (
     <SmallText textStyles={{ alignSelf: "flex-start" }}>
       Numer telefonu:
-      <Text
-        onPress={() => {
-          Linking.openURL(`tel:${phoneNumber}`);
-        }}
-      >
-        {` ${formattedPhoneNumber}`}
-      </Text>
+      <PhoneLink style={{}} phoneNumber={formattedPhoneNumber} />
     </SmallText>
   );
 };

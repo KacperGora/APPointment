@@ -8,7 +8,6 @@ const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
 const CustomUnavailableItem = (props: UnavailableItemProps) => {
   const patternSize = 5;
-
   const rectProps = useAnimatedProps(() => ({
     height: props.hour * props.timeIntervalHeight.value,
   }));

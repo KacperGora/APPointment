@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SelectiveOptions } from "../../types";
+import { SelectiveOptions } from "../../../../types";
 
 const useSetColorForEvent = (service: SelectiveOptions) => {
   const [color, setColor] = useState("red");

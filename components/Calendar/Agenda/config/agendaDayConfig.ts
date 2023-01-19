@@ -8,6 +8,7 @@ export function getAgendaDayConfig(props) {
   const { item, nameDay, day, nameMonth, fullDate } = props;
   const { flatData } = useFetchEvents();
   const dailyIncome = useMemo(() => getDailyIncome(flatData), [flatData]);
+
   const textStyle: TextStyle = {
     fontSize: 12,
     color: item !== undefined ? colors.greydark : "#b3b7bd",
@@ -36,4 +37,22 @@ export function getAgendaDayConfig(props) {
     },
   ];
   return agendaDayConfig;
+}
+
+export function getAgendaItemDetails(item) {
+  const title = item?.title;
+  const serviceName = item?.serviceName;
+  const singleItem: {
+    value: string;
+    style: TextStyle;
+    id: number;
+  }[] = [
+    {
+      id: 1,
+      value: title,
+      style: { color: "black", fontWeight: "bold", fontSize: 16 },
+    },
+    { id: 2, value: serviceName, style: { fontSize: 10, color: "#726f6f" } },
+  ];
+  return singleItem;
 }

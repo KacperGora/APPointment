@@ -1,16 +1,9 @@
-import { addMinutes, subHours } from "date-fns";
+import dayjs from "dayjs";
 
-function calculateTimeOfEnd(startTime: string, duration: number) {
-  const startTimeDate = new Date(startTime);
-
-  if (duration === undefined) {
-    return new Date(addMinutes(startTimeDate, 90)).toLocaleTimeString();
-  } else {
-    return subHours(
-      new Date(addMinutes(startTimeDate, duration)),
-      1
-    ).toLocaleTimeString();
-  }
+function calculateTimeOfEnd(startTime: string | Date, duration: number) {
+  return dayjs(startTime)
+    .add(duration || 90, "minutes")
+    .format("HH:mm");
 }
 
 export default calculateTimeOfEnd;

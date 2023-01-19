@@ -42,7 +42,7 @@ export function getCalendarListTheme(): Theme {
     dotColor: themeColor,
     selectedDotColor: "white",
     disabledDotColor: disabledColor,
-    dotStyle: { marginTop: -2 },
+    dotStyle: { marginBottom: 2 },
   };
 }
 

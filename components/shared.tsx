@@ -4,6 +4,7 @@ import { Dimensions } from "react-native";
 
 export const Container = styled.View`
   flex: 1;
+  margin-top: 24px;
   align-items: center;
   background-color: ${colors.white};
 `;
@@ -22,7 +23,12 @@ export const RowContainer = styled.View`
 export const RowContainerSpaceBetween = styled(RowContainer)`
   justify-content: space-between;
 `;
-
+export const StyledViewBorder = styled.View`
+  flex: 1;
+  background-color: white;
+  border-color: lightgray;
+  border-width: 1px;
+`;
 //card
 export const CardIncomingsDot = styled.View`
   width: 24px;
@@ -84,4 +90,10 @@ export const getCalendarLocale = () => {
     // @ts-ignore: Unreachable code error
     today: "Dziś",
   };
+};
+export const shadowStyle = {
+  shadowColor: "lightgray",
+  shadowOffset: { width: 2, height: 4 },
+  shadowOpacity: 0.5,
+  shadowRadius: 2,
 };

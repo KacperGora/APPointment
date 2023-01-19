@@ -7,7 +7,6 @@ const StyledText = styled.Text`
   font-size: 14px;
   color: ${colors.greydark};
   text-align: left;
-  font-family: Lato-Regular;
 `;
 type TextProps = {
   children: ReactNode;

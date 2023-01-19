@@ -11,7 +11,7 @@ import TimelineEventContent from "./TimelineEventContent";
 import { SaloonContext } from "../../../../store/SaloonStore";
 import { TimelineProps } from "../../../../types";
 import { getTimelineTheme } from "../themes/themes";
-import { getMonthName } from "../../../../Utils/formatUtilis";
+import { getMonthName, ISOSplitter } from "../../../../Utils/formatUtilis";
 
 const TimelineComponent: React.FC<TimelineProps> = (props) => {
   const {
@@ -32,6 +32,7 @@ const TimelineComponent: React.FC<TimelineProps> = (props) => {
   const salonCtx = useContext(SaloonContext);
   const unavailableHours = salonCtx.unavailableHours;
   const timelineTheme = useRef(getTimelineTheme());
+
   const renderEventContent = useCallback(
     (event: PackedEvent) => (
       <TimelineEventContent event={event} userPickedView={viewMode} />
@@ -52,8 +53,10 @@ const TimelineComponent: React.FC<TimelineProps> = (props) => {
   };
 
   const longPressHandler = (date: string | number | Date) => {
-    // console.log(date);
-    const correctDate = addDays(new Date(date), 1).toISOString().split("T")[0];
+    const correctDate = ISOSplitter(
+      addDays(new Date(date), 1).toISOString(),
+      0
+    );
     setBottomSheetDirtyDate(correctDate);
     setBottomSheetActiveIndex(1);
     setBottomSheetVisible(true);
@@ -63,15 +66,15 @@ const TimelineComponent: React.FC<TimelineProps> = (props) => {
   };
   return (
     <TimelineCalendar
+      timeZone="Europe/Warsaw"
+      locale="pl"
       isLoading={isLoading}
       ref={calendarRef}
       start={7}
       isShowHeader={timelineHeaderShown}
-      timeZone="Europe/Warsaw"
       viewMode={viewMode}
       allowPinchToZoom
       overlapEventsSpacing={4}
-      locale="pl"
       scrollToNow={false}
       unavailableHours={unavailableHours}
       events={events}

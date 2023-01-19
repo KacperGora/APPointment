@@ -25,6 +25,7 @@
     "@shopify/flash-list": "1.1.0",
     "@types/react-native-snap-carousel": "^3.8.5",
     "date-fns": "^2.29.3",
+    "dayjs": "^1.11.7",
     "expo": "~46.0.16",
     "expo-app-loading": "~2.1.0",
     "expo-calendar": "~10.3.0",

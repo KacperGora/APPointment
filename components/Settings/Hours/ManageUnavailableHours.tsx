@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useContext } from "react";
-import { Button, Text, View } from "react-native";
-import { SaloonContext } from "../../../store/SaloonStore";
-import pickHandler from "../../../Utils/pickHandler";
+import React from "react";
+import { View } from "react-native";
 
 import HoursSettings from "./HoursSettings";
 

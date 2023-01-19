@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react";
 import { MarkedDates } from "react-native-calendars/src/types";
-import useGetSortedAgendaEvents from "./useGetSortedAgendaEvents";
+import useFetchEvents from "./useFetchEvents";
 
 const useSetMarkedDates = () => {
   const [markedDates, setMarkedDates] = useState({});
-  const sortedEvents = useGetSortedAgendaEvents();
+  const { data } = useFetchEvents();
   useEffect(() => {
     const marked: MarkedDates = {};
-    sortedEvents.length > 0
-      ? sortedEvents?.forEach((el) => {
-          if (el.data && el.data.length > 0 && el.data.length < 2) {
-            marked[el.title] = { marked: true, dotColor: "green" };
-          } else if (el.data.length >= 2 && el.data.length < 4) {
-            marked[el.title] = { marked: true, dotColor: "lightblue" };
-          } else if (el.data.length >= 4) {
-            marked[el.title] = { marked: true, dotColor: "red" };
-          }
-        })
-      : null;
+    for (const key of Object.keys(data)) {
+      marked[key] = {
+        marked: true,
+        dotColor: data[key].length > 4 ? "red" : "green",
+      };
+    }
     setMarkedDates(marked);
-  }, [sortedEvents]);
+  }, [data]);
+
   return markedDates;
 };
 export default useSetMarkedDates;

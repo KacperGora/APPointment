@@ -56,7 +56,7 @@ export const salonWorkers = [
 export const servicesDetails = [
   {
     value: "Manicure Klasyczny",
-    isActive: true,
+    isActive: false,
     duration: 90,
     price: "40PLN",
   },

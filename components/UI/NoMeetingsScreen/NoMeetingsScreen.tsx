@@ -25,7 +25,8 @@ const NoMeetingsScreen: React.FC<NoItemsScreenProps> = ({
         alignItems: "center",
         justifyContent: "center",
         flex: 1,
-        marginTop: 100,
+        paddingTop: 100,
+        backgroundColor: "white",
       }}
     >
       <Pressable

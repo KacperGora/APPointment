@@ -5,7 +5,7 @@ import CustomersList from "./CustomerList";
 import SaloonCustomersListTools from "./SaloonCustomersTools";
 import { SaloonContext } from "../../../store/SaloonStore";
 import AddNewCustomerForm from "./AddNewCustomerForm";
-import BottomSheetForm from "../../BottomSheet/BottomSheetForm";
+import BottomSheetForm from "../../BottomSheet/BottomSheetComponent";
 
 function SalonCustomers() {
   const salonCtx = useContext(SaloonContext);

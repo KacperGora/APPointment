@@ -10,9 +10,10 @@ import EmptyWeek from "./EmptyWeek";
 const AgendaDay: React.FC<AgendaDayProps> = (props) => {
   const { item, emptyWeeks, fullDate } = props;
   const agendaDayConfig = getAgendaDayConfig(props);
-  const emptyDates = emptyWeeks.filter(
+  const emptyDates = emptyWeeks?.filter(
     (week) => (week.start || week) === fullDate
   );
+
   if (item !== undefined) {
     return (
       <ViewRow>
@@ -33,7 +34,8 @@ const AgendaDay: React.FC<AgendaDayProps> = (props) => {
       </ViewRow>
     );
   } else {
-    return emptyDates.map((date) => <EmptyWeek date={date} />);
+    return emptyDates.map((date) => <EmptyWeek key={date.start} date={date} />);
   }
 };
+
 export default AgendaDay;

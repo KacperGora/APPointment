@@ -1,4 +1,5 @@
 import { addMinutes, areIntervalsOverlapping } from "date-fns";
+import dayjs from "dayjs";
 import { useContext, useEffect, useState } from "react";
 import { MeetingsContext } from "../../../../store/CalendarStore";
 
@@ -10,24 +11,25 @@ function useCheckOverlappingEvents(
 ) {
   const [isOverlapped, setOverlapped] = useState(false);
   const ctx = useContext(MeetingsContext);
-  const meetings = ctx.meetings;
-  const meetingsAtPickedDate = meetings[pickedDate];
+  const data = ctx.meetings;
+  const meetingsAtPickedDate = data[pickedDate];
   const employeeMeetingsArray = meetingsAtPickedDate?.filter(
     (meeting) => meeting.worker === worker
   );
+
   useEffect(() => {
     setOverlapped(false);
     if (Number.isInteger(employeeMeetingsArray?.length)) {
-      employeeMeetingsArray.forEach((meeting) => {
+      employeeMeetingsArray?.forEach((meeting) => {
         if (
           areIntervalsOverlapping(
             {
-              start: new Date(meeting?.start),
-              end: new Date(meeting?.end),
+              start: dayjs(meeting?.start).toDate(),
+              end: dayjs(meeting?.start).toDate(),
             },
             {
               start: newMeetingDate,
-              end: addMinutes(newMeetingDate, serviceDuration),
+              end: addMinutes(newMeetingDate, serviceDuration || 90),
             }
           )
         ) {

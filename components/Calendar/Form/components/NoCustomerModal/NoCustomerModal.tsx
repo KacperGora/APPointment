@@ -1,8 +1,12 @@
 import React from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { colors } from "../../../../colors";
+import { Modal } from "react-native";
 import ActionButtons from "../../../../UI/ActionButtons/ActionButtons";
-import RegularButton from "../../../../UI/Buttons/RegularButton";
+import RegularText16 from "../../../../UI/Text/RegularText";
+import SmallText from "../../../../UI/Text/SmallText";
+import {
+  ModalCentredViewContainer,
+  ModalContainer,
+} from "../../style/Form.style";
 
 const NoCustomerModal = ({
   modalShow,
@@ -10,6 +14,16 @@ const NoCustomerModal = ({
   showBottomSheetHandler,
   cancelButtonPressHandler,
 }) => {
+  const confirmButton = {
+    onPress: showBottomSheetHandler,
+    title: "Dodaj",
+    primary: true,
+  };
+  const dismissButton = {
+    onPress: cancelButtonPressHandler,
+    title: "Powrót",
+  };
+
   return (
     <Modal
       animationType="fade"
@@ -19,57 +33,21 @@ const NoCustomerModal = ({
         setModalShow(!modalShow);
       }}
     >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalHeader}>Nie znaleziono takiego klienta</Text>
-          <Text style={styles.modalText}>Czy chcesz go dodać?</Text>
+      <ModalCentredViewContainer>
+        <ModalContainer>
+          <RegularText16 textStyles={{ marginVertical: 12 }}>
+            Nie znaleziono takiego klienta
+          </RegularText16>
+          <SmallText textStyles={{ marginBottom: 12 }}>
+            Czy chcesz go dodać?
+          </SmallText>
           <ActionButtons
-            confirmButton={{
-              onPress: showBottomSheetHandler,
-              title: "Dodaj",
-              primary: true,
-            }}
-            dismissButton={{
-              onPress: cancelButtonPressHandler,
-              title: "Powrót",
-            }}
+            confirmButton={confirmButton}
+            dismissButton={dismissButton}
           />
-        </View>
-      </View>
+        </ModalContainer>
+      </ModalCentredViewContainer>
     </Modal>
   );
 };
 export default NoCustomerModal;
-const styles = StyleSheet.create({
-  modalHeader: {
-    fontWeight: "600",
-    textAlign: "center",
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#1a1a1a56",
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colors.graylight,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "gray",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-});

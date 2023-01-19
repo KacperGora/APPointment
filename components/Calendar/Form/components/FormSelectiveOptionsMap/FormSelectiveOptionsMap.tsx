@@ -1,59 +1,33 @@
-import React from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { colors } from "../../../../colors";
+import React, { useMemo } from "react";
+import SmallText from "../../../../UI/Text/SmallText";
+import { getActiveTileStyle } from "../../config/formConfig";
+import { StyledPressable, StyledScrollView } from "../../style/Form.style";
 
-const FormSelectiveOptionsMap = ({ data, pressHandler }) => {
-  return (
-    <ScrollView
-      showsVerticalScrollIndicator
-      horizontal
-      style={styles.serviceBox}
-    >
-      {data.map((item, index) => (
-        <Pressable
-          key={index}
-          onPress={() => pressHandler(index)}
-          style={[styles.container, item.isActive ? styles.active : null]}
-        >
-          <Text style={styles.item}>{item.value}</Text>
-        </Pressable>
-      ))}
-    </ScrollView>
-  );
+const FormSelectiveOptionsMap = ({ data }) => {
+  const activeTileStyle = useMemo(() => {
+    return getActiveTileStyle();
+  }, []);
+
+  return data.map((item) => {
+    return (
+      item.render && (
+        <StyledScrollView key={item.id} showsVerticalScrollIndicator horizontal>
+          {item.data.map((element, index: number) => {
+            return (
+              <StyledPressable
+                key={index}
+                onPress={item.pressHandler.bind(this, index)}
+                style={[element.isActive ? activeTileStyle.style : null]}
+              >
+                <SmallText textStyles={activeTileStyle.textStyle}>
+                  {element.value}
+                </SmallText>
+              </StyledPressable>
+            );
+          })}
+        </StyledScrollView>
+      )
+    );
+  });
 };
 export default FormSelectiveOptionsMap;
-const styles = StyleSheet.create({
-  active: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.primary,
-    shadowColor: colors.greydark,
-    shadowOffset: { width: 2, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
-    transform: [{ scaleX: 1.052 }],
-  },
-  container: {
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    margin: 4,
-
-    height: "auto",
-    borderColor: colors.greydark,
-    borderWidth: 0.3,
-  },
-  item: {
-    color: "black",
-    fontWeight: "bold",
-    fontSize: 12,
-    textAlign: "center",
-  },
-  serviceBox: {
-    borderBottomColor: "lightgray",
-    borderBottomWidth: 0.3,
-    paddingVertical: 12,
-    paddingHorizontal: 6,
-  },
-});

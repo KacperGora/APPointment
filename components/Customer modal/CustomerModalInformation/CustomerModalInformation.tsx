@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import React, { useMemo } from "react";
 import { StyleProp, TextStyle, View } from "react-native";
 import getClosestPastCustomerMeeting from "../../../hooks/Customer/getClosestPastCustomerMeeting";
@@ -17,7 +18,7 @@ const CustomerModalInformation: React.FC<ModalInformation> = ({ item }) => {
   const formattedDate =
     typeof closestPastMeeting === "string"
       ? null
-      : new Date(closestPastMeeting.start).toLocaleString().slice(0, 17);
+      : dayjs(closestPastMeeting.start).format("DD MMM YYYY HH:mm");
 
   return typeof closestPastMeeting === "string" ? (
     <RegularText16 textStyles={{ textAlign: "center", margin: 12 }}>

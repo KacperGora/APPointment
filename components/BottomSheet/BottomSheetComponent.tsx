@@ -1,12 +1,13 @@
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useMemo, useRef } from "react";
 import React from "react";
-import { StyleSheet } from "react-native";
+import { View } from "react-native";
 import { colors } from "../colors";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { BottomSheetProps } from "../../types";
+import { StyledViewBorder } from "../shared";
 
-const BottomSheetForm: React.FC<BottomSheetProps> = ({
+const BottomSheetComponent: React.FC<BottomSheetProps> = ({
   index,
   children,
   setIndex,
@@ -29,23 +30,10 @@ const BottomSheetForm: React.FC<BottomSheetProps> = ({
       handleIndicatorStyle={{ backgroundColor: colors.primary }}
       backgroundStyle={{ backgroundColor: "transparent" }}
     >
-      <KeyboardAwareScrollView
-        style={styles.contentContainer}
-        extraScrollHeight={30}
-        contentContainerStyle={{ alignItems: "center" }}
-      >
-        {children}
-      </KeyboardAwareScrollView>
+      <StyledViewBorder>
+        <KeyboardAwareScrollView>{children}</KeyboardAwareScrollView>
+      </StyledViewBorder>
     </BottomSheet>
   );
 };
-export default React.memo(BottomSheetForm);
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
-    backgroundColor: "white",
-    borderColor: "lightgray",
-    borderWidth: 1,
-  },
-});
+export default React.memo(BottomSheetComponent);

@@ -11,7 +11,10 @@ import {
   KeyboardTypeOptions,
   ReturnKeyTypeOptions,
   TextInputProps,
+  TextStyle,
+  ViewStyle,
 } from "react-native";
+import { TDaySelectionAnimation } from "react-native-calendar-strip";
 
 export interface Meeting {
   id: string;
@@ -30,7 +33,13 @@ export interface Meeting {
   name: string;
   day: string;
 }
-
+export type RouteProps = {
+  params: {
+    viewMode?: CalendarViewMode;
+    date?: string;
+    onCloseBottomSheet?: () => void;
+  };
+};
 export interface AllMeetings {
   [title: string]: Meeting[];
 }
@@ -157,6 +166,37 @@ export type AgendaDayProps = {
 };
 export type AgendaItemProps = {
   item: Meeting;
-  emptyWeeks: any;
-  fullDate: any;
+  emptyWeeks?: any;
+  fullDate?: any;
+};
+
+export type InputComponentProps = {
+  setUserTypedName: React.Dispatch<React.SetStateAction<string>>;
+  setUserTypedLastName: React.Dispatch<React.SetStateAction<string>>;
+  fullName: string;
+};
+export type FormCalendarStripProps = {
+  date: string;
+  setNewDate: React.Dispatch<React.SetStateAction<string>>;
+};
+export type CalendarStripProps = {
+  style: ViewStyle;
+  calendarAnimation: { duration: number; type: "sequence" | "parallel" };
+  daySelectionAnimation: TDaySelectionAnimation;
+  calendarHeaderStyle: TextStyle;
+  highlightDateContainerStyle: ViewStyle;
+  dateNumberStyle: TextStyle;
+  dateNameStyle: TextStyle;
+  highlightDateNameStyle: TextStyle;
+  highlightDateNumberStyle: TextStyle;
+  disabledDateNameStyle: TextStyle;
+  disabledDateNumberStyle: TextStyle;
+};
+export type MeetingDetailProps = {
+  date: Date;
+  service: SelectiveOptions;
+  endHour: string;
+  worker: string;
+  submitHandler: () => {};
+  customerName: string;
 };

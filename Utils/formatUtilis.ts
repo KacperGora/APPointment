@@ -1,15 +1,28 @@
-import { subHours } from "date-fns";
+import dayjs from "dayjs";
 import calculateTimeOfEnd from "./calculateTimeOfEnd";
+import { Hours, SelectiveOptions } from "../types";
+export const dateFormatter = (
+  pickedDate: string,
+  pickedHour: Hours,
+  pickedService: SelectiveOptions,
+  availableHours: Hours[]
+) => {
+  const startFullDateISO = dayjs(
+    `${pickedDate} ${pickedHour?.value || availableHours[0]?.value || "09:00"}`
+  ).toISOString();
+  const startFullDate = dayjs(startFullDateISO).toDate();
 
-export const dateFormatter = (pickedDate, pickedHour, pickedService) => {
-  const startFullDate =
-    pickedDate + "T" + (pickedHour?.value || "09:00") + ":00.000Z";
-  const startISO = new Date(subHours(new Date(startFullDate), 1)).toISOString();
-  const endHour = calculateTimeOfEnd(startFullDate, pickedService?.duration);
-  const endFullDate = pickedDate + "T" + endHour + ".000Z";
-  const endISODate = new Date(subHours(new Date(endFullDate), 1)).toISOString();
+  const day = dayjs(startFullDate).format("YYYY-MM-DD");
+  const endHour = calculateTimeOfEnd(startFullDateISO, pickedService?.duration);
+  const endFullDateISO = dayjs(`${pickedDate} ${endHour}`).toISOString();
 
-  return { startFullDate, startISO, endHour, endISODate };
+  return {
+    startFullDateISO,
+    endHour,
+    endFullDateISO,
+    startFullDate,
+    day,
+  };
 };
 
 export const phoneNumberFormatter = (phoneNumber: string) => {

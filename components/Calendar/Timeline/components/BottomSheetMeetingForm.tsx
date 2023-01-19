@@ -1,5 +1,6 @@
 import React from "react";
-import BottomSheetForm from "../../../BottomSheet/BottomSheetForm";
+import BottomSheet from "../../../BottomSheet/BottomSheetComponent";
+import BottomSheetForm from "../../../BottomSheet/BottomSheetComponent";
 import MeetingForm from "../../Form";
 
 const BottomSheetMeetingForm = ({
@@ -9,7 +10,7 @@ const BottomSheetMeetingForm = ({
   onCloseBottomSheet,
 }) => {
   return (
-    <BottomSheetForm
+    <BottomSheet
       index={index}
       setIndex={setIndex}
       onCloseBottomSheet={onCloseBottomSheet}
@@ -18,7 +19,7 @@ const BottomSheetMeetingForm = ({
         timelineDate={bottomSheetDirtyDate}
         onCloseBottomSheet={onCloseBottomSheet}
       />
-    </BottomSheetForm>
+    </BottomSheet>
   );
 };
 export default BottomSheetMeetingForm;
