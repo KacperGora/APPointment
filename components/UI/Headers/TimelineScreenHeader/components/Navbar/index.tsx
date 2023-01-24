@@ -7,6 +7,8 @@ const Navbar = ({
   onGestureStart,
   searchIconPressHandler,
   onTodayIconPressHandler,
+  disableSearchBar,
+  disableCalendar,
 }) => {
   const menuIconPressHandler = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
@@ -27,19 +29,22 @@ const Navbar = ({
         calendarListVisible={true}
         monthName={monthName}
         onGestureStart={onGestureStart}
+        disableCalendar={disableCalendar}
       />
-      <Ionicons
-        name="md-search"
-        size={24}
-        color="gray"
-        onPress={searchIconPressHandler}
-      />
+      {disableSearchBar ? null : (
+        <Ionicons
+          name="md-search"
+          size={24}
+          color="gray"
+          onPress={searchIconPressHandler}
+        />
+      )}
       <Ionicons
         name="ios-today-outline"
         size={24}
         color="gray"
         onPress={calendarIconPressHandler}
-      ></Ionicons>
+      />
     </>
   );
 };

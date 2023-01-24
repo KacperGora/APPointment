@@ -13,6 +13,7 @@ import { TimelineProps } from "../../../../types";
 import { getTimelineTheme } from "../themes/themes";
 import { getMonthName, ISOSplitter } from "../../../../Utils/formatUtilis";
 import dayjs from "dayjs";
+import { Text, View } from "react-native";
 
 const TimelineComponent: React.FC<TimelineProps> = (props) => {
   const {
@@ -54,8 +55,6 @@ const TimelineComponent: React.FC<TimelineProps> = (props) => {
   };
 
   const longPressHandler = (date: string) => {
-    console.log(date);
-    console.log(dayjs(date).format("YYYY-MM-DD"));
     setBottomSheetDirtyDate(dayjs(date).format("YYYY-MM-DD"));
     setBottomSheetActiveIndex(1);
     setBottomSheetVisible(true);

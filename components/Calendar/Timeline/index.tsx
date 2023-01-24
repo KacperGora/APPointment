@@ -7,13 +7,15 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import TimelineComponent from "./components/TimelineComponent";
 import useFetchEvents from "../../../hooks/calendar/useFetchEvents";
-import useGetCustomers from "../../../hooks/Salon/useGetCustomers";
 import MyStatusBar from "../../UI/StatusBar/MyStatusBar";
 import { getMonthName } from "../../../Utils/formatUtilis";
 import BottomSheetMeetingForm from "./components/BottomSheetMeetingForm";
 import { RouteProps } from "../../../types";
 import BottomSheetSelectedEvent from "./components/BottomSheetSelectedEvent";
 import TimelineScreenHeader from "../../UI/Headers/TimelineScreenHeader/TimelineScreenHeader";
+import dayjs from "dayjs";
+import NoCustomerModal from "../Form/components/NoCustomerModal/NoCustomerModal";
+import { Modal } from "react-native";
 
 const Timeline = () => {
   const route = useRoute<RouteProp<RouteProps>>();
@@ -27,6 +29,8 @@ const Timeline = () => {
   const [editedEventDraft, setEditedEventDraft] = useState<PackedEvent>();
   const [timelineHeaderShown, setTimelineHeaderShown] = useState(true);
   const [events, setEvents] = useState<EventItem[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [searchedEvents, setSearchedEvents] = useState([]);
   const [bottomSheetActiveIndex, setBottomSheetActiveIndex] = useState(0);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [bottomSheetDirtyDate, setBottomSheetDirtyDate] = useState(
@@ -37,24 +41,31 @@ const Timeline = () => {
   useEffect(() => {
     setEvents(flatData);
   }, [flatData]);
-  useGetCustomers();
-
-  const onPressCancel = () => {
-    setSelectedEvent(undefined);
-  };
 
   const onCloseBottomSheet = () => {
     setBottomSheetVisible(false);
     setBottomSheetActiveIndex(0);
   };
+  const optionalProps = {
+    date: searchedEvents[0]?.day || dayjs().format("YYYY-MM-DD"),
+    animatedHour: true,
+    animatedDate: true,
+  };
+
   const onTodayIconPressHandler = () => {
-    const optionalProps = {
-      date: new Date().toISOString().split("T")[0],
-      animatedHour: true,
-      animatedDate: true,
-    };
     calendarRef?.current?.goToDate(optionalProps);
   };
+
+  useEffect(() => {
+    if (searchedEvents.length !== 0) {
+      setEvents(searchedEvents);
+      calendarRef?.current?.goToDate(optionalProps);
+    } else {
+      setEvents(flatData);
+      calendarRef?.current?.goToDate(optionalProps);
+      // setShowModal(true);
+    }
+  }, [searchedEvents]);
   return (
     <MyStatusBar>
       <TimelineScreenHeader
@@ -62,6 +73,8 @@ const Timeline = () => {
         calendarRef={calendarRef}
         monthName={monthName}
         onTodayIconPressHandler={onTodayIconPressHandler}
+        setSearchedEvents={setSearchedEvents}
+        disableCalendar={false}
       />
       <TimelineComponent
         calendarRef={calendarRef}
@@ -77,6 +90,7 @@ const Timeline = () => {
         viewMode={viewMode}
         timelineHeaderShown={timelineHeaderShown}
       />
+
       {bottomSheetVisible ? (
         <BottomSheetMeetingForm
           bottomSheetDirtyDate={bottomSheetDirtyDate}

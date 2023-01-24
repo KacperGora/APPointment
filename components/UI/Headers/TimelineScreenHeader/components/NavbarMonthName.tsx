@@ -12,11 +12,9 @@ const NavbarMonthName = ({
   onGestureStart,
   monthName,
   calendarListVisible,
+  disableCalendar,
 }) => {
-  const show = Gesture.Fling()
-    .direction(Directions.DOWN)
-    .onStart(onGestureStart)
-    .runOnJS(true);
+  const show = Gesture.Pan().onStart(onGestureStart);
 
   return (
     <GestureDetector gesture={show}>
@@ -31,12 +29,14 @@ const NavbarMonthName = ({
         <RegularText16 textStyles={{ marginRight: 6 }}>
           {monthName}
         </RegularText16>
-        <Octicons
-          style={{ alignSelf: "center" }}
-          name={!calendarListVisible ? "triangle-up" : "triangle-down"}
-          size={24}
-          color="gray"
-        />
+        {disableCalendar ? null : (
+          <Octicons
+            style={{ alignSelf: "center" }}
+            name={!calendarListVisible ? "triangle-up" : "triangle-down"}
+            size={24}
+            color="gray"
+          />
+        )}
       </Pressable>
     </GestureDetector>
   );

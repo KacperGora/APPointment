@@ -18,6 +18,8 @@ import NoMeetingsScreen from "../../UI/NoMeetingsScreen/NoMeetingsScreen";
 import useGetEmptyWeeks from "./hooks/useGetEmptyWeeks";
 import TimelineScreenHeader from "../../UI/Headers/TimelineScreenHeader/TimelineScreenHeader";
 import dayjs from "dayjs";
+import { useRoute } from "@react-navigation/native";
+import { isEmpty } from "lodash";
 
 const AgendaComponent: React.FC = () => {
   const markedDates = useSetMarkedDates();
@@ -75,12 +77,14 @@ const AgendaComponent: React.FC = () => {
       <TimelineScreenHeader
         monthName={monthName}
         disableCalendar
+        disableSearchBar
         onTodayIconPressHandler={onTodayIconPressHandler}
       />
       <Agenda
         items={items}
         renderDay={renderDayHandler}
         onDayChange={changeMonthNameHandler}
+        renderEmptyData={renderEmptyDataHandler}
         showClosingKnob
         theme={theme.current}
         ref={agendaRef}

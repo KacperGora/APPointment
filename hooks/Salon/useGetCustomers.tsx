@@ -6,9 +6,10 @@ import { SaloonContext } from "../../store/SaloonStore";
 const useGetCustomers = () => {
   const [customers, setCustomers] = useState([]);
   const salonCtx = useContext(SaloonContext);
-  useEffect(() => {
+
+  const fetchUsers = () => {
     const q = query(collection(db, "customers"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    onSnapshot(q, (querySnapshot) => {
       const users = [];
       querySnapshot.forEach((doc) => {
         users.push(doc.data());
@@ -16,9 +17,8 @@ const useGetCustomers = () => {
       setCustomers(users);
       salonCtx.getCustomers(users);
     });
-    return () => unsubscribe();
-  }, []);
+  };
 
-  return customers;
+  return { fetchUsers, customers };
 };
 export default useGetCustomers;

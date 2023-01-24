@@ -13,8 +13,7 @@ const AgendaDay: React.FC<AgendaDayProps> = (props) => {
   const emptyDates = emptyWeeks?.filter(
     (week) => (week.start || week) === fullDate
   );
-  console.log(props);
-  console.log(agendaDayConfig);
+
   if (item !== undefined) {
     return (
       <ViewRow>

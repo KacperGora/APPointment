@@ -22,7 +22,7 @@ const BottomSheetSelectedEvent: React.FC<BottomSheetSelectedEv> = ({
   const customer = useGetCurrentCustomer(selectedEvent.worker);
 
   const [isEditing, setIsEditing] = useState(false);
-  const formattedPhoneNumber = phoneNumberFormatter(customer.phoneNumber);
+  // const formattedPhoneNumber = phoneNumberFormatter(customer.phoneNumber);
 
   const [index, setIndex] = useState(0);
   const [bottomSheetShown, setBottomSheetShow] = useState(true);
@@ -40,10 +40,10 @@ const BottomSheetSelectedEvent: React.FC<BottomSheetSelectedEv> = ({
     console.log("ab");
   };
 
-  const closestPastMeeting = useMemo(
-    () => getClosestPastCustomerMeeting(customer),
-    [customer]
-  );
+  // const closestPastMeeting = useMemo(
+  //   () => getClosestPastCustomerMeeting(customer),
+  //   [customer]
+  // );
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const snapPoints = useMemo(() => ["20%", "95%"], []);
@@ -121,10 +121,10 @@ const BottomSheetSelectedEvent: React.FC<BottomSheetSelectedEv> = ({
           <NewMeetingFormSummary
             customerName={selectedEvent.title}
             worker={selectedEvent.worker}
-            service={selectedEvent.serviceName}
+            service={selectedEvent?.serviceName}
             submitHandler={null}
             date={dayjs(selectedEvent?.start).toDate()}
-            endHour={editedEventDraft?.endHour}
+            endHour={selectedEvent?.endHour}
             style={{ borderWidth: 0, margin: 0, width: "100%" }}
           />
         ) : (
