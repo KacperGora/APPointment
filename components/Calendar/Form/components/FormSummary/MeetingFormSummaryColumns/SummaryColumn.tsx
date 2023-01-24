@@ -3,16 +3,17 @@ import { View, Text } from "react-native";
 import SmallText from "../../../../../UI/Text/SmallText";
 
 const SummaryColumn = ({ data }) => {
+  // console.log(data);
   return (
     <View
       style={[
         {
           paddingHorizontal: 6,
-          paddingVertical: 12,
+          // paddingVertical: 12,
         },
       ]}
     >
-      <View style={{ marginVertical: 6 }}>
+      <View style={{}}>
         <Text style={{ color: "black", ...data.title.styling }}>
           {data.title.value}
         </Text>

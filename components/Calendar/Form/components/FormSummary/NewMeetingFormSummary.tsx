@@ -13,6 +13,8 @@ const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
   worker,
   submitHandler,
   customerName,
+  children,
+  style,
 }) => {
   const dateString = dayjs(date).format("DD MMM YYYY");
   const startHour = dayjs(date).format("HH:mm");
@@ -30,11 +32,12 @@ const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
   const columnsData = getSummaryColumnsData(data);
 
   return (
-    <SummaryViewContainer style={shadowStyle}>
+    <SummaryViewContainer style={[shadowStyle, style]}>
       <RowContainerSpaceBetween>
         <SummaryColumn data={columnsData.firstCol} />
         <SummaryColumn data={columnsData.secondCol} />
       </RowContainerSpaceBetween>
+      {children}
     </SummaryViewContainer>
   );
 };

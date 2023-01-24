@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { TextStyle } from "react-native";
 import useFetchEvents from "../../../../hooks/calendar/useFetchEvents";
 import { colors } from "../../../colors";
@@ -7,7 +6,7 @@ import getDailyIncome from "../helpers/getDailyIncome";
 export function getAgendaDayConfig(props) {
   const { item, nameDay, day, nameMonth, fullDate } = props;
   const { flatData } = useFetchEvents();
-  const dailyIncome = useMemo(() => getDailyIncome(flatData), [flatData]);
+  const dailyIncome = getDailyIncome(flatData);
 
   const textStyle: TextStyle = {
     fontSize: 12,
@@ -30,12 +29,13 @@ export function getAgendaDayConfig(props) {
     {
       id: 3,
       text:
-        dailyIncome[fullDate] !== undefined
-          ? `${dailyIncome[fullDate]} PLN`
-          : null,
+        dailyIncome[fullDate] === undefined
+          ? null
+          : `${dailyIncome[fullDate]} PLN`,
       props: textStyle2,
     },
   ];
+
   return agendaDayConfig;
 }
 

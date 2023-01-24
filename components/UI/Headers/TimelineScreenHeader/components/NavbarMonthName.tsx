@@ -6,7 +6,7 @@ import {
   Gesture,
   GestureDetector,
 } from "react-native-gesture-handler";
-import RegularText16 from "../../../../Text/RegularText";
+import RegularText16 from "../../../Text/RegularText";
 
 const NavbarMonthName = ({
   onGestureStart,

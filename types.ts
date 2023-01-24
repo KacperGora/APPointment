@@ -193,10 +193,29 @@ export type CalendarStripProps = {
   disabledDateNumberStyle: TextStyle;
 };
 export type MeetingDetailProps = {
-  date: Date;
-  service: SelectiveOptions;
-  endHour: string;
-  worker: string;
-  submitHandler: () => {};
-  customerName: string;
+  date?: Date;
+  service?: SelectiveOptions;
+  endHour?: string;
+  worker?: string;
+  submitHandler?: () => {};
+  customerName?: string;
+  children?: any;
+  style?: ViewStyle;
+};
+export type MeetingFormProps = {
+  timelineDate: string;
+  onCloseBottomSheet?: () => void;
+  worker?: string;
+  service?: any;
+  customerName?: string;
+  editing?: boolean;
+  editedEventDraft?: any;
+  selectedEvent?: any;
+  setEditingFinished?: any;
+  setIndexForm?: any;
+};
+export type BottomSheetSelectedEv = {
+  selectedEvent: PackedEvent;
+  editedEventDraft: PackedEvent;
+  setSelectedEvent: React.Dispatch<React.SetStateAction<PackedEvent>>;
 };

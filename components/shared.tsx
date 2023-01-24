@@ -10,8 +10,10 @@ export const Container = styled.View`
 `;
 export const TextContainer = styled.View`
   flex: 1;
-  justify-content: center;
-  padding: 0px 12px 24px 24px;
+  justify-items: baseline;
+  margin: 24px 12px
+  /* justify-content: center; */
+  /* padding: 0px 12px 24px 24px; */
 `;
 export const SafeAreaContainer = styled.SafeAreaView`
   flex: 1;

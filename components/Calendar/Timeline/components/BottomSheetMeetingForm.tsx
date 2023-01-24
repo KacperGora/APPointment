@@ -1,6 +1,5 @@
 import React from "react";
 import BottomSheet from "../../../BottomSheet/BottomSheetComponent";
-import BottomSheetForm from "../../../BottomSheet/BottomSheetComponent";
 import MeetingForm from "../../Form";
 
 const BottomSheetMeetingForm = ({

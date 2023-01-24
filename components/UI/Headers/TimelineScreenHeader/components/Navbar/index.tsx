@@ -1,7 +1,7 @@
-import NavbarMonthName from "./components/NavbarMonthName";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
+import NavbarMonthName from "../NavbarMonthName";
 const Navbar = ({
   monthName,
   onGestureStart,

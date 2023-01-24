@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { RowContainerSpaceBetween } from "../../shared";
-import SearchBar from "./components/Searchbar/SearchBar";
-import Navbar from "./components/Navbar";
+import { RowContainerSpaceBetween } from "../../../shared";
 import CalendarListComponent from "./components/CalendarList/CalendarListComponent";
+import Navbar from "./components/Navbar";
+import SearchBar from "./components/Searchbar/SearchBar";
+
 type TimelineScreenHeaderProps = {
   calendarRef?: any;
   monthName?: any;

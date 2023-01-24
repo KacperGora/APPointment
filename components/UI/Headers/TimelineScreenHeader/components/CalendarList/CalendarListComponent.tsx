@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { CalendarList, DateData, LocaleConfig } from "react-native-calendars";
-import useSetMarkedDates from "../../../../../hooks/calendar/useSetMarkedDates";
-import { getCalendarListTheme } from "../../../../Calendar/Timeline/themes/themes";
-import { getCalendarLocale } from "../../../../shared";
+import useSetMarkedDates from "../../../../../../hooks/calendar/useSetMarkedDates";
+import { getCalendarListTheme } from "../../../../../Calendar/Timeline/themes/themes";
+import { getCalendarLocale } from "../../../../../shared";
 LocaleConfig.locales["pl"] = getCalendarLocale();
 LocaleConfig.defaultLocale = "pl";
 const CalendarListComponent = ({ calendarRef }) => {

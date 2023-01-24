@@ -1,9 +1,10 @@
 import React from "react";
 import { TextInput } from "react-native";
-import { colors } from "../../../../colors";
-import { RowContainerSpaceBetween } from "../../../../shared";
+
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import { colors } from "../../../../../colors";
+import { RowContainerSpaceBetween } from "../../../../../shared";
 const SearchBar = ({ setSearchBarVisible, searchIconPressHandler }) => {
   return (
     <RowContainerSpaceBetween style={{ padding: 12 }}>

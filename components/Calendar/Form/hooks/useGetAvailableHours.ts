@@ -22,7 +22,7 @@ const useGetAvailableHours = (
   const rawAvailableHours = openHours
     .filter((hour) => !excludedTimesAtThisDayForEmployee?.includes(hour.value))
     .map((el) => el.value);
-  console.log(excludedTimesAtThisDayForEmployee);
+
   const avHours = [];
 
   const loopNumber =
@@ -40,7 +40,7 @@ const useGetAvailableHours = (
       avHours.push(rawAvailableHours[i]);
     }
   }
-  // console.log(avHours);
+
   return avHours.map((el) => {
     return { value: el, isActive: false };
   });

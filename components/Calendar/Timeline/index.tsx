@@ -8,13 +8,12 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import TimelineComponent from "./components/TimelineComponent";
 import useFetchEvents from "../../../hooks/calendar/useFetchEvents";
 import useGetCustomers from "../../../hooks/Salon/useGetCustomers";
-import TimelineScreenHeader from "../../UI/Headers/TimelineScreenHeader";
 import MyStatusBar from "../../UI/StatusBar/MyStatusBar";
 import { getMonthName } from "../../../Utils/formatUtilis";
 import BottomSheetMeetingForm from "./components/BottomSheetMeetingForm";
-import ActionButtons from "../../UI/ActionButtons/ActionButtons";
 import { RouteProps } from "../../../types";
 import BottomSheetSelectedEvent from "./components/BottomSheetSelectedEvent";
+import TimelineScreenHeader from "../../UI/Headers/TimelineScreenHeader/TimelineScreenHeader";
 
 const Timeline = () => {
   const route = useRoute<RouteProp<RouteProps>>();
@@ -56,15 +55,6 @@ const Timeline = () => {
     };
     calendarRef?.current?.goToDate(optionalProps);
   };
-  const confirmButton = {
-    title: "Zapisz",
-    onPress: () => console.log("edited"),
-  };
-  const cancelButton = {
-    title: "Anuluj",
-    onPress: onPressCancel,
-  };
-  console.log(selectedEvent);
   return (
     <MyStatusBar>
       <TimelineScreenHeader
@@ -99,6 +89,7 @@ const Timeline = () => {
         <BottomSheetSelectedEvent
           selectedEvent={selectedEvent}
           setSelectedEvent={setSelectedEvent}
+          editedEventDraft={editedEventDraft}
         />
       ) : null}
     </MyStatusBar>

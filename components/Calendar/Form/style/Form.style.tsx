@@ -1,5 +1,6 @@
 import styled from "styled-components/native";
 import { colors } from "../../../colors";
+import { ScreenWidth } from "../../../shared";
 
 export const InputContainer = styled.View`
   flex-direction: row;
@@ -43,12 +44,13 @@ export const ModalCentredViewContainer = styled.View`
   justify-content: center;
   background-color: #1a1a1a56;
 `;
-export const SummaryViewContainer= styled.View`
+export const SummaryViewContainer = styled.View`
   border-width: 1px;
   border-color: ${colors.gray};
   border-radius: 12px;
-  margin: 24px 12px;
+  /* margin: 12px; */
   padding: 12px;
   background-color: white;
-
-`
+  display: flex;
+  flex: 1;
+`;

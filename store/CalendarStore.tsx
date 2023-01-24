@@ -40,6 +40,7 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
 
   const addMeeting = async (newMeeting: Meeting, pickedDate: string) => {
     const newArr = { ...meetings };
+    console.log(newArr)
     if (newArr[pickedDate]) {
       newArr[pickedDate] = [...newArr[pickedDate], newMeeting];
       setMeetings(newArr);
@@ -47,6 +48,7 @@ const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
       newArr[pickedDate] = [newMeeting];
       setMeetings({ ...newArr });
     }
+
     try {
       setIsLoading(true);
       const meetingsRef = doc(db, "meetings", "meetings");

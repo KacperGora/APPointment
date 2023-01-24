@@ -9,14 +9,14 @@ import { hours, salonWorkers } from "../../../data";
 import {
   Hours,
   Meeting,
+  MeetingFormProps,
   RouteProps,
   SelectiveOptions,
   WorkerDetails,
 } from "../../../types";
-import { SaloonContext } from "../../../store/SaloonStore";
 import { servicesDetails } from "../../../data";
 import useGetPickedValue from "../../../hooks/calendar/useGetPickedValue";
-import { dateFormatter, ISOSplitter } from "../../../Utils/formatUtilis";
+import { dateFormatter } from "../../../Utils/formatUtilis";
 import emptyEventDataChecker from "../../../Utils/emptyEventDataChecker";
 import Spinner from "../../UI/Spinner/Spinner";
 import FormCoreComponent from "./components/FormCoreComponent/FormCore";
@@ -29,11 +29,26 @@ import { colors } from "../../colors";
 import { Container } from "../../shared";
 import getAvHours from "./hooks/useGetAvailableHours";
 import pickHandler from "../../../Utils/pickHandler";
-const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
+import useGetCurrentCustomer from "../../../hooks/useGetCurrentCustomer";
+import { v4 } from "uuid";
+import dayjs from "dayjs";
+import useFirebase from "../../../hooks/useFirebase";
+import { getSelectiveOptions } from "./config/formConfig";
+
+const MeetingForm: React.FC<MeetingFormProps> = ({
+  timelineDate,
+  onCloseBottomSheet,
+  worker,
+  service,
+  customerName,
+  editing,
+  editedEventDraft,
+  selectedEvent,
+  setEditingFinished,
+  setIndexForm,
+}) => {
   const ctx = useContext(MeetingsContext);
-  const isLoading = ctx.isLoading;
-  const salonCtx = useContext(SaloonContext);
-  const customers = salonCtx.customers;
+
   const [modalShow, setModalShow] = useState(false);
   const [bottomSheetShown, setBottomSheetShown] = useState(false);
   const [dismissAddingCustomer, setDismissAddingCustomer] = useState(false);
@@ -42,30 +57,33 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
   const [availableHours, setAvailableHours] = useState<Hours[]>(hours);
   const [services, setServices] = useState<SelectiveOptions[]>(servicesDetails);
   const [workers, setWorkers] = useState(salonWorkers);
-  const dateString = route.params?.date || ISOSplitter(timelineDate, 0);
+  const dateString = route.params?.date || timelineDate;
+
   const [pickedDate, setPickedDate] = useState(dateString);
   const [pickedHour, setPickedHour] = useState(availableHours[0]);
   const [pickedService, setPickedService] = useState<SelectiveOptions>();
   const [pickedWorker, setPickedWorker] = useState<WorkerDetails>();
-  const [userTypedName, setUserTypedName] = useState("");
-  const [userTypedLastName, setUserTypedLastName] = useState("");
+  const [userTypedName, setUserTypedName] = useState(
+    customerName?.split(" ")[0] || ""
+  );
+
+  const [userTypedLastName, setUserTypedLastName] = useState(
+    customerName?.split(" ")[1] || ""
+  );
   const color = useSetColorForEvent(pickedService);
+  useEffect(() => {
+    setPickedService(services.find((el) => el.value === service));
+    setPickedWorker(workers.find((el) => el.value === worker));
+  }, [worker, service]);
 
   const customerFullName = `${userTypedName} ${userTypedLastName}`;
-
-  const customer = customers.filter((customer) =>
-    customer.fullName
-      .toLowerCase()
-      .includes(
-        userTypedName.toLowerCase() + " " + userTypedLastName.toLowerCase()
-      )
-  );
+  const customer = useGetCurrentCustomer(customerFullName.toLowerCase());
 
   const { endHour, startFullDateISO, endFullDateISO, startFullDate, day } =
     dateFormatter(pickedDate, pickedHour, pickedService, availableHours);
 
   const data: Meeting = {
-    id: new Date(pickedDate)?.toISOString() + Math.random(),
+    id: v4(),
     color: color,
     title: customerFullName,
     serviceName: pickedService?.value,
@@ -84,7 +102,11 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
     name: customerFullName,
     day: day,
   };
-  console.log(data);
+  const { error, isLoading, makeFirebaseCall } = useFirebase(
+    selectedEvent,
+    pickedDate,
+    data
+  );
   const fromDataIsEmpty = emptyEventDataChecker(data);
 
   const res = getAvHours(pickedDate, data?.worker, pickedService);
@@ -104,22 +126,51 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
   useGetPickedValue(setPickedWorker, workers);
 
   const submitHandler = async () => {
-    if (customer.length === 0 && !dismissAddingCustomer && !fromDataIsEmpty) {
-      setModalShow(true);
-      return;
-    } else if (fromDataIsEmpty) {
-      Alert.alert(
-        "Nie wprowadzono danych",
-        "Uzupełnij brakujące dane i spróbuj ponownie."
-      );
-      return;
+    if (editing) {
+      setEditingFinished(false),
+        setIndexForm(0),
+        await makeFirebaseCall("edit");
+      setEditingFinished(true);
+      // const editedLength = dayjs(editedEventDraft.end).diff(
+      //   editedEventDraft.start,
+      //   "minutes"
+      // );
+      // const editedMeeting: Meeting = { ...editedEventDraft };
+      // editedMeeting.day = dayjs(editedEventDraft.start).format("YYYY-MM-DD");
+      // editedMeeting.endHour = dayjs(editedEventDraft.end).format("HH:mm");
+      // editedMeeting.startHourStr = dayjs(editedEventDraft.start).format(
+      //   "HH:mm"
+      // );
+      // editedMeeting.serviceName = data.serviceName;
+      // editedMeeting.serviceDuration = data.serviceDuration;
+      // editedMeeting.servicePrice = data.servicePrice;
+      // editedMeeting.excludedTimes = getEventExcludedTimes(
+      //   editedLength,
+      //   dayjs(editedEventDraft.start).add(1, "hour").toDate()
+      // );
     } else {
-      ctx?.addMeeting(data, ISOSplitter(pickedDate, 0));
-      useAddMeetingForCustomer(customerFullName, data);
-      onCloseBottomSheet();
-      !isLoading && setIndex(0);
+      if (
+        customer === undefined &&
+        !dismissAddingCustomer &&
+        !fromDataIsEmpty
+      ) {
+        setModalShow(true);
+        return;
+      } else if (fromDataIsEmpty) {
+        Alert.alert(
+          "Nie wprowadzono danych",
+          "Uzupełnij brakujące dane i spróbuj ponownie."
+        );
+        return;
+      } else {
+        ctx?.addMeeting(data, pickedDate);
+        useAddMeetingForCustomer(customerFullName, data);
+        onCloseBottomSheet();
+        !isLoading && setIndex(0);
+      }
     }
   };
+
   const selectiveOptionsPressHandler = (
     index: number,
     state: SelectiveOptions[],
@@ -146,30 +197,18 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
     fontWeight: "bold",
     fontSize: 18,
   };
+  const selectiveOptionsData = {
+    workers,
+    services,
+    availableHours,
+    selectiveOptionsPressHandler,
+    setWorkers,
+    setServices,
+    setAvailableHours,
+    pickedService,
+  };
+  const selectMapConfig = getSelectiveOptions(selectiveOptionsData);
 
-  const selectMapConfig = [
-    {
-      id: 3,
-      data: workers,
-      pressHandler: (index: number) =>
-        selectiveOptionsPressHandler(index, workers, setWorkers),
-      render: true,
-    },
-    {
-      id: 2,
-      data: services,
-      pressHandler: (index: number) =>
-        selectiveOptionsPressHandler(index, services, setServices),
-      render: true,
-    },
-    {
-      id: 1,
-      data: availableHours,
-      pressHandler: (index: number) =>
-        selectiveOptionsPressHandler(index, availableHours, setAvailableHours),
-      render: pickedService ? true : false,
-    },
-  ];
   return (
     <Container>
       {isLoading ? (
@@ -184,7 +223,7 @@ const MeetingForm = ({ timelineDate, onCloseBottomSheet }) => {
             isOverlapped={isOverlapped}
             customerName={customerFullName}
             worker={pickedWorker?.value}
-            endHour={endHour.slice(0, 5)}
+            endHour={endHour}
             setPickedDate={setPickedDate}
             setUserTypedLastName={setUserTypedLastName}
             setUserTypedName={setUserTypedName}

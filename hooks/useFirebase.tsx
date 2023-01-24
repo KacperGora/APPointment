@@ -1,3 +1,4 @@
+import { PackedEvent } from "@howljs/calendar-kit";
 import {
   arrayUnion,
   deleteField,
@@ -9,14 +10,19 @@ import {
 import { useContext, useState } from "react";
 import { db } from "../firebase/firebase";
 import { MeetingsContext } from "../store/CalendarStore";
+import { Meeting } from "../types";
 
-const useFirebase = (selectedEvent, pickedDate, data) => {
+const useFirebase = (
+  selectedEvent: PackedEvent,
+  pickedDate: string,
+  data: Meeting
+) => {
   const docRef = doc(db, "meetings", `meetings`);
   const ctx = useContext(MeetingsContext);
   const meetings = ctx.meetings;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const meetingsAtThisDay = meetings[selectedEvent.day]?.filter(
+  const meetingsAtThisDay = meetings[selectedEvent?.day]?.filter(
     (el) => el.id !== selectedEvent.id
   );
   const makeFirebaseCall = async (type: string) => {
@@ -25,7 +31,7 @@ const useFirebase = (selectedEvent, pickedDate, data) => {
     if (type === "delete") {
       try {
         await updateDoc(docRef, {
-          [selectedEvent.day]:
+          [selectedEvent?.day]:
             meetingsAtThisDay.length === 0 ? deleteField() : meetingsAtThisDay,
         });
       } catch (error) {
@@ -38,7 +44,7 @@ const useFirebase = (selectedEvent, pickedDate, data) => {
     } else if (type === "edit") {
       try {
         await updateDoc(docRef, {
-          [selectedEvent.day]:
+          [selectedEvent?.day]:
             meetingsAtThisDay.length === 0 ? deleteField() : meetingsAtThisDay,
         });
         const docSnap = await getDoc(docRef);
@@ -57,7 +63,7 @@ const useFirebase = (selectedEvent, pickedDate, data) => {
       } finally {
         setIsLoading(false);
       }
-    } 
+    }
   };
   return { makeFirebaseCall, isLoading, error };
 };

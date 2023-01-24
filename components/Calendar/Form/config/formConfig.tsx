@@ -77,7 +77,7 @@ export const getSummaryColumnsData = (data) => {
       },
       styling: { alignSelf: "flex-end", fontSize: 12, marginBottom: 4 },
     },
-    detail: (
+    detail: data.submitHandler ? (
       <Pressable
         onPress={data?.submitHandler}
         style={({ pressed }) => {
@@ -106,8 +106,44 @@ export const getSummaryColumnsData = (data) => {
         </Text>
         <FontAwesome5 name="calendar-check" size={20} color={colors.primary} />
       </Pressable>
-    ),
+    ) : null,
   };
 
   return { firstCol, secondCol };
 };
+export function getSelectiveOptions(selectiveOptionsData) {
+  const {
+    workers,
+    setWorkers,
+    services,
+    setServices,
+    availableHours,
+    selectiveOptionsPressHandler,
+    setAvailableHours,
+    pickedService,
+  } = selectiveOptionsData;
+  const cfg = [
+    {
+      id: 3,
+      data: workers,
+      pressHandler: (index: number) =>
+        selectiveOptionsPressHandler(index, workers, setWorkers),
+      render: true,
+    },
+    {
+      id: 2,
+      data: services,
+      pressHandler: (index: number) =>
+        selectiveOptionsPressHandler(index, services, setServices),
+      render: true,
+    },
+    {
+      id: 1,
+      data: availableHours,
+      pressHandler: (index: number) =>
+        selectiveOptionsPressHandler(index, availableHours, setAvailableHours),
+      render: pickedService ? true : false,
+    },
+  ];
+  return cfg;
+}

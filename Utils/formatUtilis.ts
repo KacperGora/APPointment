@@ -15,7 +15,7 @@ export const dateFormatter = (
   const day = dayjs(startFullDate).format("YYYY-MM-DD");
   const endHour = calculateTimeOfEnd(startFullDateISO, pickedService?.duration);
   const endFullDateISO = dayjs(`${pickedDate} ${endHour}`).toISOString();
-
+  console.log(pickedDate);
   return {
     startFullDateISO,
     endHour,
@@ -43,10 +43,10 @@ export const getMonthName = (e) => {
 };
 
 export const todayDateData = {
-  dateString: new Date().toISOString().split("T")[0],
-  month: new Date().getMonth(),
-  day: new Date().getDay(),
-  year: new Date().getFullYear(),
+  dateString: dayjs().format("YYYY-MM-DD"),
+  month: +dayjs().format("MM"),
+  day: +dayjs().format("DD"),
+  year: +dayjs().format("YYYY"),
   timestamp: new Date().valueOf(),
 };
 

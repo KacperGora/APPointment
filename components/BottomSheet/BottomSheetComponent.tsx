@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { colors } from "../colors";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { BottomSheetProps } from "../../types";
-import { StyledViewBorder } from "../shared";
+import { ScreenWidth, StyledViewBorder } from "../shared";
 
 const BottomSheetComponent: React.FC<BottomSheetProps> = ({
   index,
@@ -31,7 +31,9 @@ const BottomSheetComponent: React.FC<BottomSheetProps> = ({
       backgroundStyle={{ backgroundColor: "transparent" }}
     >
       <StyledViewBorder>
-        <KeyboardAwareScrollView>{children}</KeyboardAwareScrollView>
+        <KeyboardAwareScrollView horizontal={false} scrollEnabled={false}>
+          {children}
+        </KeyboardAwareScrollView>
       </StyledViewBorder>
     </BottomSheet>
   );

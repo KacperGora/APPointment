@@ -9,7 +9,6 @@ import CalendarStripComponent from "../CalendarStrip/CalendarStrip";
 const FormCoreComponent = ({
   pickedDate,
   setPickedDate,
-
   setUserTypedLastName,
   setUserTypedName,
   startFullDate,

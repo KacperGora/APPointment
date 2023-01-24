@@ -1,57 +1,147 @@
-import React, { useMemo, useRef, useState } from "react";
-import { Pressable, View } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import RegularText16 from "../../../UI/Text/RegularText";
-import RegularText24 from "../../../UI/Text/RegularText24";
-import { SimpleLineIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import ModalDropdown from "react-native-modal-dropdown";
-import dayjs from "dayjs";
-import BottomSheetComponent from "../../../BottomSheet/BottomSheetComponent";
-import {
-  BottomSheetEditContainer,
-  RowFlex,
-  RowFlexEndView,
-} from "../style/Timeline.style";
-import { Entypo } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import useGetCurrentCustomer from "../../../../hooks/useGetCurrentCustomer";
 import { phoneNumberFormatter } from "../../../../Utils/formatUtilis";
-import PhoneLink from "../../../UI/Text/PhoneLink";
-import SmallText from "../../../UI/Text/SmallText";
 import getClosestPastCustomerMeeting from "../../../../hooks/Customer/getClosestPastCustomerMeeting";
 import NewMeetingFormSummary from "../../Form/components/FormSummary/NewMeetingFormSummary";
-const BottomSheetSelectedEvent = ({ selectedEvent, setSelectedEvent }) => {
+import BottomSheet from "@gorhom/bottom-sheet";
+import { colors } from "../../../colors";
+import { View } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import Spinner from "../../../UI/Spinner/Spinner";
+import InformationText from "../../../UI/InformationText/InformationText";
+import MeetingForm from "../../Form";
+import useFirebase from "../../../../hooks/useFirebase";
+import { BottomSheetSelectedEv } from "../../../../types";
+import dayjs from "dayjs";
+
+const BottomSheetSelectedEvent: React.FC<BottomSheetSelectedEv> = ({
+  selectedEvent,
+  setSelectedEvent,
+  editedEventDraft,
+}) => {
   const customer = useGetCurrentCustomer(selectedEvent.worker);
+
+  const [isEditing, setIsEditing] = useState(false);
   const formattedPhoneNumber = phoneNumberFormatter(customer.phoneNumber);
 
-  const [index, setIndex] = useState(1);
+  const [index, setIndex] = useState(0);
+  const [bottomSheetShown, setBottomSheetShow] = useState(true);
+  const { error, isLoading, makeFirebaseCall } = useFirebase(
+    selectedEvent,
+    "delete",
+    null
+  );
+  const [editingFinished, setEditingFinished] = useState(false);
   const onCloseBottomSheet = () => {
     setSelectedEvent(undefined);
+    setBottomSheetShow(false);
   };
   const confirmButtonPressHandler = () => {
     console.log("ab");
   };
+
   const closestPastMeeting = useMemo(
     () => getClosestPastCustomerMeeting(customer),
     [customer]
   );
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const formattedDate =
-    typeof closestPastMeeting === "string"
-      ? null
-      : dayjs(closestPastMeeting.start).format("DD MMM YYYY HH:mm");
-  const [showModalDropdown, setShowModalDropdown] = useState(false);
+  const snapPoints = useMemo(() => ["20%", "95%"], []);
+  const onClosePressHandler = (index: number) => {
+    setIndex(index);
+  };
 
-  return (
-    <BottomSheetComponent
+  const deleteEventHandler = async () => {
+    await makeFirebaseCall("delete");
+    bottomSheetRef.current.close();
+  };
+  // useEffect(() => {
+  //   if (!!editedEventDraft) {
+  //     for (const [key, value] of Object.entries(selectedEvent)) {
+  //       console.log(selectedEvent[key] === editedEventDraft[key]);
+  //       console.log(selectedEvent[key], key);
+  //     }
+  //   }
+  // }, [selectedEvent, editedEventDraft]);
+  useEffect(() => {
+    editingFinished === true
+      ? (bottomSheetRef.current.close(), setSelectedEvent(undefined))
+      : null;
+  }, [editingFinished]);
+  const editEventHandler = () => {
+    setIsEditing(true);
+    setIndex(1);
+  };
+
+  return bottomSheetShown ? (
+    <BottomSheet
+      enablePanDownToClose
+      onClose={onCloseBottomSheet}
+      onChange={onClosePressHandler}
+      ref={bottomSheetRef}
       index={index}
-      setIndex={setIndex}
-      onCloseBottomSheet={onCloseBottomSheet}
+      snapPoints={snapPoints}
+      handleIndicatorStyle={{ backgroundColor: colors.primary }}
+      backgroundStyle={{
+        backgroundColor: "white",
+        borderWidth: 1,
+        borderColor: "lightgray",
+      }}
     >
-      {/* <NewMeetingFormSummary /> */}
-    </BottomSheetComponent>
-  );
+      <View style={{ flex: 1, alignItems: "center" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignSelf: "flex-end",
+            width: 80,
+            marginHorizontal: 12,
+          }}
+        >
+          <AntDesign
+            name="edit"
+            onPress={editEventHandler}
+            size={24}
+            color={colors.greydark}
+          />
+          <AntDesign
+            onPress={deleteEventHandler}
+            name="delete"
+            size={24}
+            color={colors.greydark}
+          />
+        </View>
+        {isLoading ? (
+          <Spinner />
+        ) : error ? (
+          <InformationText stylingProps={{ color: "red" }}>
+            Wystąpił błąd spróbuj ponownie.
+          </InformationText>
+        ) : !isEditing ? (
+          <NewMeetingFormSummary
+            customerName={selectedEvent.title}
+            worker={selectedEvent.worker}
+            service={selectedEvent.serviceName}
+            submitHandler={null}
+            date={dayjs(selectedEvent?.start).toDate()}
+            endHour={editedEventDraft?.endHour}
+            style={{ borderWidth: 0, margin: 0, width: "100%" }}
+          />
+        ) : (
+          <MeetingForm
+            timelineDate={selectedEvent.day}
+            worker={selectedEvent.worker}
+            service={selectedEvent.serviceName}
+            customerName={selectedEvent.title}
+            selectedEvent={selectedEvent}
+            editedEventDraft={editedEventDraft}
+            editing
+            setEditingFinished={setEditingFinished}
+            setIndexForm={setIndex}
+          />
+        )}
+      </View>
+    </BottomSheet>
+  ) : null;
 };
 export default BottomSheetSelectedEvent;
