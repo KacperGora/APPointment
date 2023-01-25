@@ -219,3 +219,25 @@ export type BottomSheetSelectedEv = {
   editedEventDraft: PackedEvent;
   setSelectedEvent: React.Dispatch<React.SetStateAction<PackedEvent>>;
 };
+
+export type TimelineScreenHeaderProps = {
+  calendarRef?: React.MutableRefObject<TimelineCalendarHandle>;
+  monthName?: string;
+  setTimelineHeaderShown?: React.Dispatch<React.SetStateAction<boolean>>;
+  disableCalendar?: boolean;
+  onTodayIconPressHandler: () => void;
+  searchPressHandler: (value: string) => void;
+  disableSearchBar?: boolean;
+};
+export type NavbarProps = {
+  monthName: string;
+  onGestureStart: () => void;
+  searchIconPressHandler: () => void;
+  onTodayIconPressHandler: () => void;
+  disableSearchBar: boolean;
+  disableCalendar: boolean;
+};
+export type SearchBarProps = {
+  setSearchBarVisible?: React.Dispatch<React.SetStateAction<boolean>>;
+  searchPressHandler: (value: string) => void;
+};

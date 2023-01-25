@@ -11,9 +11,16 @@ export const Container = styled.View`
 export const TextContainer = styled.View`
   flex: 1;
   justify-items: baseline;
-  margin: 24px 12px
+  margin: 24px 12px;
   /* justify-content: center; */
   /* padding: 0px 12px 24px 24px; */
+`;
+export const StyledTextInput = styled.TextInput`
+  padding: 12px 0px 12px 24px;
+  border-radius: 6px;
+  margin: 0px 6px;
+  flex: 4;
+  background-color: white;
 `;
 export const SafeAreaContainer = styled.SafeAreaView`
   flex: 1;

@@ -1,4 +1,4 @@
-import { Keyboard, View } from "react-native";
+import { Keyboard } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import CustomersList from "./CustomerList";
 
@@ -6,17 +6,25 @@ import SaloonCustomersListTools from "./SaloonCustomersTools";
 import { SaloonContext } from "../../../store/SaloonStore";
 import AddNewCustomerForm from "./AddNewCustomerForm";
 import BottomSheetForm from "../../BottomSheet/BottomSheetComponent";
-import useGetCustomers from "../../../hooks/Salon/useGetCustomers";
 
 function SalonCustomers() {
   const salonCtx = useContext(SaloonContext);
   const [index, setIndex] = useState(0);
   const [customers, setCustomers] = useState(salonCtx.customers);
   const [modalVisible, setModalVisible] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
+  useEffect(() => {
+    setCustomers(salonCtx.customers);
+  }, [salonCtx.customers]);
 
-  const searchInputChangeHandler = (value: string) => {
-    setSearchValue(value);
+  const searchPressHandler = (value: string) => {
+    setCustomers(
+      customers.filter((el) =>
+        el.fullName.toLowerCase().includes(value.toLowerCase())
+      )
+    );
+    if (value === "") {
+      setCustomers(salonCtx.customers);
+    }
   };
 
   const iconPressHandler = () => {
@@ -29,8 +37,7 @@ function SalonCustomers() {
   return (
     <>
       <SaloonCustomersListTools
-        searchInputValue={searchValue}
-        searchInputChangeHandler={searchInputChangeHandler}
+        searchPressHandler={searchPressHandler}
         iconPressHandler={iconPressHandler}
       />
       <CustomersList

@@ -1,32 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { LayoutAnimation } from "react-native";
-import Animated, { SlideInRight } from "react-native-reanimated";
-import { RowContainerSpaceBetween } from "../../../shared";
+import { TimelineScreenHeaderProps } from "../../../../types";
+import { RowContainer, RowContainerSpaceBetween } from "../../../shared";
 import CalendarListComponent from "./components/CalendarList/CalendarListComponent";
 import Navbar from "./components/Navbar";
 import SearchBar from "./components/Searchbar/SearchBar";
 
-type TimelineScreenHeaderProps = {
-  calendarRef?: any;
-  monthName?: any;
-  setTimelineHeaderShown?: any;
-  disableCalendar?: boolean;
-  onTodayIconPressHandler: () => void;
-  setSearchedEvents?: any;
-  disableSearchBar?: boolean;
-};
 const TimelineScreenHeader: React.FC<TimelineScreenHeaderProps> = ({
   calendarRef,
   monthName,
   setTimelineHeaderShown,
   disableCalendar,
-
   onTodayIconPressHandler,
-  setSearchedEvents,
+  searchPressHandler,
   disableSearchBar,
 }) => {
   const [searchBarVisible, setSearchBarVisible] = useState(false);
   const [calendarListVisible, setCalendarListVisible] = useState(false);
+
   const searchIconPressHandler = () => {
     LayoutAnimation.easeInEaseOut();
     setSearchBarVisible(true);
@@ -43,11 +34,11 @@ const TimelineScreenHeader: React.FC<TimelineScreenHeaderProps> = ({
 
   return (
     <>
-      <RowContainerSpaceBetween style={{ paddingHorizontal: 12 }}>
+      <RowContainer style={{ marginHorizontal: 16 }}>
         {searchBarVisible ? (
           <SearchBar
             setSearchBarVisible={setSearchBarVisible}
-            setSearchedEvents={setSearchedEvents}
+            searchPressHandler={searchPressHandler}
           />
         ) : (
           <Navbar
@@ -59,7 +50,7 @@ const TimelineScreenHeader: React.FC<TimelineScreenHeaderProps> = ({
             disableCalendar={disableCalendar}
           />
         )}
-      </RowContainerSpaceBetween>
+      </RowContainer>
       {calendarRenderCondition ? (
         <CalendarListComponent
           calendarRef={calendarRef}

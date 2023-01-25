@@ -51,7 +51,7 @@ const TimelineComponent: React.FC<TimelineProps> = (props) => {
   );
 
   const monthNameChangeHandler = (e: OnChangeProps) => {
-    setMonthName(getMonthName(e.date));
+    setMonthName(dayjs(e.date).format("MMMM"));
   };
 
   const longPressHandler = (date: string) => {

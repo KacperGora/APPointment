@@ -1,12 +1,8 @@
 import React from "react";
 import { Octicons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
-import {
-  Directions,
-  Gesture,
-  GestureDetector,
-} from "react-native-gesture-handler";
 import RegularText16 from "../../../Text/RegularText";
+import GestureDetectorComponent from "../../../GestureDetectorComponent/GestureDetectorComponent";
 
 const NavbarMonthName = ({
   onGestureStart,
@@ -14,31 +10,27 @@ const NavbarMonthName = ({
   calendarListVisible,
   disableCalendar,
 }) => {
-  const show = Gesture.Pan().onStart(onGestureStart);
-
   return (
-    <GestureDetector gesture={show}>
+    <GestureDetectorComponent onGestureStartHandler={onGestureStart}>
       <Pressable
         onPress={onGestureStart}
         style={{
           flexDirection: "row",
-          alignItems: "center",
-          width: 150,
+          alignItems: "flex-start",
         }}
       >
-        <RegularText16 textStyles={{ marginRight: 6 }}>
+        <RegularText16 textStyles={{ marginLeft: 24, marginRight: 6 }}>
           {monthName}
         </RegularText16>
         {disableCalendar ? null : (
           <Octicons
-            style={{ alignSelf: "center" }}
             name={!calendarListVisible ? "triangle-up" : "triangle-down"}
             size={24}
             color="gray"
           />
         )}
       </Pressable>
-    </GestureDetector>
+    </GestureDetectorComponent>
   );
 };
 export default NavbarMonthName;

@@ -1,24 +1,22 @@
 import { collection, onSnapshot, query } from "firebase/firestore";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { db } from "../../firebase/firebase";
+import { SaloonContext } from "../../store/SaloonStore";
 
 const useGetCustomers = () => {
-  const [fetchedCustomers, setCustomers] = useState([]);
-
-  const users = [];
-  const fetchUsers = async () => {
+  const salonCtx = useContext(SaloonContext);
+  const [fetchedCustomers, setFetchedCustomers] = useState([]);
+  const tempArr = [];
+  useEffect(() => {
     const q = query(collection(db, "customers"));
     onSnapshot(q, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        users.push(doc.data());
-        console.log(doc.data());
+        tempArr.push(doc.data());
       });
-      setCustomers(users);
+      setFetchedCustomers(tempArr);
     });
-    console.log(fetchedCustomers);
-    return fetchedCustomers;
-  };
-
-  return { fetchUsers, fetchedCustomers };
+  }, []);
+  salonCtx.getCustomers(fetchedCustomers);
+  return fetchedCustomers;
 };
 export default useGetCustomers;

@@ -8,7 +8,7 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import TimelineComponent from "./components/TimelineComponent";
 import useFetchEvents from "../../../hooks/calendar/useFetchEvents";
 import MyStatusBar from "../../UI/StatusBar/MyStatusBar";
-import { getMonthName } from "../../../Utils/formatUtilis";
+
 import BottomSheetMeetingForm from "./components/BottomSheetMeetingForm";
 import { RouteProps } from "../../../types";
 import BottomSheetSelectedEvent from "./components/BottomSheetSelectedEvent";
@@ -20,7 +20,7 @@ const Timeline = () => {
   const viewMode = route.params?.viewMode;
   const calendarRef = useRef<TimelineCalendarHandle>(null);
   const thisMonthName = useMemo(() => {
-    return getMonthName(new Date());
+    return dayjs().format("MMMM");
   }, []);
   const [monthName, setMonthName] = useState(thisMonthName);
   const [selectedEvent, setSelectedEvent] = useState<PackedEvent>();
@@ -34,7 +34,6 @@ const Timeline = () => {
     new Date().toLocaleString()
   );
   const { flatData, isLoading } = useFetchEvents();
-
   useEffect(() => {
     setEvents(flatData);
   }, [flatData]);
@@ -62,29 +61,40 @@ const Timeline = () => {
       calendarRef?.current?.goToDate(optionalProps);
     }
   }, [searchedEvents]);
+
+  const searchPressHandler = (searchedValue: string) => {
+    setSearchedEvents(
+      flatData.filter(
+        (el) =>
+          el.title.toLowerCase().includes(searchedValue.toLowerCase()) ||
+          el.serviceName.toLowerCase().includes(searchedValue.toLowerCase())
+      )
+    );
+  };
   return (
     <MyStatusBar>
       <TimelineScreenHeader
         setTimelineHeaderShown={setTimelineHeaderShown}
+        onTodayIconPressHandler={onTodayIconPressHandler}
+        searchPressHandler={searchPressHandler}
         calendarRef={calendarRef}
         monthName={monthName}
-        onTodayIconPressHandler={onTodayIconPressHandler}
-        setSearchedEvents={setSearchedEvents}
         disableCalendar={false}
       />
+
       <TimelineComponent
         calendarRef={calendarRef}
         events={events}
         isLoading={isLoading}
         selectedEvent={selectedEvent}
+        viewMode={viewMode}
+        timelineHeaderShown={timelineHeaderShown}
         setBottomSheetActiveIndex={setBottomSheetActiveIndex}
         setBottomSheetDirtyDate={setBottomSheetDirtyDate}
         setBottomSheetVisible={setBottomSheetVisible}
         setMonthName={setMonthName}
         setSelectedEvent={setSelectedEvent}
         setEditedEventDraft={setEditedEventDraft}
-        viewMode={viewMode}
-        timelineHeaderShown={timelineHeaderShown}
       />
 
       {bottomSheetVisible ? (

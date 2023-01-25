@@ -1,71 +1,64 @@
 import React, { useRef, useState } from "react";
-import { TextInput, LayoutAnimation } from "react-native";
-
-import { Ionicons } from "@expo/vector-icons";
+import { LayoutAnimation, View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { colors } from "../../../../../colors";
-import { RowContainerSpaceBetween } from "../../../../../shared";
-import { useNavigation } from "@react-navigation/native";
-import useFetchEvents from "../../../../../../hooks/calendar/useFetchEvents";
-import { disableNetwork } from "firebase/firestore";
+import { RowContainer, StyledTextInput } from "../../../../../shared";
+import { SearchBarProps } from "../../../../../../types";
+import SearchButton from "../../../../Buttons/SearchButton";
 
-const SearchBar = ({ setSearchBarVisible, setSearchedEvents }) => {
-  const { flatData } = useFetchEvents();
+const SearchBar: React.FC<SearchBarProps> = ({
+  setSearchBarVisible,
+  searchPressHandler,
+}) => {
   const [searchedValue, setSearchedValue] = useState("");
   const onInputChangeHandler = (e: string) => {
     setSearchedValue(e);
   };
   const inputRef = useRef(null);
   const cancelPressHandler = () => {
-    LayoutAnimation.linear();
+    LayoutAnimation.easeInEaseOut();
     inputRef.current.clear();
-    setSearchedEvents([]);
-    setSearchBarVisible(false);
-  };
-  const searchPressHandler = () => {
-    setSearchedEvents(
-      flatData.filter(
-        (el) =>
-          el.title.toLowerCase().includes(searchedValue.toLowerCase()) ||
-          el.serviceName.toLowerCase().includes(searchedValue.toLowerCase())
-      )
-    );
+    !!setSearchBarVisible && setSearchBarVisible(false);
+    searchPressHandler("");
   };
 
   return (
-    <RowContainerSpaceBetween>
-      <TextInput
+    <RowContainer style={{ marginBottom: 6 }}>
+      <StyledTextInput
         style={{
-          borderWidth: 0.2,
-          borderColor: colors.greydark,
-          paddingVertical: 6,
-          marginBottom: 8,
-          borderRadius: 12,
-          flex: 1,
-          textAlign: "center",
+          elevation: 14,
+          shadowColor: "lightgray",
+          shadowOffset: { height: 1, width: 2 },
+          shadowOpacity: 0.5,
+          shadowRadius: 4,
         }}
         placeholder="Szukaj"
         ref={inputRef}
         onChangeText={onInputChangeHandler}
         placeholderTextColor="lightgray"
-        onSubmitEditing={searchPressHandler}
+        onSubmitEditing={() => searchPressHandler(searchedValue)}
         returnKeyType="search"
-      />
-      <MaterialIcons
-        name="cancel"
-        size={24}
-        color={colors.greydark}
-        style={{ position: "relative", right: 30, bottom: 4 }}
-        onPress={cancelPressHandler}
+        autoFocus={true}
       />
 
-      <Ionicons
-        name="md-search"
-        size={24}
-        color="gray"
-        onPress={searchPressHandler}
-      />
-    </RowContainerSpaceBetween>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          position: "absolute",
+          right: 4,
+        }}
+      >
+        <MaterialIcons
+          name="cancel"
+          size={24}
+          color={colors.gray}
+          onPress={cancelPressHandler}
+          style={{ marginRight: 12 }}
+        />
+        <SearchButton onPress={() => searchPressHandler(searchedValue)} />
+      </View>
+    </RowContainer>
   );
 };
 export default SearchBar;

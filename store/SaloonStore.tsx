@@ -69,12 +69,12 @@ const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
   const getCustomers = (data) => {
     setCustomers(data);
   };
-  const { fetchedCustomers } = useGetCustomers();
-
+  const fetchedCustomers = useGetCustomers();
+  console.log(fetchedCustomers);
   useEffect(() => {
     setCustomers(fetchedCustomers);
-    console.log(fetchedCustomers);
   }, [fetchedCustomers]);
+
   const changeTargetHandler = async (value: number, type: string) => {
     switch (type) {
       case "daily": {

@@ -1,53 +1,46 @@
-import React from "react";
-import { Button, TextInput, View } from "react-native";
+import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
-const SaloonCustomersListTools = ({
-  iconPressHandler,
-  searchInputValue,
-  searchInputChangeHandler,
-}) => {
+import SearchBar from "../../UI/Headers/TimelineScreenHeader/components/Searchbar/SearchBar";
+import { RowContainer } from "../../shared";
+import { LayoutAnimation, View } from "react-native";
+import SearchButton from "../../UI/Buttons/SearchButton";
+import { colors } from "../../colors";
+const SaloonCustomersListTools = ({ iconPressHandler, searchPressHandler }) => {
+  const [showSearchBar, setShowSearchBar] = useState(false);
+  const searchButtonPressHandler = () => {
+    LayoutAnimation.easeInEaseOut();
+    setShowSearchBar(true);
+  };
   return (
-    <View
-      style={{
-        alignItems: "center",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        backgroundColor: "white",
-        paddingHorizontal: 12,
-        width: "100%",
-        height: 50,
-      }}
+    <RowContainer
+      style={{ justifyContent: "space-between", marginHorizontal: 12 }}
     >
-      <View style={{ flexDirection: "row" }}>
-        <TextInput
+      {showSearchBar ? (
+        <SearchBar
+          setSearchBarVisible={setShowSearchBar}
+          searchPressHandler={searchPressHandler}
+        />
+      ) : (
+        <View
           style={{
-            borderColor: "lightgray",
-            borderWidth: 0.5,
-            borderRadius: 12,
-            width: 150,
-            padding: 12,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flex: 1,
+            paddingVertical: 4,
+            paddingHorizontal: 4,
           }}
-          onChangeText={searchInputChangeHandler}
-          placeholder="Szukaj"
-          placeholderTextColor="gray"
-          value={searchInputValue}
-        />
-        {/* <Button title="Szukaj" /> */}
-      </View>
-
-      <View
-        style={{
-          marginRight: 12,
-        }}
-      >
-        <AntDesign
-          onPress={iconPressHandler}
-          name="adduser"
-          size={28}
-          color="black"
-        />
-      </View>
-    </View>
+        >
+          <AntDesign
+            onPress={iconPressHandler}
+            name="adduser"
+            size={28}
+            color="gray"
+          />
+          <SearchButton onPress={searchButtonPressHandler} />
+        </View>
+      )}
+    </RowContainer>
   );
 };
 export default SaloonCustomersListTools;
