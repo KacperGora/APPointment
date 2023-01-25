@@ -14,8 +14,6 @@ import { RouteProps } from "../../../types";
 import BottomSheetSelectedEvent from "./components/BottomSheetSelectedEvent";
 import TimelineScreenHeader from "../../UI/Headers/TimelineScreenHeader/TimelineScreenHeader";
 import dayjs from "dayjs";
-import NoCustomerModal from "../Form/components/NoCustomerModal/NoCustomerModal";
-import { Modal } from "react-native";
 
 const Timeline = () => {
   const route = useRoute<RouteProp<RouteProps>>();
@@ -29,7 +27,6 @@ const Timeline = () => {
   const [editedEventDraft, setEditedEventDraft] = useState<PackedEvent>();
   const [timelineHeaderShown, setTimelineHeaderShown] = useState(true);
   const [events, setEvents] = useState<EventItem[]>([]);
-  const [showModal, setShowModal] = useState(false);
   const [searchedEvents, setSearchedEvents] = useState([]);
   const [bottomSheetActiveIndex, setBottomSheetActiveIndex] = useState(0);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -63,7 +60,6 @@ const Timeline = () => {
     } else {
       setEvents(flatData);
       calendarRef?.current?.goToDate(optionalProps);
-      // setShowModal(true);
     }
   }, [searchedEvents]);
   return (

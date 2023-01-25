@@ -1,7 +1,8 @@
 import { doc, setDoc } from "firebase/firestore";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { db } from "../firebase/firebase";
+import useGetCustomers from "../hooks/Salon/useGetCustomers";
 import { NewUserData } from "../types";
 interface SaloonProviderProps {
   children: React.ReactNode;
@@ -68,6 +69,12 @@ const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
   const getCustomers = (data) => {
     setCustomers(data);
   };
+  const { fetchedCustomers } = useGetCustomers();
+
+  useEffect(() => {
+    setCustomers(fetchedCustomers);
+    console.log(fetchedCustomers);
+  }, [fetchedCustomers]);
   const changeTargetHandler = async (value: number, type: string) => {
     switch (type) {
       case "daily": {

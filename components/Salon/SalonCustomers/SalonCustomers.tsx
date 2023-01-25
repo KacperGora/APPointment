@@ -1,11 +1,12 @@
 import { Keyboard, View } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CustomersList from "./CustomerList";
 
 import SaloonCustomersListTools from "./SaloonCustomersTools";
 import { SaloonContext } from "../../../store/SaloonStore";
 import AddNewCustomerForm from "./AddNewCustomerForm";
 import BottomSheetForm from "../../BottomSheet/BottomSheetComponent";
+import useGetCustomers from "../../../hooks/Salon/useGetCustomers";
 
 function SalonCustomers() {
   const salonCtx = useContext(SaloonContext);

@@ -20,7 +20,7 @@ const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
   const startHour = dayjs(date).format("HH:mm");
 
   const data = {
-    serviceValue: service?.value,
+    serviceValue: service?.value || service,
     customerName: customerName,
     worker: worker,
     dateString,
