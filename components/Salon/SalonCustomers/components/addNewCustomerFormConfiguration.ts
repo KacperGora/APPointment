@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Keyboard } from "react-native";
+import { Keyboard, TextInput } from "react-native";
 import {
   InputConfig,
   NewCustomerConfigurationFnReturnedValue,
@@ -8,8 +8,8 @@ import {
 export const addNewCustomerFormConfiguration = (
   customerName
 ): NewCustomerConfigurationFnReturnedValue => {
-  const ref_input2 = useRef();
-  const ref_input3 = useRef();
+  const ref_input2 = useRef<TextInput>();
+  const ref_input3 = useRef<TextInput>();
   const [fullName, setFullName] = useState(customerName || "");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [additionalInfo, setAdditionalInfo] = useState("");
@@ -27,7 +27,7 @@ export const addNewCustomerFormConfiguration = (
       keyboardType: "default",
       autoFocus: false,
       returnKeyType: "next",
-      // @ts-ignore: Unreachable code error
+
       onSubmitEditing: () => ref_input2.current.focus(),
       onChange: (value) => setFullName(value),
       value: fullName,
@@ -42,7 +42,6 @@ export const addNewCustomerFormConfiguration = (
       autoFocus: false,
       ref: ref_input2,
       returnKeyType: "next",
-      // @ts-ignore: Unreachable code error
       onSubmitEditing: () => ref_input3.current.focus(),
       onChange: (value) => setPhoneNumber(value),
       value: phoneNumber,

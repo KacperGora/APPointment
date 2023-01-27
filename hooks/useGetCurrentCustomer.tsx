@@ -1,12 +1,16 @@
 import { useContext } from "react";
 import { SaloonContext } from "../store/SaloonStore";
+import { NewUserData, User } from "../types";
 
-const useGetCurrentCustomer = (customerName) => {
+const useGetCurrentCustomer = (customerName: string): NewUserData => {
   const salonCtx = useContext(SaloonContext);
   const customers = salonCtx.customers;
-  const customer = customers.filter((customer) =>
-    customer.fullName.toLowerCase().includes(customerName.toLowerCase())
-  );
-  return customer[0];
+  console.log(customers[customerName]);
+  const currCustomer: {} = Object.values(customers)?.filter(
+    (customer: NewUserData) =>
+      customer?.fullName?.toLowerCase().includes(customerName?.toLowerCase())
+  )[0];
+
+  return;
 };
 export default useGetCurrentCustomer;

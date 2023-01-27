@@ -19,8 +19,6 @@ const BottomSheetSelectedEvent: React.FC<BottomSheetSelectedEv> = ({
   setSelectedEvent,
   editedEventDraft,
 }) => {
-  const customer = useGetCurrentCustomer(selectedEvent.worker);
-
   const [isEditing, setIsEditing] = useState(false);
   // const formattedPhoneNumber = phoneNumberFormatter(customer.phoneNumber);
 
@@ -53,6 +51,7 @@ const BottomSheetSelectedEvent: React.FC<BottomSheetSelectedEv> = ({
 
   const deleteEventHandler = async () => {
     await makeFirebaseCall("delete");
+
     bottomSheetRef.current.close();
   };
   // useEffect(() => {
@@ -112,7 +111,7 @@ const BottomSheetSelectedEvent: React.FC<BottomSheetSelectedEv> = ({
           />
         </View>
         {isLoading ? (
-          <Spinner />
+          <Spinner borderWidth={5} size={50} />
         ) : error ? (
           <InformationText stylingProps={{ color: "red" }}>
             Wystąpił błąd spróbuj ponownie.

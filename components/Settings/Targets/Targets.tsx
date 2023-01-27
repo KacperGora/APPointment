@@ -59,7 +59,7 @@ const Targets = () => {
     weeklyTargets: weeklyTargetRef.current,
     monthlyTargets: monthlyTargetRef.current,
   };
-  console.log(salonTargetData);
+
   const buttonPressHandler = async () => {
     await setDoc(doc(db, "salon settings", "targets"), salonTargetData);
   };
@@ -99,7 +99,7 @@ const Targets = () => {
         <Text
           style={{ fontSize: 24, fontWeight: "600", color: colors.greydark }}
         >
-          Ustaw target 
+          Ustaw target
         </Text>
       </View>
       <View

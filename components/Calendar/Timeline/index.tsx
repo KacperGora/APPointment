@@ -3,19 +3,23 @@ import {
   PackedEvent,
   TimelineCalendarHandle,
 } from "@howljs/calendar-kit";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { RouteProp, useRoute } from "@react-navigation/native";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import TimelineComponent from "./components/TimelineComponent";
 import useFetchEvents from "../../../hooks/calendar/useFetchEvents";
 import MyStatusBar from "../../UI/StatusBar/MyStatusBar";
-
 import BottomSheetMeetingForm from "./components/BottomSheetMeetingForm";
 import { RouteProps } from "../../../types";
 import BottomSheetSelectedEvent from "./components/BottomSheetSelectedEvent";
 import TimelineScreenHeader from "../../UI/Headers/TimelineScreenHeader/TimelineScreenHeader";
+import { FloatingAction } from "react-native-floating-action";
 import dayjs from "dayjs";
-
+import { colors } from "../../colors";
+import { getFloatingButtonActions } from "./config/timelineConfig";
+import { SaloonContext } from "../../../store/SaloonStore";
+import useGetCustomers from "../../../hooks/Salon/useGetCustomers";
 const Timeline = () => {
+  const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<RouteProps>>();
   const viewMode = route.params?.viewMode;
   const calendarRef = useRef<TimelineCalendarHandle>(null);
@@ -33,6 +37,16 @@ const Timeline = () => {
   const [bottomSheetDirtyDate, setBottomSheetDirtyDate] = useState(
     new Date().toLocaleString()
   );
+  const salonContext = useContext(SaloonContext);
+  const { users } = useGetCustomers();
+
+  useEffect(() => {
+    salonContext.getCustomers(users);
+  }, [users]);
+
+  const actions = useMemo(() => {
+    return getFloatingButtonActions();
+  }, []);
   const { flatData, isLoading } = useFetchEvents();
   useEffect(() => {
     setEvents(flatData);
@@ -71,6 +85,18 @@ const Timeline = () => {
       )
     );
   };
+  const addMeetingButtonPressHandler = () => {
+    setBottomSheetDirtyDate(dayjs().format("YYYY-MM-DD"));
+    setBottomSheetVisible(true);
+    setBottomSheetActiveIndex(1);
+  };
+  const addCustomerButtonPressHandler = () => {
+    navigation.navigate("Klienci");
+  };
+  const floatingButtonsPressHandler = (name: string) => {
+    name === "Meeting" && addMeetingButtonPressHandler();
+    name === "Customer" && addCustomerButtonPressHandler();
+  };
   return (
     <MyStatusBar>
       <TimelineScreenHeader
@@ -96,7 +122,13 @@ const Timeline = () => {
         setSelectedEvent={setSelectedEvent}
         setEditedEventDraft={setEditedEventDraft}
       />
-
+      <FloatingAction
+        actions={actions}
+        color={colors.secondary}
+        overlayColor={"#9ea4ab5d"}
+        actionsPaddingTopBottom={1}
+        onPressItem={(name) => floatingButtonsPressHandler(name)}
+      />
       {bottomSheetVisible ? (
         <BottomSheetMeetingForm
           bottomSheetDirtyDate={bottomSheetDirtyDate}

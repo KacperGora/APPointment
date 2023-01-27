@@ -1,17 +1,23 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { colors } from "../../colors";
+import { colors } from "../../../colors";
 import { addNewCustomerFormConfiguration } from "./addNewCustomerFormConfiguration";
 import { Ionicons } from "@expo/vector-icons";
 import {
   validateFullName,
   validatePhoneNumber,
-} from "../../../Utils/validation/regexValidation";
-import { serverTimestamp } from "firebase/firestore";
-import Spinner from "../../UI/Spinner/Spinner";
-import { SaloonContext } from "../../../store/SaloonStore";
-import RegularButton from "../../UI/Buttons/RegularButton";
+} from "../../../../Utils/validation/regexValidation";
+import {
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import Spinner from "../../../UI/Spinner/Spinner";
+import RegularButton from "../../../UI/Buttons/RegularButton";
+import { db } from "../../../../firebase/firebase";
 type FormProps = {
   hideBottomModal?: () => void;
   customerName?: string;
@@ -23,9 +29,8 @@ const AddNewCustomerForm: React.FC<FormProps> = ({
   const { inputConfig, additionalInfo, fullName, phoneNumber, resetInputs } =
     addNewCustomerFormConfiguration(customerName);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
   const phoneIsValid = validatePhoneNumber(phoneNumber);
-  const customerCtx = useContext(SaloonContext);
+
   const fullNameInputIsValid = validateFullName(fullName);
   const formIsValid = phoneIsValid && fullNameInputIsValid;
   const userData = {
@@ -39,17 +44,28 @@ const AddNewCustomerForm: React.FC<FormProps> = ({
     if (formIsValid) {
       try {
         setIsLoading(true);
-        setError(false);
-        customerCtx.addCustomers(userData);
-      } catch (error) {
-        setError(true);
+        const customerRef = doc(db, "customers", "customers");
+        const docSnap = await getDoc(customerRef);
+        if (docSnap.exists()) {
+          await updateDoc(customerRef, {
+            [userData.fullName]: userData,
+          });
+        } else {
+          await setDoc(customerRef, {
+            [userData.fullName]: userData,
+          });
+        }
+        // await updateDoc(customerRef, {
+        //   [userData.fullName]: userData,
+        // });
+      } catch (e) {
+        console.error("Error adding document: ", e);
+        throw new Error(e);
       } finally {
         setIsLoading(false);
+        hideBottomModal();
+        resetInputs();
       }
-      hideBottomModal();
-      resetInputs();
-    } else {
-      return;
     }
   };
 
@@ -57,7 +73,7 @@ const AddNewCustomerForm: React.FC<FormProps> = ({
     <>
       <Text style={styles.heading}>Dodaj nowego klienta</Text>
       {isLoading ? (
-        <Spinner />
+        <Spinner size={50} borderWidth={5} />
       ) : (
         <View>
           {inputConfig.map((input) => {

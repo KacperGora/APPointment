@@ -6,18 +6,19 @@ export const InputContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: 12px 6px;
-  border-bottom-width: 0.3px;
-  border-bottom-color: #ccc;
+  padding: 0px 6px;
+  margin: 0 12px;
 `;
 export const StyledInput = styled.TextInput`
-  border-bottom-width: 1px;
   border-color: #ccc;
   padding: 8px;
+  border-width: 0.3x;
   text-align: center;
-  border-radius: 5px;
-  width: 40%;
+  border-radius: 8px;
+  flex: 1;
+  margin: 12px 12px;
 `;
+
 export const StyledScrollView = styled.ScrollView`
   border-bottom-color: lightgray;
   border-bottom-width: 0.3px;
@@ -48,8 +49,8 @@ export const SummaryViewContainer = styled.View`
   border-width: 1px;
   border-color: ${colors.gray};
   border-radius: 12px;
-  /* margin: 12px; */
-  padding: 12px;
+  padding: 24px 12px;
+  margin: 12px;
   background-color: white;
   display: flex;
   flex: 1;

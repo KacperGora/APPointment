@@ -18,7 +18,7 @@ const CustomerModalInformation: React.FC<ModalInformation> = ({ item }) => {
   const formattedDate =
     typeof closestPastMeeting === "string"
       ? null
-      : dayjs(closestPastMeeting.start).format("DD MMM YYYY HH:mm");
+      : dayjs(closestPastMeeting?.start).format("DD MMM YYYY HH:mm");
 
   return typeof closestPastMeeting === "string" ? (
     <RegularText16 textStyles={{ textAlign: "center", margin: 12 }}>
@@ -33,7 +33,7 @@ const CustomerModalInformation: React.FC<ModalInformation> = ({ item }) => {
         Ostatnia wizyta: {formattedDate}
       </SmallText>
       <SmallText textStyles={{ marginVertical: 12, textAlign: "left" }}>
-        Usługa: {closestPastMeeting.serviceName}
+        Usługa: {closestPastMeeting?.serviceName}
       </SmallText>
     </View>
   );

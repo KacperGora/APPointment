@@ -1,11 +1,14 @@
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../../firebase/firebase";
+import { Meeting, NewUserData } from "../../../../types";
 
-async function useAddMeetingForCustomer(fullName, data) {
-  const customerRef = doc(db, "customers", fullName);
+async function useAddMeetingForCustomer(customer: NewUserData, data: Meeting) {
+  const customerRef = doc(db, "customers", "customers");
+  const dirtyData = { ...customer };
+  dirtyData.meetings.push(data);
 
   await updateDoc(customerRef, {
-    meetings: arrayUnion(data),
+    [customer.fullName]: dirtyData,
   });
 }
 export default useAddMeetingForCustomer;

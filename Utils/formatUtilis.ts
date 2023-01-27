@@ -15,7 +15,6 @@ export const dateFormatter = (
   const day = dayjs(startFullDate).format("YYYY-MM-DD");
   const endHour = calculateTimeOfEnd(startFullDateISO, pickedService?.duration);
   const endFullDateISO = dayjs(`${pickedDate} ${endHour}`).toISOString();
-  console.log(pickedDate);
   return {
     startFullDateISO,
     endHour,

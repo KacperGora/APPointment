@@ -10,6 +10,7 @@ import {
 import { useContext, useState } from "react";
 import { db } from "../firebase/firebase";
 import { MeetingsContext } from "../store/CalendarStore";
+import { SaloonContext } from "../store/SaloonStore";
 import { Meeting } from "../types";
 
 const useFirebase = (
@@ -17,8 +18,11 @@ const useFirebase = (
   pickedDate: string,
   data: Meeting
 ) => {
-  const docRef = doc(db, "meetings", `meetings`);
+  const meetingsRef = doc(db, "meetings", `meetings`);
+  const customersRef = doc(db, "customers", "customers");
   const ctx = useContext(MeetingsContext);
+  const salonCtx = useContext(SaloonContext);
+  const customers = salonCtx.customers;
   const meetings = ctx.meetings;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -29,10 +33,20 @@ const useFirebase = (
     setIsLoading(true);
     setError(null);
     if (type === "delete") {
+      const customersData = {
+        ...customers[selectedEvent.title],
+        meetings: customers[selectedEvent.title].meetings.filter(
+          (el: Meeting) => el.id !== selectedEvent.id
+        ),
+      };
+
       try {
-        await updateDoc(docRef, {
+        await updateDoc(meetingsRef, {
           [selectedEvent?.day]:
             meetingsAtThisDay.length === 0 ? deleteField() : meetingsAtThisDay,
+        });
+        await updateDoc(customersRef, {
+          [selectedEvent.title]: customersData,
         });
       } catch (error) {
         setError(error);
@@ -43,17 +57,17 @@ const useFirebase = (
       }
     } else if (type === "edit") {
       try {
-        await updateDoc(docRef, {
+        await updateDoc(meetingsRef, {
           [selectedEvent?.day]:
             meetingsAtThisDay.length === 0 ? deleteField() : meetingsAtThisDay,
         });
-        const docSnap = await getDoc(docRef);
+        const docSnap = await getDoc(meetingsRef);
         if (docSnap.exists()) {
-          await updateDoc(docRef, {
+          await updateDoc(meetingsRef, {
             [pickedDate]: arrayUnion(data),
           });
         } else {
-          await setDoc(docRef, {
+          await setDoc(meetingsRef, {
             [pickedDate]: arrayUnion(data),
           });
         }

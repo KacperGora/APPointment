@@ -88,7 +88,7 @@ export type InputConfig = {
   value?: string;
   icon: any;
   ref?: any;
-  onSubmitEditing?: () => {};
+  onSubmitEditing?: () => void;
   numberOfLines?: number;
   onChange?: (value) => void;
   autoCapitalize?: TextInputProps["autoCapitalize"];
@@ -113,6 +113,9 @@ export type NewUserData = {
   additionalInfo?: string;
   meetings: Meeting[];
   timeStamp: FieldValue;
+};
+export type User = {
+  [key: string]: NewUserData;
 };
 export type CustomerModalProps = {
   modalVisible: boolean;
@@ -174,6 +177,7 @@ export type InputComponentProps = {
   setUserTypedName: React.Dispatch<React.SetStateAction<string>>;
   setUserTypedLastName: React.Dispatch<React.SetStateAction<string>>;
   fullName: string;
+  setShowSummary: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export type FormCalendarStripProps = {
   date: string;
@@ -226,7 +230,7 @@ export type TimelineScreenHeaderProps = {
   setTimelineHeaderShown?: React.Dispatch<React.SetStateAction<boolean>>;
   disableCalendar?: boolean;
   onTodayIconPressHandler: () => void;
-  searchPressHandler: (value: string) => void;
+  searchPressHandler?: (value: string) => void;
   disableSearchBar?: boolean;
 };
 export type NavbarProps = {
@@ -239,5 +243,10 @@ export type NavbarProps = {
 };
 export type SearchBarProps = {
   setSearchBarVisible?: React.Dispatch<React.SetStateAction<boolean>>;
-  searchPressHandler: (value: string) => void;
+  searchPressHandler?: (value: string) => void;
+};
+export type CustomerList = {
+  customers: {};
+  modalVisible: boolean;
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };

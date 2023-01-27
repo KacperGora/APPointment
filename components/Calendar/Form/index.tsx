@@ -1,5 +1,5 @@
 import React, { SetStateAction, useContext, useEffect, useState } from "react";
-import { Alert, TextStyle } from "react-native";
+import { Alert, LayoutAnimation, TextStyle } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { MeetingsContext } from "../../../store/CalendarStore";
 import useCheckOverlappingEvents from "./hooks/useCheckOverlappingEvents";
@@ -10,6 +10,7 @@ import {
   Hours,
   Meeting,
   MeetingFormProps,
+  NewUserData,
   RouteProps,
   SelectiveOptions,
   WorkerDetails,
@@ -23,24 +24,23 @@ import FormCoreComponent from "./components/FormCoreComponent/FormCore";
 import NoCustomerModal from "./components/NoCustomerModal/NoCustomerModal";
 import useAddMeetingForCustomer from "./hooks/useAddMeetingForCustomer";
 import BottomSheetForm from "../../BottomSheet/BottomSheetComponent";
-import AddNewCustomerForm from "../../Salon/SalonCustomers/AddNewCustomerForm";
+import AddNewCustomerForm from "../../Salon/SalonCustomers/components/AddNewCustomerForm";
 import InformationText from "../../UI/InformationText/InformationText";
 import { colors } from "../../colors";
 import { Container } from "../../shared";
 import getAvHours from "./hooks/useGetAvailableHours";
 import pickHandler from "../../../Utils/pickHandler";
-import useGetCurrentCustomer from "../../../hooks/useGetCurrentCustomer";
 import { v4 } from "uuid";
 import dayjs from "dayjs";
 import useFirebase from "../../../hooks/useFirebase";
 import { getSelectiveOptions } from "./config/formConfig";
+import { SaloonContext } from "../../../store/SaloonStore";
 
 const MeetingForm: React.FC<MeetingFormProps> = ({
   timelineDate,
   onCloseBottomSheet,
   worker,
   service,
-  customerName,
   editing,
   editedEventDraft,
   selectedEvent,
@@ -63,13 +63,11 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
   const [pickedHour, setPickedHour] = useState(availableHours[0]);
   const [pickedService, setPickedService] = useState<SelectiveOptions>();
   const [pickedWorker, setPickedWorker] = useState<WorkerDetails>();
-  const [userTypedName, setUserTypedName] = useState(
-    customerName?.split(" ")[0] || ""
-  );
+  const [userTypedName, setUserTypedName] = useState("");
+  const salonCtx = useContext(SaloonContext);
+  const customers = salonCtx.customers;
+  const [userTypedLastName, setUserTypedLastName] = useState("");
 
-  const [userTypedLastName, setUserTypedLastName] = useState(
-    customerName?.split(" ")[1] || ""
-  );
   const color = useSetColorForEvent(pickedService);
   useEffect(() => {
     setPickedService(services.find((el) => el.value === service));
@@ -77,11 +75,11 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
   }, [worker, service]);
 
   const customerFullName = `${userTypedName} ${userTypedLastName}`;
-  const customer = useGetCurrentCustomer(customerFullName.toLowerCase());
-
+  const customer: NewUserData = customers[customerFullName];
   const { endHour, startFullDateISO, endFullDateISO, startFullDate, day } =
     dateFormatter(pickedDate, pickedHour, pickedService, availableHours);
-
+  console.log(customer);
+  console.log(customers[customerFullName]);
   const data: Meeting = {
     id: v4(),
     color: color,
@@ -164,7 +162,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
         return;
       } else {
         ctx?.addMeeting(data, pickedDate);
-        useAddMeetingForCustomer(customerFullName, data);
+        useAddMeetingForCustomer(customer, data);
         onCloseBottomSheet();
         !isLoading && setIndex(0);
       }
@@ -176,6 +174,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
     state: SelectiveOptions[],
     setState: SetStateAction<any>
   ) => {
+    LayoutAnimation.easeInEaseOut();
     pickHandler(index, state, setState);
   };
   const bottomSheetHandler = () => {
@@ -212,7 +211,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
   return (
     <Container>
       {isLoading ? (
-        <Spinner />
+        <Spinner borderWidth={5} size={50} />
       ) : (
         <>
           <FormCoreComponent

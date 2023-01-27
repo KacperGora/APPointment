@@ -23,7 +23,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <RowContainer style={{ marginBottom: 6 }}>
+    <RowContainer
+      style={{
+        marginBottom: 4,
+      }}
+    >
       <StyledTextInput
         style={{
           elevation: 14,

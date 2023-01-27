@@ -8,7 +8,18 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import MeetingsProvider from "./store/CalendarStore";
 import SaloonProvider from "./store/SaloonStore";
+import * as Notifications from "expo-notifications";
 SplashScreen.preventAutoHideAsync();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+      shouldShowAlert: true,
+    };
+  },
+});
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -16,6 +27,7 @@ export default function App() {
   let [fontLoaded] = useFonts({
     "Lato-Bold": require("./assets/fonts/Lato-Bold.ttf"),
     "Lato-Regular": require("./assets/fonts/Lato-Regular.ttf"),
+    "Material Design Icons": require("./assets/fonts/MaterialCommunityIcons.ttf"),
   });
 
   useEffect(() => {
@@ -42,7 +54,20 @@ export default function App() {
   if (!appIsReady) {
     return null;
   }
-
+  const scheduleNotificationHandler = () => {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "My first local noti",
+        body: "This is the body.",
+        data: { userName: "Kacper" },
+        vibrate: [10, 50, 250],
+      },
+      trigger: {
+        seconds: 3,
+      },
+    });
+  };
+  scheduleNotificationHandler();
   return (
     <MeetingsProvider>
       <SaloonProvider>

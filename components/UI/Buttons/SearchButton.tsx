@@ -11,6 +11,8 @@ const SearchButton = ({ onPress }) => {
         borderRadius: 12,
         width: 40,
         height: 40,
+        borderWidth: 1.5,
+        borderColor: "#db981b",
       }}
     >
       <Ionicons

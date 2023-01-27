@@ -14,9 +14,9 @@ interface SaloonContextProps {
   changeTargetHandler: (value: number, type: string) => void;
   unavailableHours: {};
   unavailableHoursHandler: (data) => void;
-  customers: NewUserData[];
-  addCustomers: (customer: NewUserData) => void;
-  getCustomers: (data: NewUserData[]) => void;
+  customers: {};
+
+  getCustomers: (data) => void;
 }
 export const SaloonContext = React.createContext<SaloonContextProps>({
   dailyTarget: 0,
@@ -26,7 +26,7 @@ export const SaloonContext = React.createContext<SaloonContextProps>({
   unavailableHoursHandler: (data) => {},
   unavailableHours: {},
   customers: [],
-  addCustomers: (customer) => {},
+
   getCustomers: (data) => {},
 });
 
@@ -34,7 +34,7 @@ const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
   const [dailyTarget, setDailyTarget] = useState<number>(500);
   const [weeklyTarget, setWeeklyTarget] = useState<number>(3000);
   const [monthlyTarget, setMonthlyTarget] = useState<number>(8000);
-  const [customers, setCustomers] = useState<NewUserData[]>([]);
+  const [customers, setCustomers] = useState({});
   const [unavailableHours, setUnavailableHours] = useState({
     0: [
       { start: 0, end: 7 },
@@ -63,17 +63,9 @@ const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
     6: [{ start: 0, end: 24 }],
   });
 
-  const addCustomers = async (data: NewUserData) => {
-    const customerRef = await setDoc(doc(db, "customers", data.fullName), data);
-  };
   const getCustomers = (data) => {
     setCustomers(data);
   };
-  const fetchedCustomers = useGetCustomers();
-  console.log(fetchedCustomers);
-  useEffect(() => {
-    setCustomers(fetchedCustomers);
-  }, [fetchedCustomers]);
 
   const changeTargetHandler = async (value: number, type: string) => {
     switch (type) {
@@ -104,7 +96,6 @@ const SaloonProvider: React.FC<SaloonProviderProps> = ({ children }) => {
         changeTargetHandler,
         customers,
         getCustomers,
-        addCustomers,
       }}
     >
       {children}

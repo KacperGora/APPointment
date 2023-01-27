@@ -14,15 +14,16 @@ import NoMeetingsScreen from "../../UI/NoMeetingsScreen/NoMeetingsScreen";
 import useGetEmptyWeeks from "./hooks/useGetEmptyWeeks";
 import TimelineScreenHeader from "../../UI/Headers/TimelineScreenHeader/TimelineScreenHeader";
 import dayjs from "dayjs";
+import { AnimatedFAB } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 const AgendaComponent: React.FC = () => {
   const markedDates = useSetMarkedDates();
   const agendaRef = useRef<Agenda>();
   const theme = useRef(getCalendarListTheme());
   const items = generateDays(todayDateData);
-
+  const navigate = useNavigation<any>();
   const emptyWeeks = useGetEmptyWeeks(items);
-  console.log(emptyWeeks);
   const [monthName, setMonthName] = useState(getMonthName(new Date()));
 
   const changeMonthNameHandler = (day) => {
@@ -79,6 +80,20 @@ const AgendaComponent: React.FC = () => {
         ref={agendaRef}
         markedDates={markedDates}
         firstDay={1}
+      />
+      <AnimatedFAB
+        icon={"plus-circle-outline"}
+        variant={"tertiary"}
+        label=" "
+        onPress={() => navigate.navigate("Tydzień")}
+        visible={true}
+        animateFrom={"left"}
+        iconMode={"static"}
+        style={{
+          bottom: 16,
+          right: 16,
+          position: "absolute",
+        }}
       />
     </MyStatusBar>
   );
