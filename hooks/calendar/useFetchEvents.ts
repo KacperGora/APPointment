@@ -35,3 +35,30 @@ const useFetchEvents = () => {
   return { data, flatData, error, isLoading };
 };
 export default useFetchEvents;
+//  const [data, setData] = useState({});
+//  const [flatData, setFlatData] = useState<Meeting[]>([]);
+//  const [error, setError] = useState(null);
+//  const [isLoading, setIsLoading] = useState(true);
+//  useEffect(() => {
+//    setIsLoading(true);
+//    setError(null);
+//    const q = query(collection(db, "meetings"));
+//    const unsubscribe = onSnapshot(
+//      q,
+//      (querySnapshot) => {
+//        querySnapshot.forEach((doc) => {
+//          setData(doc.data());
+//          setFlatData(Object.values(doc.data()).flat());
+//        });
+
+//        setIsLoading(false);
+//      },
+//      (error) => {
+//        setError(error);
+//        throw new Error(error.message);
+//      }
+//    );
+//    return () => {
+//      unsubscribe;
+//    };
+//  }, []);
