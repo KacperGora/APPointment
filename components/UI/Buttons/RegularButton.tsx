@@ -35,7 +35,11 @@ const RegularButton: FunctionComponent<ButtonProps> = ({
     <ButtonView
       disabled={disabled}
       onPress={onPress}
-      style={[btnStyles, primary && { backgroundColor: colors.primary }]}
+      style={[
+        btnStyles,
+        primary && { backgroundColor: colors.primary },
+        disabled && { backgroundColor: "#db95b7" },
+      ]}
     >
       <RegularText textStyles={textStyles}>{title}</RegularText>
     </ButtonView>

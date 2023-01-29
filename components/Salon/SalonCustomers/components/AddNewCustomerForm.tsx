@@ -1,9 +1,15 @@
-import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  Easing,
+  LayoutAnimation,
+  StyleSheet,
+  View,
+} from "react-native";
 import { colors } from "../../../colors";
 import { addNewCustomerFormConfiguration } from "./addNewCustomerFormConfiguration";
 import { Ionicons } from "@expo/vector-icons";
+import { HelperText, TextInput as TextInputPaper } from "react-native-paper";
 import {
   validateFullName,
   validatePhoneNumber,
@@ -18,19 +24,25 @@ import {
 import Spinner from "../../../UI/Spinner/Spinner";
 import RegularButton from "../../../UI/Buttons/RegularButton";
 import { db } from "../../../../firebase/firebase";
+import { RowContainer } from "../../../shared";
+import RegularText24 from "../../../UI/Text/RegularText24";
+import Animation from "../../../UI/SuccessAnimation/Animation";
+
 type FormProps = {
   hideBottomModal?: () => void;
   customerName?: string;
+  setIndex: React.Dispatch<SetStateAction<number>>;
 };
 const AddNewCustomerForm: React.FC<FormProps> = ({
   hideBottomModal,
   customerName,
+  setIndex,
 }) => {
   const { inputConfig, additionalInfo, fullName, phoneNumber, resetInputs } =
     addNewCustomerFormConfiguration(customerName);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const phoneIsValid = validatePhoneNumber(phoneNumber);
-
   const fullNameInputIsValid = validateFullName(fullName);
   const formIsValid = phoneIsValid && fullNameInputIsValid;
   const userData = {
@@ -41,6 +53,7 @@ const AddNewCustomerForm: React.FC<FormProps> = ({
     timeStamp: serverTimestamp(),
   };
   const buttonPressHandler = async () => {
+    setIndex(0);
     if (formIsValid) {
       try {
         setIsLoading(true);
@@ -55,105 +68,130 @@ const AddNewCustomerForm: React.FC<FormProps> = ({
             [userData.fullName]: userData,
           });
         }
-        // await updateDoc(customerRef, {
-        //   [userData.fullName]: userData,
-        // });
       } catch (e) {
         console.error("Error adding document: ", e);
         throw new Error(e);
       } finally {
+        LayoutAnimation.easeInEaseOut();
         setIsLoading(false);
-        hideBottomModal();
-        resetInputs();
+        setShowSuccess(true);
+        setTimeout(() => {
+          hideBottomModal();
+          resetInputs();
+        }, 1500);
       }
     }
   };
+  const animationProgress = useRef(new Animated.Value(0));
+  useEffect(() => {
+    Animated.timing(animationProgress.current, {
+      toValue: 1,
+      duration: 5000,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    }).start();
+  }, []);
 
   return (
-    <>
-      <Text style={styles.heading}>Dodaj nowego klienta</Text>
+    <View style={{ marginVertical: 0, marginHorizontal: 24 }}>
       {isLoading ? (
-        <Spinner size={50} borderWidth={5} />
+        <View
+          style={{
+            alignContent: "center",
+            justifyContent: "center",
+            flex: 1,
+          }}
+        >
+          <Spinner size={50} borderWidth={5} />
+        </View>
       ) : (
-        <View>
-          {inputConfig.map((input) => {
-            return (
-              <View key={input.id} style={styles.singleInputLine}>
-                <Ionicons
-                  name={input.icon}
-                  size={24}
-                  color={colors.secondary}
-                  style={styles.icon}
-                />
-                <TextInput
-                  placeholderTextColor={colors.gray}
-                  style={styles.input}
-                  placeholder={input.name}
-                  keyboardType={input.keyboardType}
-                  returnKeyType={input.returnKeyType}
-                  autoCapitalize={input.autoCapitalize}
-                  autoFocus={false}
-                  ref={input.ref}
-                  onSubmitEditing={input.onSubmitEditing}
-                  onChangeText={input.onChange}
-                  value={input.value}
-                  maxLength={input.maxLength}
-                />
-              </View>
-            );
-          })}
+        <View style={{ marginTop: 24 }}>
+          {showSuccess ? (
+            <Animation />
+          ) : (
+            <>
+              <RegularText24>Dodaj nowego klienta</RegularText24>
+              {inputConfig.map((input) => {
+                return (
+                  <RowContainer
+                    key={input.id}
+                    style={{ marginVertical: 12, alignItems: "center" }}
+                  >
+                    <Ionicons
+                      name={input.icon}
+                      size={24}
+                      color="gray"
+                      style={styles.icon}
+                    />
+                    <View style={{ flex: 1 }}>
+                      <TextInputPaper
+                        mode="outlined"
+                        placeholderTextColor="#9d9d9d"
+                        ref={input.ref}
+                        style={{
+                          flex: 1,
+                          paddingLeft: 24,
+                          backgroundColor: "white",
+                        }}
+                        outlineColor="lightgray"
+                        activeOutlineColor="#f764ab52"
+                        textAlign="center"
+                        value={input.value}
+                        label={input.name}
+                        key={input.id}
+                        autoCapitalize={input.autoCapitalize}
+                        returnKeyType={input.returnKeyType}
+                        onChangeText={input.onChange}
+                        keyboardType={input.keyboardType}
+                        maxLength={input.maxLength}
+                        multiline={input.multiline}
+                        error={input.error}
+                        onSubmitEditing={input.onSubmitEditing}
+                        onBlur={input.onBlur}
+                        onFocus={input.onFocus}
+                      />
+                      {input.error && (
+                        <HelperText type="error" visible={input.error}>
+                          {input.errorText}
+                        </HelperText>
+                      )}
+                    </View>
+                  </RowContainer>
+                );
+              })}
+              <RegularButton
+                btnStyles={{
+                  alignSelf: "center",
+                  width: "60%",
+                  marginVertical: 12,
+                  marginHorizontal: 24,
+                }}
+                textStyles={{
+                  color: "white",
+                  fontWeight: "700",
+                  fontSize: 16,
+                }}
+                onPress={buttonPressHandler}
+                title="DODAJ"
+                primary
+                disabled={!formIsValid}
+              />
+            </>
+          )}
         </View>
       )}
-      <RegularButton
-        btnStyles={{
-          alignSelf: "center",
-          width: "60%",
-          marginVertical: 12,
-          marginHorizontal: 24,
-        }}
-        textStyles={{ color: "white", fontWeight: "700", fontSize: 16 }}
-        onPress={buttonPressHandler}
-        title="DODAJ"
-        primary
-      />
-    </>
+    </View>
   );
 };
 
 export default AddNewCustomerForm;
 const styles = StyleSheet.create({
-  container: {
-    width: Dimensions.get("screen").width - 10,
-    backgroundColor: "white",
-    alignSelf: "center",
-    borderWidth: 1,
-    borderColor: "lightgray",
-    borderRadius: 16,
-    shadowColor: "black",
-    shadowOffset: { height: 2, width: 2 },
-    shadowOpacity: 0.6,
-    shadowRadius: 12,
-    alignItems: "center",
-    padding: 24,
-    margin: 24,
-  },
   singleInputLine: {
     flexDirection: "row",
-    margin: 12,
-    borderBottomColor: colors.gray,
-    borderBottomWidth: 1,
-    padding: 12,
+    marginVertical: 12,
+    alignItems: "center",
   },
-  preInputText: {
-    fontWeight: "600",
-    width: 120,
-    borderRightColor: "red",
-    borderRightWidth: 1,
-  },
-  input: {
-    color: "black",
-    width: 190,
-  },
+
   heading: {
     fontSize: 24,
     fontWeight: "600",
@@ -162,6 +200,8 @@ const styles = StyleSheet.create({
     margin: 24,
   },
   icon: {
-    paddingRight: 24,
+    position: "relative",
+    left: 30,
+    zIndex: 3,
   },
 });

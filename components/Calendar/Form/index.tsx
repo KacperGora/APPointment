@@ -48,38 +48,34 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
   setIndexForm,
 }) => {
   const ctx = useContext(MeetingsContext);
-
+  const salonCtx = useContext(SaloonContext);
+  const route = useRoute<RouteProp<RouteProps>>();
+  const dateString = route.params?.date || timelineDate;
   const [modalShow, setModalShow] = useState(false);
   const [bottomSheetShown, setBottomSheetShown] = useState(false);
   const [dismissAddingCustomer, setDismissAddingCustomer] = useState(false);
   const [index, setIndex] = useState(0);
-  const route = useRoute<RouteProp<RouteProps>>();
   const [availableHours, setAvailableHours] = useState<Hours[]>(hours);
   const [services, setServices] = useState<SelectiveOptions[]>(servicesDetails);
   const [workers, setWorkers] = useState(salonWorkers);
-  const dateString = route.params?.date || timelineDate;
-
   const [pickedDate, setPickedDate] = useState(dateString);
   const [pickedHour, setPickedHour] = useState(availableHours[0]);
   const [pickedService, setPickedService] = useState<SelectiveOptions>();
   const [pickedWorker, setPickedWorker] = useState<WorkerDetails>();
   const [userTypedName, setUserTypedName] = useState("");
-  const salonCtx = useContext(SaloonContext);
-  const customers = salonCtx.customers;
   const [userTypedLastName, setUserTypedLastName] = useState("");
-
+  const customerFullName = `${userTypedName} ${userTypedLastName}`;
+  const customers = salonCtx.customers;
+  const customer: NewUserData = customers[customerFullName];
   const color = useSetColorForEvent(pickedService);
   useEffect(() => {
     setPickedService(services.find((el) => el.value === service));
     setPickedWorker(workers.find((el) => el.value === worker));
   }, [worker, service]);
 
-  const customerFullName = `${userTypedName} ${userTypedLastName}`;
-  const customer: NewUserData = customers[customerFullName];
   const { endHour, startFullDateISO, endFullDateISO, startFullDate, day } =
     dateFormatter(pickedDate, pickedHour, pickedService, availableHours);
-  console.log(customer);
-  console.log(customers[customerFullName]);
+
   const data: Meeting = {
     id: v4(),
     color: color,

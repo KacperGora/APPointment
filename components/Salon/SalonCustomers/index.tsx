@@ -13,7 +13,7 @@ function SalonCustomers() {
   const [index, setIndex] = useState(0);
   const [customers, setCustomers] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
-  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(true);
 
   const searchPressHandler = (value: string) => {
     setCustomers(
@@ -55,7 +55,10 @@ function SalonCustomers() {
       />
       {bottomSheetVisible ? (
         <BottomSheetForm index={index} setIndex={setIndex}>
-          <AddNewCustomerForm hideBottomModal={hideBottomSheetHandler} />
+          <AddNewCustomerForm
+            hideBottomModal={hideBottomSheetHandler}
+            setIndex={setIndex}
+          />
         </BottomSheetForm>
       ) : null}
     </>

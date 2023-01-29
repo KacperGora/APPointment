@@ -16,9 +16,7 @@ const AgendaItem: React.FC<AgendaItemProps> = ({
   const [modalVisible, setModalVisible] = useState(false);
   const salonCtx = useContext(SaloonContext);
   const customers = salonCtx.customers;
-  const currentCustomer = customers.find(
-    (customer) => customer.fullName === item?.title
-  );
+  const currentCustomer = customers[item.title];
   const itemPressed = useCallback(() => {
     setModalVisible(true);
   }, []);

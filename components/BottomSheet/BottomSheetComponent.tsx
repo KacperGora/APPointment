@@ -14,7 +14,7 @@ const BottomSheetComponent: React.FC<BottomSheetProps> = ({
   onCloseBottomSheet,
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["5%", "90%"], []);
+  const snapPoints = useMemo(() => ["30%", "90%"], []);
   const onClosePressHandler = (index: number) => {
     setIndex(index);
   };

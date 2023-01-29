@@ -86,6 +86,8 @@ export type InputConfig = {
   keyboardType: KeyboardTypeOptions;
   returnKeyType: ReturnKeyTypeOptions;
   value?: string;
+  onBlur?: () => void;
+  onFocus?: () => void;
   icon: any;
   ref?: any;
   onSubmitEditing?: () => void;
@@ -93,6 +95,9 @@ export type InputConfig = {
   onChange?: (value) => void;
   autoCapitalize?: TextInputProps["autoCapitalize"];
   maxLength?: number;
+  multiline?: boolean;
+  error?: boolean;
+  errorText?: string;
 }[];
 
 export type NewCustomerConfigurationFnReturnedValue = {

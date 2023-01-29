@@ -62,26 +62,6 @@ const TextInputs: React.FC<InputComponentProps> = ({
               textAlign="center"
               textContentType="name"
             />
-            {/* <View
-              style={{
-                position: "relative",
-                top: 20,
-                left: 20,
-                backgroundColor: "white",
-              }}
-            >
-              <Text>{input.placeholder}</Text>
-            </View>
-            <StyledInput
-              key={input.id}
-              autoCapitalize="words"
-              placeholderTextColor="#9d9d9d"
-              autoCorrect={input.autoCorrect}
-              onChangeText={input.onChangeText}
-              value={input.value}
-              // ref={input.ref}
-              onSubmitEditing={input.onSubmitEditing}
-            /> */}
           </View>
         );
       })}
