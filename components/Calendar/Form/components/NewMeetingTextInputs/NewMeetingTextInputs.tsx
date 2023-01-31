@@ -8,7 +8,6 @@ const TextInputs: React.FC<InputComponentProps> = ({
   setUserTypedName,
   setUserTypedLastName,
   fullName,
-  setShowSummary,
 }) => {
   const firstNameInputRef = useRef<TextInput>();
   const lastNameInputRef = useRef<TextInput>();
@@ -30,7 +29,6 @@ const TextInputs: React.FC<InputComponentProps> = ({
       value: fullName.split(" ")[1].trim(),
       ref: lastNameInputRef,
       onSubmitEditing: () => {
-        setShowSummary(true);
         LayoutAnimation.easeInEaseOut();
         Keyboard.dismiss();
       },

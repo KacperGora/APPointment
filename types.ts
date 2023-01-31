@@ -15,7 +15,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { TDaySelectionAnimation } from "react-native-calendar-strip";
-
+import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
 export interface Meeting {
   id: string;
   color: string;
@@ -163,6 +163,7 @@ export type BottomSheetProps = {
   setIndex: Dispatch<SetStateAction<number>>;
   children: ReactNode;
   onCloseBottomSheet?: () => void;
+  editing?: boolean;
 };
 export type AgendaDayProps = {
   nameDay: string;
@@ -210,6 +211,11 @@ export type MeetingDetailProps = {
   customerName?: string;
   children?: any;
   style?: ViewStyle;
+  selectedEvent?: PackedEvent;
+  editing?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  editedEventDraft?: PackedEvent | Meeting;
 };
 export type MeetingFormProps = {
   timelineDate: string;
@@ -254,4 +260,12 @@ export type CustomerList = {
   customers: {};
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+};
+export type FormSelectiveOptionsMapProps = {
+  data: {
+    id: number;
+    render: boolean;
+    data: SelectiveOptions[];
+    pressHandler: () => void;
+  }[];
 };

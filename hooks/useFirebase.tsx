@@ -18,7 +18,7 @@ const useFirebase = (
   pickedDate: string,
   data: Meeting
 ) => {
-  const meetingsRef = doc(db, "meetings", `meetings`);
+  const meetingsRef = doc(db, "meetings", "meetings");
   const customersRef = doc(db, "customers", "customers");
   const ctx = useContext(MeetingsContext);
   const salonCtx = useContext(SaloonContext);
@@ -26,9 +26,11 @@ const useFirebase = (
   const meetings = ctx.meetings;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
   const meetingsAtThisDay = meetings[selectedEvent?.day]?.filter(
     (el) => el.id !== selectedEvent.id
   );
+  console.log(meetingsAtThisDay);
   const makeFirebaseCall = async (type: string) => {
     setIsLoading(true);
     setError(null);

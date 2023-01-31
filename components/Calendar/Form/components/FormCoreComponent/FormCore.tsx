@@ -20,19 +20,23 @@ const FormCoreComponent = ({
   worker,
   customerName,
   selectMapConfig,
+  userTypedName,
+  userTypedLastName,
 }) => {
-  const [showSummary, setShowSummary] = useState(false);
+  const renderSummaryCondition =
+    userTypedLastName.trim().length !== 0 && userTypedName.trim().length !== 0;
+  console.log(renderSummaryCondition);
   return (
-    <View style={{ flex: 1 }}>
+    <View>
       <CalendarStripComponent date={pickedDate} setNewDate={setPickedDate} />
       <FormSelectiveOptionsMap data={selectMapConfig} />
       <TextInputs
         setUserTypedLastName={setUserTypedLastName}
         setUserTypedName={setUserTypedName}
         fullName={customerName}
-        setShowSummary={setShowSummary}
       />
-      {showSummary && (
+
+      {renderSummaryCondition && (
         <MeetingDetails
           date={new Date(startFullDate)}
           service={pickedService}
@@ -46,5 +50,3 @@ const FormCoreComponent = ({
   );
 };
 export default FormCoreComponent;
-//   <KeyboardAwareScrollView resetScrollToCoords={{ x: 0, y: 0 }}>
-// </KeyboardAwareScrollView>

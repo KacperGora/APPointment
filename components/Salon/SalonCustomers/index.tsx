@@ -54,7 +54,11 @@ function SalonCustomers() {
         onPressMain={iconPressHandler}
       />
       {bottomSheetVisible ? (
-        <BottomSheetForm index={index} setIndex={setIndex}>
+        <BottomSheetForm
+          index={index}
+          setIndex={setIndex}
+          onCloseBottomSheet={hideBottomSheetHandler}
+        >
           <AddNewCustomerForm
             hideBottomModal={hideBottomSheetHandler}
             setIndex={setIndex}

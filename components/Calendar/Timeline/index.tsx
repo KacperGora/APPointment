@@ -6,18 +6,17 @@ import {
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import TimelineComponent from "./components/TimelineComponent";
-import useFetchEvents from "../../../hooks/calendar/useFetchEvents";
+import useFetchEvents from "../../../hooks/calendar/useFetchData";
 import MyStatusBar from "../../UI/StatusBar/MyStatusBar";
 import BottomSheetMeetingForm from "./components/BottomSheetMeetingForm";
 import { RouteProps } from "../../../types";
-import BottomSheetSelectedEvent from "./components/BottomSheetSelectedEvent";
 import TimelineScreenHeader from "../../UI/Headers/TimelineScreenHeader/TimelineScreenHeader";
 import { FloatingAction } from "react-native-floating-action";
 import dayjs from "dayjs";
 import { colors } from "../../colors";
 import { getFloatingButtonActions } from "./config/timelineConfig";
 import { SaloonContext } from "../../../store/SaloonStore";
-import useGetCustomers from "../../../hooks/Salon/useGetCustomers";
+import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
 const Timeline = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<RouteProps>>();
@@ -35,26 +34,24 @@ const Timeline = () => {
   const [bottomSheetActiveIndex, setBottomSheetActiveIndex] = useState(0);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [bottomSheetDirtyDate, setBottomSheetDirtyDate] = useState(
-    new Date().toLocaleString()
+    dayjs().format("YYYY-MM-DD")
   );
   const salonContext = useContext(SaloonContext);
-  const { users } = useGetCustomers();
-
-  useEffect(() => {
-    salonContext.getCustomers(users);
-  }, [users]);
-
   const actions = useMemo(() => {
     return getFloatingButtonActions();
   }, []);
-  const { flatData, isLoading } = useFetchEvents();
+  const { eventsFlatData, isLoading, customers } = useFetchEvents();
+  console.log(editedEventDraft);
   useEffect(() => {
-    setEvents(flatData);
-  }, [flatData]);
+    setEvents(eventsFlatData);
+    salonContext.getCustomers(customers);
+  }, [eventsFlatData, customers]);
 
   const onCloseBottomSheet = () => {
     setBottomSheetVisible(false);
     setBottomSheetActiveIndex(0);
+    !!selectedEvent && setSelectedEvent(undefined);
+    bottomSheetRef.current?.close();
   };
   const optionalProps = {
     date: searchedEvents[0]?.day || dayjs().format("YYYY-MM-DD"),
@@ -71,14 +68,14 @@ const Timeline = () => {
       setEvents(searchedEvents);
       calendarRef?.current?.goToDate(optionalProps);
     } else {
-      setEvents(flatData);
+      setEvents(eventsFlatData);
       calendarRef?.current?.goToDate(optionalProps);
     }
   }, [searchedEvents]);
 
   const searchPressHandler = (searchedValue: string) => {
     setSearchedEvents(
-      flatData.filter(
+      eventsFlatData.filter(
         (el) =>
           el.title.toLowerCase().includes(searchedValue.toLowerCase()) ||
           el.serviceName.toLowerCase().includes(searchedValue.toLowerCase())
@@ -94,9 +91,12 @@ const Timeline = () => {
     navigation.navigate("Klienci");
   };
   const floatingButtonsPressHandler = (name: string) => {
-    name === "Meeting" && addMeetingButtonPressHandler();
-    name === "Customer" && addCustomerButtonPressHandler();
+    name === "Meeting"
+      ? addMeetingButtonPressHandler()
+      : addCustomerButtonPressHandler();
   };
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
   return (
     <MyStatusBar>
       <TimelineScreenHeader
@@ -135,12 +135,18 @@ const Timeline = () => {
           index={bottomSheetActiveIndex}
           setIndex={setBottomSheetActiveIndex}
           onCloseBottomSheet={onCloseBottomSheet}
+          editing={false}
+          selectedEvent={null}
         />
       ) : null}
       {selectedEvent ? (
-        <BottomSheetSelectedEvent
+        <BottomSheetMeetingForm
+          editing={true}
           selectedEvent={selectedEvent}
-          setSelectedEvent={setSelectedEvent}
+          bottomSheetDirtyDate={dayjs(selectedEvent.start).format("YYYY-MM-DD")}
+          index={bottomSheetActiveIndex}
+          setIndex={setBottomSheetActiveIndex}
+          onCloseBottomSheet={onCloseBottomSheet}
           editedEventDraft={editedEventDraft}
         />
       ) : null}

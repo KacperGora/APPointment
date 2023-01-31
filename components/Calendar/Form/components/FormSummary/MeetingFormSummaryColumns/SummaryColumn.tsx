@@ -18,11 +18,11 @@ const SummaryColumn = ({ data }) => {
           {data.title.value}
         </Text>
       </View>
-      {!data.subTitle.value.start ? (
+      {!data.subTitle.value?.start ? (
         <Text>{data.subTitle.value}</Text>
       ) : (
         <Text style={{ ...data.subTitle.styling }}>
-          {data.subTitle.value.start} - {data.subTitle.value.end}
+          {data.subTitle.value?.start} - {data.subTitle.value.end}
         </Text>
       )}
       <SmallText textStyles={{ fontSize: 10, marginVertical: 4 }}>

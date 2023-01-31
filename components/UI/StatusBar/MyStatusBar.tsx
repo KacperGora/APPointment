@@ -5,7 +5,7 @@ import { SafeAreaContainer } from "../../shared";
 const MyStatusBar = ({ children }) => {
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
-      <SafeAreaContainer>
+      <SafeAreaContainer style={{ flex: 1 }}>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
         {children}
       </SafeAreaContainer>

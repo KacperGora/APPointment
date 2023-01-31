@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import { MarkedDates } from "react-native-calendars/src/types";
-import useFetchEvents from "./useFetchEvents";
+import useFetchEvents from "./useFetchData";
 
 const useSetMarkedDates = () => {
   const [markedDates, setMarkedDates] = useState({});
-  const { data } = useFetchEvents();
+  const { eventsData } = useFetchEvents();
   useEffect(() => {
     const marked: MarkedDates = {};
-    for (const key of Object.keys(data)) {
+    for (const key of Object.keys(eventsData)) {
       marked[key] = {
         marked: true,
-        dotColor: data[key].length > 4 ? "red" : "green",
+        dotColor: eventsData[key].length > 4 ? "red" : "green",
       };
     }
     setMarkedDates(marked);
-  }, [data]);
+  }, [eventsData]);
 
   return markedDates;
 };

@@ -1,13 +1,13 @@
 import { TextStyle } from "react-native";
-import useFetchEvents from "../../../../hooks/calendar/useFetchEvents";
+import useFetchData from "../../../../hooks/calendar/useFetchData";
+import useFetchEvents from "../../../../hooks/calendar/useFetchData";
 import { colors } from "../../../colors";
 import getDailyIncome from "../helpers/getDailyIncome";
 
 export function getAgendaDayConfig(props) {
   const { item, nameDay, day, nameMonth, fullDate } = props;
-  const { flatData } = useFetchEvents();
-  const dailyIncome = getDailyIncome(flatData);
-  console.log(dailyIncome[fullDate], item);
+  const { eventsFlatData } = useFetchData();
+  const dailyIncome = getDailyIncome(eventsFlatData);
   const textStyle: TextStyle = {
     fontSize: 12,
     color: item !== undefined ? colors.greydark : "#b3b7bd",

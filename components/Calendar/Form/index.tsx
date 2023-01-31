@@ -1,5 +1,5 @@
 import React, { SetStateAction, useContext, useEffect, useState } from "react";
-import { Alert, LayoutAnimation, TextStyle } from "react-native";
+import { Alert, LayoutAnimation, TextStyle, View } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { MeetingsContext } from "../../../store/CalendarStore";
 import useCheckOverlappingEvents from "./hooks/useCheckOverlappingEvents";
@@ -39,8 +39,7 @@ import { SaloonContext } from "../../../store/SaloonStore";
 const MeetingForm: React.FC<MeetingFormProps> = ({
   timelineDate,
   onCloseBottomSheet,
-  worker,
-  service,
+
   editing,
   editedEventDraft,
   selectedEvent,
@@ -59,19 +58,21 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
   const [services, setServices] = useState<SelectiveOptions[]>(servicesDetails);
   const [workers, setWorkers] = useState(salonWorkers);
   const [pickedDate, setPickedDate] = useState(dateString);
+
   const [pickedHour, setPickedHour] = useState(availableHours[0]);
-  const [pickedService, setPickedService] = useState<SelectiveOptions>();
+  const [pickedService, setPickedService] = useState<SelectiveOptions>(null);
   const [pickedWorker, setPickedWorker] = useState<WorkerDetails>();
-  const [userTypedName, setUserTypedName] = useState("");
-  const [userTypedLastName, setUserTypedLastName] = useState("");
+  const [userTypedName, setUserTypedName] = useState(
+    selectedEvent?.title.split(" ")[0] || ""
+  );
+
+  const [userTypedLastName, setUserTypedLastName] = useState(
+    selectedEvent?.title.split(" ")[1] || ""
+  );
   const customerFullName = `${userTypedName} ${userTypedLastName}`;
   const customers = salonCtx.customers;
   const customer: NewUserData = customers[customerFullName];
   const color = useSetColorForEvent(pickedService);
-  useEffect(() => {
-    setPickedService(services.find((el) => el.value === service));
-    setPickedWorker(workers.find((el) => el.value === worker));
-  }, [worker, service]);
 
   const { endHour, startFullDateISO, endFullDateISO, startFullDate, day } =
     dateFormatter(pickedDate, pickedHour, pickedService, availableHours);
@@ -185,13 +186,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
   const hideBottomModalHandler = () => {
     setBottomSheetShown(false);
   };
-  const informationTextStyle: TextStyle = {
-    color: colors.primary,
-    textAlign: "center",
-    marginVertical: 16,
-    fontWeight: "bold",
-    fontSize: 18,
-  };
+
   const selectiveOptionsData = {
     workers,
     services,
@@ -209,28 +204,22 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
       {isLoading ? (
         <Spinner borderWidth={5} size={50} />
       ) : (
-        <>
-          <FormCoreComponent
-            selectMapConfig={selectMapConfig}
-            pickedDate={pickedDate}
-            pickedService={pickedService}
-            startFullDate={startFullDateISO}
-            isOverlapped={isOverlapped}
-            customerName={customerFullName}
-            worker={pickedWorker?.value}
-            endHour={endHour}
-            setPickedDate={setPickedDate}
-            setUserTypedLastName={setUserTypedLastName}
-            setUserTypedName={setUserTypedName}
-            submitHandler={submitHandler}
-          />
-
-          {isOverlapped && pickedService ? (
-            <InformationText stylingProps={informationTextStyle}>
-              Termin zajety, wybierz proszę inny.
-            </InformationText>
-          ) : null}
-        </>
+        <FormCoreComponent
+          selectMapConfig={selectMapConfig}
+          pickedDate={pickedDate}
+          pickedService={pickedService}
+          startFullDate={startFullDateISO}
+          isOverlapped={isOverlapped}
+          customerName={customerFullName}
+          worker={pickedWorker?.value}
+          endHour={endHour}
+          setPickedDate={setPickedDate}
+          setUserTypedLastName={setUserTypedLastName}
+          setUserTypedName={setUserTypedName}
+          submitHandler={submitHandler}
+          userTypedName={userTypedName}
+          userTypedLastName={userTypedLastName}
+        />
       )}
       {modalShow ? (
         <NoCustomerModal

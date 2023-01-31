@@ -1,11 +1,5 @@
-import React, { SetStateAction, useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  Easing,
-  LayoutAnimation,
-  StyleSheet,
-  View,
-} from "react-native";
+import React, { SetStateAction, useState } from "react";
+import { LayoutAnimation, StyleSheet, View } from "react-native";
 import { colors } from "../../../colors";
 import { addNewCustomerFormConfiguration } from "./addNewCustomerFormConfiguration";
 import { Ionicons } from "@expo/vector-icons";
@@ -31,7 +25,7 @@ import Animation from "../../../UI/SuccessAnimation/Animation";
 type FormProps = {
   hideBottomModal?: () => void;
   customerName?: string;
-  setIndex: React.Dispatch<SetStateAction<number>>;
+  setIndex?: React.Dispatch<SetStateAction<number>>;
 };
 const AddNewCustomerForm: React.FC<FormProps> = ({
   hideBottomModal,
@@ -53,7 +47,7 @@ const AddNewCustomerForm: React.FC<FormProps> = ({
     timeStamp: serverTimestamp(),
   };
   const buttonPressHandler = async () => {
-    setIndex(0);
+    !!setIndex && setIndex(0);
     if (formIsValid) {
       try {
         setIsLoading(true);
@@ -72,38 +66,20 @@ const AddNewCustomerForm: React.FC<FormProps> = ({
         console.error("Error adding document: ", e);
         throw new Error(e);
       } finally {
-        LayoutAnimation.easeInEaseOut();
         setIsLoading(false);
         setShowSuccess(true);
         setTimeout(() => {
+          LayoutAnimation.easeInEaseOut();
           hideBottomModal();
           resetInputs();
         }, 1500);
       }
     }
   };
-  const animationProgress = useRef(new Animated.Value(0));
-  useEffect(() => {
-    Animated.timing(animationProgress.current, {
-      toValue: 1,
-      duration: 5000,
-      easing: Easing.linear,
-      useNativeDriver: false,
-    }).start();
-  }, []);
-
   return (
     <View style={{ marginVertical: 0, marginHorizontal: 24 }}>
       {isLoading ? (
-        <View
-          style={{
-            alignContent: "center",
-            justifyContent: "center",
-            flex: 1,
-          }}
-        >
-          <Spinner size={50} borderWidth={5} />
-        </View>
+        <Spinner size={50} borderWidth={5} />
       ) : (
         <View style={{ marginTop: 24 }}>
           {showSuccess ? (
@@ -123,13 +99,12 @@ const AddNewCustomerForm: React.FC<FormProps> = ({
                       color="gray"
                       style={styles.icon}
                     />
-                    <View style={{ flex: 1 }}>
+                    <View style={{ flex: 1, height: 60 }}>
                       <TextInputPaper
                         mode="outlined"
                         placeholderTextColor="#9d9d9d"
                         ref={input.ref}
                         style={{
-                          flex: 1,
                           paddingLeft: 24,
                           backgroundColor: "white",
                         }}
@@ -200,8 +175,8 @@ const styles = StyleSheet.create({
     margin: 24,
   },
   icon: {
-    position: "relative",
-    left: 30,
+    position: "absolute",
+    left: 10,
     zIndex: 3,
   },
 });

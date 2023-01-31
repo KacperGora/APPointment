@@ -3,7 +3,7 @@ import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { db } from "../firebase/firebase";
-import useFetchEvents from "../hooks/calendar/useFetchEvents";
+import useFetchData from "../hooks/calendar/useFetchData";
 import { AllMeetings, Meeting } from "../types";
 
 interface MeetingsProviderProps {
@@ -28,19 +28,19 @@ export const MeetingsContext = React.createContext<MeetingContextProps>({
 });
 
 const MeetingsProvider: React.FC<MeetingsProviderProps> = ({ children }) => {
-  const { flatData, data } = useFetchEvents();
+  const { eventsData, eventsFlatData } = useFetchData();
   const [meetings, setMeetings] = useState({});
   const [meetingsFlat, setMeetingsFlat] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setMeetings(data);
-    setMeetingsFlat(flatData);
-  }, [flatData, data]);
+    setMeetings(eventsData);
+    setMeetingsFlat(eventsFlatData);
+  }, [eventsFlatData, eventsData]);
 
   const addMeeting = async (newMeeting: Meeting, pickedDate: string) => {
     const newArr = { ...meetings };
-    console.log(newArr)
+    console.log(newArr);
     if (newArr[pickedDate]) {
       newArr[pickedDate] = [...newArr[pickedDate], newMeeting];
       setMeetings(newArr);

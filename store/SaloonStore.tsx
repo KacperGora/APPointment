@@ -1,9 +1,5 @@
-import { doc, setDoc } from "firebase/firestore";
-import React, { useEffect } from "react";
+import React from "react";
 import { useState } from "react";
-import { db } from "../firebase/firebase";
-import useGetCustomers from "../hooks/Salon/useGetCustomers";
-import { NewUserData } from "../types";
 interface SaloonProviderProps {
   children: React.ReactNode;
 }

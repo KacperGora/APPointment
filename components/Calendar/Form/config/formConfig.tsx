@@ -8,6 +8,7 @@ export function getCalendarStripConfig(): CalendarStripProps {
   const calendarStripConfig: CalendarStripProps = {
     style: {
       height: 100,
+      flex: 1,
       borderBottomColor: "lightgray",
       borderBottomWidth: 0.3,
     },
@@ -27,6 +28,7 @@ export function getCalendarStripConfig(): CalendarStripProps {
       borderRadius: 12,
       opacity: 0.8,
     },
+
     dateNumberStyle: { color: "black" },
     dateNameStyle: { color: "gray", fontSize: 10 },
     highlightDateNameStyle: { color: "white", fontSize: 10 },

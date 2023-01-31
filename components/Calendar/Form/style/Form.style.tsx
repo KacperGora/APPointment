@@ -1,10 +1,8 @@
 import styled from "styled-components/native";
 import { colors } from "../../../colors";
-import { ScreenWidth } from "../../../shared";
 
 export const InputContainer = styled.View`
   flex-direction: row;
-  align-items: center;
   justify-content: center;
   padding: 0px 6px;
   margin: 0 12px;
@@ -52,6 +50,5 @@ export const SummaryViewContainer = styled.View`
   padding: 24px 12px;
   margin: 12px;
   background-color: white;
-  display: flex;
   flex: 1;
 `;
