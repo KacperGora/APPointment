@@ -1,6 +1,5 @@
-import React, { SetStateAction, useState } from "react";
-import { LayoutAnimation, StyleSheet, View } from "react-native";
-import { colors } from "../../../colors";
+import React, { SetStateAction, useEffect, useState } from "react";
+import { LayoutAnimation, View } from "react-native";
 import { addNewCustomerFormConfiguration } from "./addNewCustomerFormConfiguration";
 import { Ionicons } from "@expo/vector-icons";
 import { HelperText, TextInput as TextInputPaper } from "react-native-paper";
@@ -8,33 +7,22 @@ import {
   validateFullName,
   validatePhoneNumber,
 } from "../../../../Utils/validation/regexValidation";
-import {
-  doc,
-  getDoc,
-  serverTimestamp,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
 import Spinner from "../../../UI/Spinner/Spinner";
 import RegularButton from "../../../UI/Buttons/RegularButton";
-import { db } from "../../../../firebase/firebase";
 import { RowContainer } from "../../../shared";
 import RegularText24 from "../../../UI/Text/RegularText24";
 import Animation from "../../../UI/SuccessAnimation/Animation";
+import useFirebase from "../../../../hooks/useFirebase";
+import { AddNewCustomerProps } from "../../../../types";
 
-type FormProps = {
-  hideBottomModal?: () => void;
-  customerName?: string;
-  setIndex?: React.Dispatch<SetStateAction<number>>;
-};
-const AddNewCustomerForm: React.FC<FormProps> = ({
+const AddNewCustomerForm: React.FC<AddNewCustomerProps> = ({
   hideBottomModal,
   customerName,
   setIndex,
 }) => {
   const { inputConfig, additionalInfo, fullName, phoneNumber, resetInputs } =
     addNewCustomerFormConfiguration(customerName);
-  const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const phoneIsValid = validatePhoneNumber(phoneNumber);
   const fullNameInputIsValid = validateFullName(fullName);
@@ -46,36 +34,20 @@ const AddNewCustomerForm: React.FC<FormProps> = ({
     meetings: [],
     timeStamp: serverTimestamp(),
   };
+  const { isLoading, error, makeFirebaseCall } = useFirebase("customers");
   const buttonPressHandler = async () => {
     !!setIndex && setIndex(0);
-    if (formIsValid) {
-      try {
-        setIsLoading(true);
-        const customerRef = doc(db, "customers", "customers");
-        const docSnap = await getDoc(customerRef);
-        if (docSnap.exists()) {
-          await updateDoc(customerRef, {
-            [userData.fullName]: userData,
-          });
-        } else {
-          await setDoc(customerRef, {
-            [userData.fullName]: userData,
-          });
-        }
-      } catch (e) {
-        console.error("Error adding document: ", e);
-        throw new Error(e);
-      } finally {
-        setIsLoading(false);
-        setShowSuccess(true);
-        setTimeout(() => {
-          LayoutAnimation.easeInEaseOut();
-          hideBottomModal();
-          resetInputs();
-        }, 1500);
-      }
-    }
+    formIsValid && makeFirebaseCall("add", userData);
+    !error && setShowSuccess(true);
   };
+  useEffect(() => {
+    showSuccess &&
+      setTimeout(() => {
+        LayoutAnimation.easeInEaseOut();
+        hideBottomModal();
+        resetInputs();
+      }, 2500);
+  }, [showSuccess]);
   return (
     <View style={{ marginVertical: 0, marginHorizontal: 24 }}>
       {isLoading ? (
@@ -97,7 +69,7 @@ const AddNewCustomerForm: React.FC<FormProps> = ({
                       name={input.icon}
                       size={24}
                       color="gray"
-                      style={styles.icon}
+                      style={{ position: "absolute", left: 10, zIndex: 3 }}
                     />
                     <View style={{ flex: 1, height: 60 }}>
                       <TextInputPaper
@@ -160,23 +132,3 @@ const AddNewCustomerForm: React.FC<FormProps> = ({
 };
 
 export default AddNewCustomerForm;
-const styles = StyleSheet.create({
-  singleInputLine: {
-    flexDirection: "row",
-    marginVertical: 12,
-    alignItems: "center",
-  },
-
-  heading: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: colors.greydark,
-    opacity: 0.6,
-    margin: 24,
-  },
-  icon: {
-    position: "absolute",
-    left: 10,
-    zIndex: 3,
-  },
-});

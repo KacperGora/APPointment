@@ -7,80 +7,103 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { isEmpty } from "lodash";
 import { useContext, useState } from "react";
 import { db } from "../firebase/firebase";
 import { MeetingsContext } from "../store/CalendarStore";
 import { SaloonContext } from "../store/SaloonStore";
-import { Meeting } from "../types";
+import { Meeting, NewUserData } from "../types";
+import Animation from "../components/UI/SuccessAnimation/Animation";
+import React from "react";
 
-const useFirebase = (
-  selectedEvent: PackedEvent,
-  pickedDate: string,
-  data: Meeting
-) => {
-  const meetingsRef = doc(db, "meetings", "meetings");
-  const customersRef = doc(db, "customers", "customers");
+type FirebaseCallType = "edit" | "delete" | "add";
+const useFirebase = (firebasePath: "meetings" | "customers") => {
+  const ref = doc(db, firebasePath, firebasePath);
+  const customerRef = doc(db, "customers", "customers");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState(null);
   const ctx = useContext(MeetingsContext);
   const salonCtx = useContext(SaloonContext);
   const customers = salonCtx.customers;
   const meetings = ctx.meetings;
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  const meetingsAtThisDay = meetings[selectedEvent?.day]?.filter(
-    (el) => el.id !== selectedEvent.id
-  );
-  console.log(meetingsAtThisDay);
-  const makeFirebaseCall = async (type: string) => {
-    setIsLoading(true);
-    setError(null);
-    if (type === "delete") {
-      const customersData = {
-        ...customers[selectedEvent.title],
-        meetings: customers[selectedEvent.title].meetings.filter(
-          (el: Meeting) => el.id !== selectedEvent.id
-        ),
-      };
+  const addDataHandler = async (data: Meeting & NewUserData) => {
+    const customer: NewUserData = { ...customers[data.title] };
 
-      try {
-        await updateDoc(meetingsRef, {
-          [selectedEvent?.day]:
-            meetingsAtThisDay.length === 0 ? deleteField() : meetingsAtThisDay,
-        });
-        await updateDoc(customersRef, {
-          [selectedEvent.title]: customersData,
-        });
-      } catch (error) {
-        setError(error);
+    !isEmpty(customer) && customer.meetings.push(data);
+    const docSnap = await getDoc(ref);
 
-        throw new Error(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    } else if (type === "edit") {
-      try {
-        await updateDoc(meetingsRef, {
-          [selectedEvent?.day]:
-            meetingsAtThisDay.length === 0 ? deleteField() : meetingsAtThisDay,
-        });
-        const docSnap = await getDoc(meetingsRef);
-        if (docSnap.exists()) {
-          await updateDoc(meetingsRef, {
-            [pickedDate]: arrayUnion(data),
+    if (!!data.day) {
+      docSnap.exists()
+        ? await updateDoc(ref, {
+            [data.day]: arrayUnion(data),
+          })
+        : await setDoc(ref, {
+            [data.day]: arrayUnion(data),
           });
-        } else {
-          await setDoc(meetingsRef, {
-            [pickedDate]: arrayUnion(data),
+      !isEmpty(customer) &&
+        (await updateDoc(customerRef, {
+          [customer.fullName]: customer,
+        }));
+    } else if (!!data.fullName) {
+      docSnap.exists()
+        ? await updateDoc(ref, {
+            [data.fullName]: data,
+          })
+        : await setDoc(ref, {
+            [data.fullName]: data,
           });
-        }
-      } catch (error) {
-        setError(error);
-        throw new Error(error);
-      } finally {
-        setIsLoading(false);
-      }
     }
   };
+  const deleteDataHandler = async (data: PackedEvent & NewUserData) => {
+    if (!!data.day) {
+      const meetingsAtThisDay = meetings[data?.day]?.filter(
+        (el) => el.id !== data.id
+      );
+      await updateDoc(ref, {
+        [data.day]:
+          meetingsAtThisDay.length === 0 ? deleteField() : meetingsAtThisDay,
+      });
+      if (!!customers[data?.title]) {
+        const customersData = {
+          ...customers[data?.title],
+          meetings: customers[data.title].meetings.filter(
+            (el: Meeting) => el.id !== data.id
+          ),
+        };
+        await updateDoc(customerRef, {
+          [data.title]: customersData,
+        });
+      }
+    } else if (!!data.fullName) {
+      await updateDoc(ref, {
+        [data.fullName]: deleteField(),
+      });
+    }
+  };
+  // const statusHandler = (type: "success" | "fail") => {
+  //   return <Animation type={type} />;
+  // };
+  const editDataHandler = async () => {};
+
+  const makeFirebaseCall = async (callType: FirebaseCallType, data: any) => {
+    setIsLoading(true);
+    setShowSuccess(false);
+    setError(null);
+    try {
+      callType === "add" && (await addDataHandler(data));
+      callType === "delete" && (await deleteDataHandler(data));
+      callType === "edit" && (await editDataHandler());
+    } catch (error) {
+      setError(error);
+      throw new Error(error);
+    } finally {
+      setIsLoading(false);
+      setShowSuccess(true);
+    }
+  };
+
   return { makeFirebaseCall, isLoading, error };
 };
 export default useFirebase;

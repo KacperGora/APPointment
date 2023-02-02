@@ -15,14 +15,10 @@ const BottomSheetMeetingForm = ({
   selectedEvent,
   editedEventDraft,
 }) => {
-  const { error, isLoading, makeFirebaseCall } = useFirebase(
-    selectedEvent,
-    bottomSheetDirtyDate,
-    null
-  );
+  const { error, isLoading, makeFirebaseCall } = useFirebase("meetings");
 
   const deleteEventHandler = async () => {
-    await makeFirebaseCall("delete");
+    await makeFirebaseCall("delete", selectedEvent);
     onCloseBottomSheet();
   };
   const editEventHandler = () => {

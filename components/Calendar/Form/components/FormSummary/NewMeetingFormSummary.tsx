@@ -24,10 +24,9 @@ const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
   editedEventDraft,
 }) => {
   const dateString = dayjs(
-    editedEventDraft.start || selectedEvent?.day || date
+    editedEventDraft?.start || selectedEvent?.day || date
   ).format("DD MMM YYYY");
   const startHour = dayjs(date).format("HH:mm");
-  console.log(editedEventDraft.start);
   const data = {
     serviceValue: selectedEvent?.serviceName || service?.value || service,
     customerName: customerName || selectedEvent?.title,

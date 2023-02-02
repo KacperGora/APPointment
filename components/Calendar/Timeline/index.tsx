@@ -17,6 +17,7 @@ import { colors } from "../../colors";
 import { getFloatingButtonActions } from "./config/timelineConfig";
 import { SaloonContext } from "../../../store/SaloonStore";
 import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
+import FloatingButton from "../../UI/Buttons/FloatingButton";
 const Timeline = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<RouteProps>>();
@@ -41,7 +42,7 @@ const Timeline = () => {
     return getFloatingButtonActions();
   }, []);
   const { eventsFlatData, isLoading, customers } = useFetchEvents();
-  console.log(editedEventDraft);
+
   useEffect(() => {
     setEvents(eventsFlatData);
     salonContext.getCustomers(customers);
@@ -122,13 +123,7 @@ const Timeline = () => {
         setSelectedEvent={setSelectedEvent}
         setEditedEventDraft={setEditedEventDraft}
       />
-      <FloatingAction
-        actions={actions}
-        color={colors.secondary}
-        overlayColor={"#9ea4ab5d"}
-        actionsPaddingTopBottom={1}
-        onPressItem={(name) => floatingButtonsPressHandler(name)}
-      />
+      <FloatingButton actions={actions} onPress={floatingButtonsPressHandler} />
       {bottomSheetVisible ? (
         <BottomSheetMeetingForm
           bottomSheetDirtyDate={bottomSheetDirtyDate}
@@ -137,8 +132,9 @@ const Timeline = () => {
           onCloseBottomSheet={onCloseBottomSheet}
           editing={false}
           selectedEvent={null}
+          editedEventDraft={editedEventDraft}
         />
-      ) : null}
+      ) : null} 
       {selectedEvent ? (
         <BottomSheetMeetingForm
           editing={true}

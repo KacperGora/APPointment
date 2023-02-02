@@ -16,6 +16,7 @@ import TimelineScreenHeader from "../../UI/Headers/TimelineScreenHeader/Timeline
 import dayjs from "dayjs";
 import { AnimatedFAB } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import FloatingButton from "../../UI/Buttons/FloatingButton";
 
 const AgendaComponent: React.FC = () => {
   const markedDates = useSetMarkedDates();
@@ -81,19 +82,9 @@ const AgendaComponent: React.FC = () => {
         markedDates={markedDates}
         firstDay={1}
       />
-      <AnimatedFAB
-        icon={"plus-circle-outline"}
-        variant={"tertiary"}
-        label=" "
+      <FloatingButton
+        actions={[]}
         onPress={() => navigate.navigate("Tydzień")}
-        visible={true}
-        animateFrom={"left"}
-        iconMode={"static"}
-        style={{
-          bottom: 16,
-          right: 16,
-          position: "absolute",
-        }}
       />
     </MyStatusBar>
   );

@@ -8,30 +8,18 @@ import CustomerModal from "../../../Customer modal/CustomerModal";
 import PhoneLink from "../../../UI/Text/PhoneLink";
 import { CustomerList, NewUserData } from "../../../../types";
 import { AntDesign } from "@expo/vector-icons";
-import { deleteField, doc, updateDoc } from "firebase/firestore";
-import { db } from "../../../../firebase/firebase";
 import Spinner from "../../../UI/Spinner/Spinner";
+import useFirebase from "../../../../hooks/useFirebase";
 const CustomersList: React.FC<CustomerList> = ({
   customers,
   modalVisible,
   setModalVisible,
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [customerPressed, setCustomerPressed] = useState<NewUserData>(null);
+  const { makeFirebaseCall, isLoading } = useFirebase("customers");
   const deleteIconPressHandler = async (customer: NewUserData) => {
-    setShowModal(true);
-    const docRef = doc(db, "customers", `customers`);
-    setIsLoading(true);
-    try {
-      await updateDoc(docRef, {
-        [customer.fullName]: deleteField(),
-      });
-    } catch (err) {
-      throw new Error(err);
-    } finally {
-      setIsLoading(false);
-    }
+    makeFirebaseCall("delete", customer);
   };
 
   const RightActions = (

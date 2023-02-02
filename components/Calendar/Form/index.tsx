@@ -1,7 +1,6 @@
 import React, { SetStateAction, useContext, useEffect, useState } from "react";
-import { Alert, LayoutAnimation, TextStyle, View } from "react-native";
+import { Alert, LayoutAnimation } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { MeetingsContext } from "../../../store/CalendarStore";
 import useCheckOverlappingEvents from "./hooks/useCheckOverlappingEvents";
 import useSetColorForEvent from "../Timeline/hooks/useSetColorForEvent";
 import getEventExcludedTimes from "../../../Utils/getEventExcludedTimes";
@@ -22,16 +21,12 @@ import emptyEventDataChecker from "../../../Utils/emptyEventDataChecker";
 import Spinner from "../../UI/Spinner/Spinner";
 import FormCoreComponent from "./components/FormCoreComponent/FormCore";
 import NoCustomerModal from "./components/NoCustomerModal/NoCustomerModal";
-import useAddMeetingForCustomer from "./hooks/useAddMeetingForCustomer";
 import BottomSheetForm from "../../BottomSheet/BottomSheetComponent";
 import AddNewCustomerForm from "../../Salon/SalonCustomers/components/AddNewCustomerForm";
-import InformationText from "../../UI/InformationText/InformationText";
-import { colors } from "../../colors";
 import { Container } from "../../shared";
 import getAvHours from "./hooks/useGetAvailableHours";
 import pickHandler from "../../../Utils/pickHandler";
 import { v4 } from "uuid";
-import dayjs from "dayjs";
 import useFirebase from "../../../hooks/useFirebase";
 import { getSelectiveOptions } from "./config/formConfig";
 import { SaloonContext } from "../../../store/SaloonStore";
@@ -46,7 +41,6 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
   setEditingFinished,
   setIndexForm,
 }) => {
-  const ctx = useContext(MeetingsContext);
   const salonCtx = useContext(SaloonContext);
   const route = useRoute<RouteProp<RouteProps>>();
   const dateString = route.params?.date || timelineDate;
@@ -97,11 +91,8 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
     name: customerFullName,
     day: day,
   };
-  const { error, isLoading, makeFirebaseCall } = useFirebase(
-    selectedEvent,
-    pickedDate,
-    data
-  );
+
+  const { error, isLoading, makeFirebaseCall } = useFirebase("meetings");
   const fromDataIsEmpty = emptyEventDataChecker(data);
 
   const res = getAvHours(pickedDate, data?.worker, pickedService);
@@ -124,7 +115,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
     if (editing) {
       setEditingFinished(false),
         setIndexForm(0),
-        await makeFirebaseCall("edit");
+        await makeFirebaseCall("edit", data);
       setEditingFinished(true);
       // const editedLength = dayjs(editedEventDraft.end).diff(
       //   editedEventDraft.start,
@@ -158,8 +149,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
         );
         return;
       } else {
-        ctx?.addMeeting(data, pickedDate);
-        useAddMeetingForCustomer(customer, data);
+        await makeFirebaseCall("add", data);
         onCloseBottomSheet();
         !isLoading && setIndex(0);
       }
@@ -198,7 +188,10 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
     pickedService,
   };
   const selectMapConfig = getSelectiveOptions(selectiveOptionsData);
-
+  const onCloseBottomSheetHandler = () => {
+    setIndex(0);
+    setBottomSheetShown(false);
+  };
   return (
     <Container>
       {isLoading ? (
@@ -230,7 +223,11 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
         />
       ) : null}
       {bottomSheetShown ? (
-        <BottomSheetForm index={index} setIndex={setIndex}>
+        <BottomSheetForm
+          index={index}
+          setIndex={setIndex}
+          onCloseBottomSheet={onCloseBottomSheetHandler}
+        >
           <AddNewCustomerForm
             customerName={customerFullName}
             hideBottomModal={hideBottomModalHandler}

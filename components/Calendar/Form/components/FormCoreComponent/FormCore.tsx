@@ -25,7 +25,7 @@ const FormCoreComponent = ({
 }) => {
   const renderSummaryCondition =
     userTypedLastName.trim().length !== 0 && userTypedName.trim().length !== 0;
-  console.log(renderSummaryCondition);
+
   return (
     <View>
       <CalendarStripComponent date={pickedDate} setNewDate={setPickedDate} />

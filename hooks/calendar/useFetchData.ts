@@ -9,44 +9,34 @@ const useFetchData = () => {
   const [customers, setCustomers] = useState({});
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const meetingsQuery = query(collection(db, "meetings"));
+  const customersQuery = query(collection(db, "customers"));
+
   useEffect(() => {
+    const abortController = new AbortController();
     setIsLoading(true);
     setError(null);
-    const meetingsQuery = query(collection(db, "meetings"));
-    const customersQuery = query(collection(db, "customers"));
-    const unsubscribeMeetings = onSnapshot(
-      meetingsQuery,
-      (querySnapshot) => {
+    try {
+      onSnapshot(meetingsQuery, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
           setEventsData(doc.data());
           setEventsFlatData(Object.values(doc.data()).flat());
         });
-
-        setIsLoading(false);
-      },
-      (error) => {
-        setError(error);
-        throw new Error(error.message);
-      }
-    );
-    const unsubscribeCustomers = onSnapshot(
-      customersQuery,
-      (querySnapshot) => {
+      });
+      onSnapshot(customersQuery, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
           setCustomers(doc.data());
         });
-
         setIsLoading(false);
-      },
-      (error) => {
-        setError(error);
-        throw new Error(error.message);
-      }
-    );
-
+      });
+    } catch (error) {
+      setError(error);
+      throw new Error(error);
+    } finally {
+      setIsLoading(false);
+    }
     return () => {
-      unsubscribeCustomers();
-      unsubscribeMeetings();
+      abortController.abort();
     };
   }, []);
 

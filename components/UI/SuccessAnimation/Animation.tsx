@@ -1,6 +1,6 @@
 import React from "react";
 import Lottie from "lottie-react-native";
-
+type AnimationSuccess = "success" | "failed";
 export default function Animation() {
   return (
     <Lottie

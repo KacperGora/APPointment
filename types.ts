@@ -33,6 +33,7 @@ export interface Meeting {
   name: string;
   day: string;
 }
+
 export type RouteProps = {
   params: {
     viewMode?: CalendarViewMode;
@@ -268,4 +269,9 @@ export type FormSelectiveOptionsMapProps = {
     data: SelectiveOptions[];
     pressHandler: () => void;
   }[];
+};
+export type AddNewCustomerProps = {
+  hideBottomModal?: () => void;
+  customerName?: string;
+  setIndex?: React.Dispatch<SetStateAction<number>>;
 };
