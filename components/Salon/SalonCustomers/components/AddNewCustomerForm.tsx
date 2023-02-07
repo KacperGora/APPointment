@@ -1,4 +1,4 @@
-import React, { SetStateAction, useEffect, useState } from "react";
+import React, { SetStateAction, useContext, useEffect, useState } from "react";
 import { LayoutAnimation, View } from "react-native";
 import { addNewCustomerFormConfiguration } from "./addNewCustomerFormConfiguration";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,15 +14,17 @@ import { RowContainer } from "../../../shared";
 import RegularText24 from "../../../UI/Text/RegularText24";
 import Animation from "../../../UI/SuccessAnimation/Animation";
 import useFirebase from "../../../../hooks/useFirebase";
-import { AddNewCustomerProps } from "../../../../types";
+import { AddNewCustomerProps, NewUserData } from "../../../../types";
+import { SaloonContext } from "../../../../store/SaloonStore";
 
 const AddNewCustomerForm: React.FC<AddNewCustomerProps> = ({
   hideBottomModal,
-  customerName,
   setIndex,
+  customerInEdition,
+  editing,
 }) => {
   const { inputConfig, additionalInfo, fullName, phoneNumber, resetInputs } =
-    addNewCustomerFormConfiguration(customerName);
+    addNewCustomerFormConfiguration(customerInEdition, editing);
   const [showSuccess, setShowSuccess] = useState(false);
   const phoneIsValid = validatePhoneNumber(phoneNumber);
   const fullNameInputIsValid = validateFullName(fullName);
@@ -35,9 +37,9 @@ const AddNewCustomerForm: React.FC<AddNewCustomerProps> = ({
     timeStamp: serverTimestamp(),
   };
   const { isLoading, error, makeFirebaseCall } = useFirebase("customers");
-  const buttonPressHandler = async () => {
-    !!setIndex && setIndex(0);
-    formIsValid && makeFirebaseCall("add", userData);
+
+  const addCustomerButtonPressHandler = async () => {
+    formIsValid && makeFirebaseCall(editing ? "edit" : "add", userData);
     !error && setShowSuccess(true);
   };
   useEffect(() => {
@@ -48,6 +50,7 @@ const AddNewCustomerForm: React.FC<AddNewCustomerProps> = ({
         resetInputs();
       }, 2500);
   }, [showSuccess]);
+
   return (
     <View style={{ marginVertical: 0, marginHorizontal: 24 }}>
       {isLoading ? (
@@ -65,43 +68,53 @@ const AddNewCustomerForm: React.FC<AddNewCustomerProps> = ({
                     key={input.id}
                     style={{ marginVertical: 12, alignItems: "center" }}
                   >
-                    <Ionicons
-                      name={input.icon}
-                      size={24}
-                      color="gray"
-                      style={{ position: "absolute", left: 10, zIndex: 3 }}
-                    />
-                    <View style={{ flex: 1, height: 60 }}>
-                      <TextInputPaper
-                        mode="outlined"
-                        placeholderTextColor="#9d9d9d"
-                        ref={input.ref}
+                    <View style={{ flex: 1 }}>
+                      <Ionicons
+                        name={input.icon}
+                        size={24}
+                        color="gray"
                         style={{
-                          paddingLeft: 24,
-                          backgroundColor: "white",
+                          position: "absolute",
+                          left: 10,
+                          zIndex: 3,
+                          top: 15,
                         }}
-                        outlineColor="lightgray"
-                        activeOutlineColor="#f764ab52"
-                        textAlign="center"
-                        value={input.value}
-                        label={input.name}
-                        key={input.id}
-                        autoCapitalize={input.autoCapitalize}
-                        returnKeyType={input.returnKeyType}
-                        onChangeText={input.onChange}
-                        keyboardType={input.keyboardType}
-                        maxLength={input.maxLength}
-                        multiline={input.multiline}
-                        error={input.error}
-                        onSubmitEditing={input.onSubmitEditing}
-                        onBlur={input.onBlur}
-                        onFocus={input.onFocus}
                       />
-                      {input.error && (
-                        <HelperText type="error" visible={input.error}>
-                          {input.errorText}
-                        </HelperText>
-                      )}
+                      <View style={{ flex: 1 }}>
+                        <TextInputPaper
+                          editable={input.editable}
+                          mode="outlined"
+                          placeholderTextColor="#9d9d9d"
+                          ref={input.ref}
+                          style={{
+                            paddingLeft: 24,
+                            backgroundColor: input.editable
+                              ? "white"
+                              : "#eaeaea7d",
+                          }}
+                          outlineColor="lightgray"
+                          activeOutlineColor="#f764ab52"
+                          textAlign="center"
+                          value={input.value}
+                          label={input.name}
+                          key={input.id}
+                          autoCapitalize={input.autoCapitalize}
+                          returnKeyType={input.returnKeyType}
+                          onChangeText={input.onChange}
+                          keyboardType={input.keyboardType}
+                          maxLength={input.maxLength}
+                          multiline={input.multiline}
+                          error={input.error}
+                          onSubmitEditing={input.onSubmitEditing}
+                          onBlur={input.onBlur}
+                          onFocus={input.onFocus}
+                        />
+                        {input.error && (
+                          <HelperText type="error" visible={input.error}>
+                            {input.errorText}
+                          </HelperText>
+                        )}
+                      </View>
                     </View>
                   </RowContainer>
                 );
@@ -112,13 +125,16 @@ const AddNewCustomerForm: React.FC<AddNewCustomerProps> = ({
                   width: "60%",
                   marginVertical: 12,
                   marginHorizontal: 24,
+                  shadowColor: "lightgray",
+                  shadowOffset: { width: 2, height: 4 },
+                  shadowRadius: 5,
                 }}
                 textStyles={{
                   color: "white",
                   fontWeight: "700",
                   fontSize: 16,
                 }}
-                onPress={buttonPressHandler}
+                onPress={addCustomerButtonPressHandler}
                 title="DODAJ"
                 primary
                 disabled={!formIsValid}

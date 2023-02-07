@@ -7,6 +7,7 @@ import {
 import { FieldValue } from "firebase/firestore";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import {
+  Animated,
   FlexAlignType,
   KeyboardTypeOptions,
   ReturnKeyTypeOptions,
@@ -82,6 +83,7 @@ export type Navigation = {
 };
 export type InputConfig = {
   id: number;
+  editable: boolean;
   name: string;
   autoFocus: boolean;
   keyboardType: KeyboardTypeOptions;
@@ -258,9 +260,10 @@ export type SearchBarProps = {
   searchPressHandler?: (value: string) => void;
 };
 export type CustomerList = {
-  customers: {};
+  customers?: {};
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  onEditCustomerPress: (customer: NewUserData) => void;
 };
 export type FormSelectiveOptionsMapProps = {
   data: {
@@ -274,4 +277,13 @@ export type AddNewCustomerProps = {
   hideBottomModal?: () => void;
   customerName?: string;
   setIndex?: React.Dispatch<SetStateAction<number>>;
+  customerInEdition?: NewUserData;
+  editing?: boolean;
+};
+export type RightActionArgs = {
+  progress: Animated.AnimatedInterpolation;
+  dragX: Animated.AnimatedInterpolation;
+  customer: NewUserData;
+  onEdit?: any;
+  swipeRef?: any;
 };

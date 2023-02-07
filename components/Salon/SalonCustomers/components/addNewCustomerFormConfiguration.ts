@@ -3,6 +3,7 @@ import { Keyboard, TextInput } from "react-native";
 import {
   InputConfig,
   NewCustomerConfigurationFnReturnedValue,
+  NewUserData,
 } from "../../../../types";
 import {
   validateFullName,
@@ -10,15 +11,19 @@ import {
 } from "../../../../Utils/validation/regexValidation";
 
 export const addNewCustomerFormConfiguration = (
-  customerName
+  customer: NewUserData,
+  editing?: boolean
 ): NewCustomerConfigurationFnReturnedValue => {
   const ref_input2 = useRef<TextInput>();
   const ref_input3 = useRef<TextInput>();
-  const [fullName, setFullName] = useState(customerName || "");
+  const [fullName, setFullName] = useState(customer?.fullName || "");
   const [nameBlurred, setNameBlurred] = useState(false);
   const [phoneBlurred, setPhoneBlurred] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [additionalInfo, setAdditionalInfo] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(customer?.phoneNumber || "");
+  const [additionalInfo, setAdditionalInfo] = useState(
+    customer?.additionalInfo || ""
+  );
+
   const resetInputs = () => {
     setFullName("");
     setPhoneNumber("");
@@ -31,6 +36,7 @@ export const addNewCustomerFormConfiguration = (
   const inputConfig: InputConfig = [
     {
       name: "Imię i nazwisko",
+      editable: !editing,
       id: 1,
       keyboardType: "default",
       autoFocus: false,
@@ -49,6 +55,7 @@ export const addNewCustomerFormConfiguration = (
 
     {
       name: "Numer telefonu",
+      editable: true,
       id: 2,
       keyboardType: "numbers-and-punctuation",
       autoFocus: false,
@@ -67,6 +74,7 @@ export const addNewCustomerFormConfiguration = (
     },
     {
       name: "Uwagi",
+      editable: true,
       id: 3,
       keyboardType: "default",
       autoFocus: false,

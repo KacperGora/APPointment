@@ -9,6 +9,8 @@ import * as Font from "expo-font";
 import MeetingsProvider from "./store/CalendarStore";
 import SaloonProvider from "./store/SaloonStore";
 import * as Notifications from "expo-notifications";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { enableLayoutAnimations } from "react-native-reanimated";
 SplashScreen.preventAutoHideAsync();
 
 Notifications.setNotificationHandler({

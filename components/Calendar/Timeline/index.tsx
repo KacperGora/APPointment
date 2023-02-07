@@ -11,9 +11,7 @@ import MyStatusBar from "../../UI/StatusBar/MyStatusBar";
 import BottomSheetMeetingForm from "./components/BottomSheetMeetingForm";
 import { RouteProps } from "../../../types";
 import TimelineScreenHeader from "../../UI/Headers/TimelineScreenHeader/TimelineScreenHeader";
-import { FloatingAction } from "react-native-floating-action";
 import dayjs from "dayjs";
-import { colors } from "../../colors";
 import { getFloatingButtonActions } from "./config/timelineConfig";
 import { SaloonContext } from "../../../store/SaloonStore";
 import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
@@ -37,6 +35,7 @@ const Timeline = () => {
   const [bottomSheetDirtyDate, setBottomSheetDirtyDate] = useState(
     dayjs().format("YYYY-MM-DD")
   );
+
   const salonContext = useContext(SaloonContext);
   const actions = useMemo(() => {
     return getFloatingButtonActions();
@@ -51,6 +50,7 @@ const Timeline = () => {
   const onCloseBottomSheet = () => {
     setBottomSheetVisible(false);
     setBottomSheetActiveIndex(0);
+    setEditedEventDraft(undefined);
     !!selectedEvent && setSelectedEvent(undefined);
     bottomSheetRef.current?.close();
   };
@@ -86,7 +86,7 @@ const Timeline = () => {
   const addMeetingButtonPressHandler = () => {
     setBottomSheetDirtyDate(dayjs().format("YYYY-MM-DD"));
     setBottomSheetVisible(true);
-    setBottomSheetActiveIndex(1);
+    setBottomSheetActiveIndex(2);
   };
   const addCustomerButtonPressHandler = () => {
     navigation.navigate("Klienci");
@@ -124,22 +124,11 @@ const Timeline = () => {
         setEditedEventDraft={setEditedEventDraft}
       />
       <FloatingButton actions={actions} onPress={floatingButtonsPressHandler} />
-      {bottomSheetVisible ? (
+      {bottomSheetVisible || selectedEvent ? (
         <BottomSheetMeetingForm
           bottomSheetDirtyDate={bottomSheetDirtyDate}
-          index={bottomSheetActiveIndex}
-          setIndex={setBottomSheetActiveIndex}
-          onCloseBottomSheet={onCloseBottomSheet}
-          editing={false}
-          selectedEvent={null}
-          editedEventDraft={editedEventDraft}
-        />
-      ) : null} 
-      {selectedEvent ? (
-        <BottomSheetMeetingForm
-          editing={true}
-          selectedEvent={selectedEvent}
-          bottomSheetDirtyDate={dayjs(selectedEvent.start).format("YYYY-MM-DD")}
+          editing={!!selectedEvent ? true : false}
+          selectedEvent={!!selectedEvent ? selectedEvent : null}
           index={bottomSheetActiveIndex}
           setIndex={setBottomSheetActiveIndex}
           onCloseBottomSheet={onCloseBottomSheet}

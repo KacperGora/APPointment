@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import { PackedEvent } from "@howljs/calendar-kit";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
 import { LayoutAnimation, View } from "react-native";
 import useFirebase from "../../../../hooks/useFirebase";
+import { Meeting } from "../../../../types";
+import getEventExcludedTimes from "../../../../Utils/getEventExcludedTimes";
 import BottomSheetComponent from "../../../BottomSheet/BottomSheetComponent";
 import Spinner from "../../../UI/Spinner/Spinner";
-
+import { differenceInMinutes } from "date-fns";
 import MeetingForm from "../../Form";
 import NewMeetingFormSummary from "../../Form/components/FormSummary/NewMeetingFormSummary";
-const BottomSheetMeetingForm = ({
+import useGetEditedEventValues from "../../../../hooks/calendar/useGetEditedEventValues";
+type TypeProps = {
+  bottomSheetDirtyDate: any;
+  index: any;
+  setIndex: any;
+  onCloseBottomSheet: any;
+  editing: any;
+  selectedEvent: any;
+  editedEventDraft: Meeting;
+};
+const BottomSheetMeetingForm: React.FC<TypeProps> = ({
   bottomSheetDirtyDate,
   index,
   setIndex,
@@ -21,21 +35,29 @@ const BottomSheetMeetingForm = ({
     await makeFirebaseCall("delete", selectedEvent);
     onCloseBottomSheet();
   };
+  const dragToEditHandler = async () => {
+    const initialEventDate = editedEventDraft.day;
+    const editedEvent = useGetEditedEventValues(editedEventDraft);
+    await makeFirebaseCall("edit", editedEvent, initialEventDate);
+    onCloseBottomSheet();
+  };
   const editEventHandler = () => {
-    setIndex(1);
+    !!editedEventDraft ? dragToEditHandler() : setIndex(2);
     LayoutAnimation.easeInEaseOut();
   };
-
+  useEffect(() => {
+    !!editedEventDraft && setIndex(0);
+  }, [editedEventDraft]);
   return (
     <BottomSheetComponent
       index={index}
       setIndex={setIndex}
       onCloseBottomSheet={onCloseBottomSheet}
     >
-      {index === 0 ? (
-        isLoading ? (
-          <Spinner size={50} borderWidth={5} />
-        ) : (
+      {isLoading ? (
+        <Spinner size={50} borderWidth={5} />
+      ) : (
+        index !== 2 && (
           <NewMeetingFormSummary
             selectedEvent={selectedEvent}
             editing
@@ -44,7 +66,9 @@ const BottomSheetMeetingForm = ({
             editedEventDraft={editedEventDraft}
           />
         )
-      ) : (
+      )}
+
+      {index === 2 && (
         <MeetingForm
           timelineDate={bottomSheetDirtyDate}
           onCloseBottomSheet={onCloseBottomSheet}

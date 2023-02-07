@@ -1,18 +1,25 @@
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import { colors } from "../colors";
-import { ScreenWidth } from "../shared";
+import { RowContainer, ScreenWidth } from "../shared";
+import RegularText16 from "../UI/Text/RegularText";
+import SmallText from "../UI/Text/SmallText";
 
-const BottomSheetToolBar = ({ editEventHandler, deleteEventHandler }) => {
+const BottomSheetToolBar = ({
+  editEventHandler,
+  deleteEventHandler,
+  data,
+  editedEventDraft,
+}) => {
   const icons = [
     {
       render: (
         <AntDesign
           key={1}
-          name="edit"
+          name={!!editedEventDraft ? "checkcircleo" : "edit"}
           onPress={editEventHandler}
-          color={colors.greydark}
+          color={!!editedEventDraft ? "green" : colors.greydark}
           size={24}
         />
       ),
@@ -23,8 +30,9 @@ const BottomSheetToolBar = ({ editEventHandler, deleteEventHandler }) => {
           key={2}
           name="delete"
           onPress={deleteEventHandler}
-          color={colors.greydark}
+          color={!!editedEventDraft ? "red" : colors.greydark}
           size={24}
+          style={{ marginLeft: 4, fontWeight: "bold" }}
         />
       ),
     },
@@ -34,17 +42,43 @@ const BottomSheetToolBar = ({ editEventHandler, deleteEventHandler }) => {
     <View
       style={{
         flexDirection: "row",
-        justifyContent: "space-between",
-        alignSelf: "flex-end",
-        paddingVertical: 12,
-        paddingHorizontal: 12,
-        marginHorizontal: 12,
-        width: ScreenWidth / 4,
+        justifyContent: !!editedEventDraft ? "space-between" : "flex-end",
+        alignItems: "center",
+        padding: !!editEventHandler ? 12 : 0,
       }}
     >
-      {icons.map((el) => {
-        return el.render;
-      })}
+      {!!editedEventDraft && (
+        <RowContainer style={{ width: ScreenWidth * 0.7, padding: 6 }}>
+          <View>
+            <RegularText16>{data.customerName}</RegularText16>
+            <SmallText>{data.serviceValue}</SmallText>
+          </View>
+          <View
+            style={{
+              alignSelf: "flex-end",
+              marginHorizontal: 20,
+            }}
+          >
+            <SmallText>
+              {data.startHour} - {data.endHour}
+            </SmallText>
+            <SmallText textStyles={{ fontSize: 12 }}>
+              {data.dateString}
+            </SmallText>
+          </View>
+        </RowContainer>
+      )}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          width: ScreenWidth / 5,
+        }}
+      >
+        {icons.map((el) => {
+          return el.render;
+        })}
+      </View>
     </View>
   );
 };

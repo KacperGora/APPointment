@@ -6,16 +6,14 @@ import { SummaryViewContainer } from "../../style/Form.style";
 import { getSummaryColumnsData } from "../../config/formConfig";
 import dayjs from "dayjs";
 import BottomSheetToolBar from "../../../../BottomSheet/BottomSheetToolBar";
-import { View } from "react-native";
+import calculateTimeOfEnd from "../../../../../Utils/calculateTimeOfEnd";
 
 const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
   date,
   service,
-  endHour,
   worker,
   submitHandler,
   customerName,
-  children,
   style,
   selectedEvent,
   editing,
@@ -23,17 +21,25 @@ const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
   onEdit,
   editedEventDraft,
 }) => {
+  const calculatedTime = calculateTimeOfEnd(date, service?.duration);
+
   const dateString = dayjs(
     editedEventDraft?.start || selectedEvent?.day || date
   ).format("DD MMM YYYY");
-  const startHour = dayjs(date).format("HH:mm");
+  const startHour = dayjs(
+    editedEventDraft?.start || selectedEvent?.start || date
+  ).format("HH:mm");
+  const endHour = dayjs(
+    editedEventDraft?.end || selectedEvent?.end || calculatedTime
+  ).format("HH:mm");
+
   const data = {
     serviceValue: selectedEvent?.serviceName || service?.value || service,
     customerName: customerName || selectedEvent?.title,
     worker: worker || selectedEvent?.worker,
     dateString,
-    startHour: selectedEvent?.startHourStr || startHour,
-    endHour: selectedEvent?.endHour || endHour,
+    startHour,
+    endHour: !!selectedEvent ? endHour : calculatedTime,
     submitHandler,
     servicePrice: service?.price,
   };
@@ -45,15 +51,19 @@ const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
         <BottomSheetToolBar
           deleteEventHandler={onDelete}
           editEventHandler={onEdit}
+          data={data}
+          editedEventDraft={editedEventDraft}
         />
       )}
-      <SummaryViewContainer style={[shadowStyle, style]}>
-        <RowContainerSpaceBetween>
-          <SummaryColumn data={columnsData.firstCol} />
-          <SummaryColumn data={columnsData.secondCol} />
-        </RowContainerSpaceBetween>
-        {children}
-      </SummaryViewContainer>
+
+      {!!editedEventDraft ? null : (
+        <SummaryViewContainer style={[shadowStyle, style]}>
+          <RowContainerSpaceBetween>
+            <SummaryColumn data={columnsData.firstCol} />
+            <SummaryColumn data={columnsData.secondCol} />
+          </RowContainerSpaceBetween>
+        </SummaryViewContainer>
+      )}
     </>
   );
 };

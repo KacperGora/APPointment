@@ -7,21 +7,23 @@ import CustomersList from "./components/CustomerList";
 import { FloatingAction } from "react-native-floating-action";
 import { colors } from "../../colors";
 import { NewUserData } from "../../../types";
+import useFetchData from "../../../hooks/calendar/useFetchData";
 
 function SalonCustomers() {
   const salonCtx = useContext(SaloonContext);
   const [index, setIndex] = useState(0);
-  const [customers, setCustomers] = useState({});
+  const { customers } = useFetchData();
+  const [customersList, setCustomersList] = useState(customers);
   const [modalVisible, setModalVisible] = useState(false);
-  const [bottomSheetVisible, setBottomSheetVisible] = useState(true);
-
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const [customerInEdition, setCustomerInEdition] = useState<NewUserData>(null);
   const searchPressHandler = (value: string) => {
-    setCustomers(
+    setCustomersList(
       Object.values(customers).filter((el: NewUserData) =>
         el.fullName.toLowerCase().includes(value.toLowerCase())
       )
     );
-    value === "" && setCustomers(salonCtx.customers);
+    value === "" && setCustomersList(salonCtx.customers);
   };
 
   const iconPressHandler = () => {
@@ -29,11 +31,16 @@ function SalonCustomers() {
     setBottomSheetVisible(true);
   };
   useEffect(() => {
-    setCustomers(salonCtx.customers);
-  }, [salonCtx.customers]);
+    setCustomersList(customers);
+  }, [customers]);
   const hideBottomSheetHandler = () => {
     setIndex(0);
     setBottomSheetVisible(false);
+    setCustomerInEdition(null);
+  };
+  const onEditCustomerPress = (customer: NewUserData) => {
+    setBottomSheetVisible(true);
+    setCustomerInEdition(customer);
   };
   return (
     <>
@@ -41,11 +48,14 @@ function SalonCustomers() {
         searchPressHandler={searchPressHandler}
         iconPressHandler={iconPressHandler}
       />
+
       <CustomersList
-        customers={customers}
+        customers={customersList}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        onEditCustomerPress={onEditCustomerPress}
       />
+
       <FloatingAction
         color={colors.secondary}
         showBackground={false}
@@ -62,6 +72,8 @@ function SalonCustomers() {
           <AddNewCustomerForm
             hideBottomModal={hideBottomSheetHandler}
             setIndex={setIndex}
+            customerInEdition={customerInEdition}
+            editing={!!customerInEdition ? true : false}
           />
         </BottomSheetForm>
       ) : null}

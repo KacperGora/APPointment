@@ -6,11 +6,6 @@ import { colors } from "../colors";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { BottomSheetProps } from "../../types";
 import { ScreenWidth, StyledViewBorder } from "../shared";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
 
 const BottomSheetComponent: React.FC<BottomSheetProps> = ({
   index,
@@ -18,19 +13,16 @@ const BottomSheetComponent: React.FC<BottomSheetProps> = ({
   setIndex,
   onCloseBottomSheet,
 }) => {
-  const snapPoints = useMemo(() => ["30%", "90%"], []);
+  const snapPoints = useMemo(() => ["15%", "30%", "90%"], []);
   const onClosePressHandler = (index: number) => {
     setIndex(index);
     LayoutAnimation.easeInEaseOut();
-  };
-  const onCloseBottomSheetHandler = () => {
-    onCloseBottomSheet();
   };
 
   return (
     <BottomSheet
       enablePanDownToClose
-      onClose={onCloseBottomSheetHandler}
+      onClose={() => onCloseBottomSheet()}
       onChange={onClosePressHandler}
       index={index}
       snapPoints={snapPoints}

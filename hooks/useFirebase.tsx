@@ -15,6 +15,7 @@ import { SaloonContext } from "../store/SaloonStore";
 import { Meeting, NewUserData } from "../types";
 import Animation from "../components/UI/SuccessAnimation/Animation";
 import React from "react";
+import dayjs from "dayjs";
 
 type FirebaseCallType = "edit" | "delete" | "add";
 const useFirebase = (firebasePath: "meetings" | "customers") => {
@@ -82,19 +83,41 @@ const useFirebase = (firebasePath: "meetings" | "customers") => {
       });
     }
   };
-  // const statusHandler = (type: "success" | "fail") => {
-  //   return <Animation type={type} />;
-  // };
-  const editDataHandler = async () => {};
 
-  const makeFirebaseCall = async (callType: FirebaseCallType, data: any) => {
+  const editDataHandler = async (
+    data: PackedEvent & NewUserData,
+    date?: string
+  ) => {
+    if (!!data.meetings) {
+      const dirtyData = { ...customers };
+      dirtyData[data.fullName] = data;
+      await updateDoc(customerRef, dirtyData);
+    } else {
+      const dirtyData = { ...meetings };
+      const filteredEvents = dirtyData[date]?.filter(
+        (meeting) => meeting.id !== data.id
+      );
+      await updateDoc(ref, {
+        [date]: filteredEvents.length !== 0 ? filteredEvents : deleteField(),
+      });
+      await updateDoc(ref, {
+        [data.day]: arrayUnion(data),
+      });
+    }
+  };
+
+  const makeFirebaseCall = async (
+    callType: FirebaseCallType,
+    data: any,
+    date?: string
+  ) => {
     setIsLoading(true);
     setShowSuccess(false);
     setError(null);
     try {
       callType === "add" && (await addDataHandler(data));
       callType === "delete" && (await deleteDataHandler(data));
-      callType === "edit" && (await editDataHandler());
+      callType === "edit" && (await editDataHandler(data, date));
     } catch (error) {
       setError(error);
       throw new Error(error);

@@ -4,16 +4,13 @@ import {
   TimelineCalendar,
   UnavailableItemProps,
 } from "@howljs/calendar-kit";
-import { addDays } from "date-fns";
 import React, { useCallback, useContext, useRef } from "react";
 import CustomUnavailableItem from "./CustomUnavailableItem";
 import TimelineEventContent from "./TimelineEventContent";
 import { SaloonContext } from "../../../../store/SaloonStore";
 import { TimelineProps } from "../../../../types";
 import { getTimelineTheme } from "../themes/themes";
-import { getMonthName, ISOSplitter } from "../../../../Utils/formatUtilis";
 import dayjs from "dayjs";
-import { Text, View } from "react-native";
 
 const TimelineComponent: React.FC<TimelineProps> = (props) => {
   const {
@@ -43,6 +40,7 @@ const TimelineComponent: React.FC<TimelineProps> = (props) => {
   );
 
   const onLongPressEvent = (event: PackedEvent) => {
+    setBottomSheetActiveIndex(1);
     setSelectedEvent(event);
   };
   const renderCustomUnavailableItem = useCallback(
@@ -55,8 +53,8 @@ const TimelineComponent: React.FC<TimelineProps> = (props) => {
   };
 
   const longPressHandler = (date: string) => {
+    setBottomSheetActiveIndex(2);
     setBottomSheetDirtyDate(dayjs(date).format("YYYY-MM-DD"));
-    setBottomSheetActiveIndex(1);
     setBottomSheetVisible(true);
   };
   const onEndDragSelectedEvent = (e) => {

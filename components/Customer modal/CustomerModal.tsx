@@ -25,10 +25,6 @@ const CustomerModal: React.FC<CustomerModalProps> = ({
       >
         <View style={styles.modalView}>
           <CustomerModalInformation item={item} style={null} />
-          <CustomerModalPhoneNumber
-            style={null}
-            phoneNumber={item.phoneNumber}
-          />
           <RegularButton
             onPress={() => setModalVisible(!modalVisible)}
             title="Powrót"
