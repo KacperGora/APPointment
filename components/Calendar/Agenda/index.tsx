@@ -17,6 +17,8 @@ import dayjs from "dayjs";
 import { AnimatedFAB } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import FloatingButton from "../../UI/Buttons/FloatingButton";
+import { View } from "react-native";
+import { colors } from "../../colors";
 
 const AgendaComponent: React.FC = () => {
   const markedDates = useSetMarkedDates();
@@ -37,7 +39,8 @@ const AgendaComponent: React.FC = () => {
   };
 
   const renderDayHandler = (date: XDate, item: Meeting) => {
-    const { nameDay, nameMonth } = getAgendaDays(date);
+    const nameDay = dayjs(date?.toDate()).format("ddd");
+    const nameMonth = dayjs(date?.toDate()).format("MMM");
     const day = date?.getDate();
 
     return (

@@ -85,7 +85,7 @@ const useFirebase = (firebasePath: "meetings" | "customers") => {
   };
 
   const editDataHandler = async (
-    data: PackedEvent & NewUserData,
+    data: PackedEvent & NewUserData & Meeting,
     date?: string
   ) => {
     if (!!data.meetings) {
@@ -97,11 +97,22 @@ const useFirebase = (firebasePath: "meetings" | "customers") => {
       const filteredEvents = dirtyData[date]?.filter(
         (meeting) => meeting.id !== data.id
       );
+      const customersData: NewUserData = {
+        ...customers[data?.title],
+        meetings: customers[data.title].meetings.filter(
+          (el: PackedEvent) => el.id !== data.id
+        ),
+      };
+      customersData.meetings.push(data);
+
       await updateDoc(ref, {
         [date]: filteredEvents.length !== 0 ? filteredEvents : deleteField(),
       });
       await updateDoc(ref, {
         [data.day]: arrayUnion(data),
+      });
+      await updateDoc(customerRef, {
+        [data.title]: customersData,
       });
     }
   };

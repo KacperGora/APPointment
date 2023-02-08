@@ -9,7 +9,7 @@ import TimelineComponent from "./components/TimelineComponent";
 import useFetchEvents from "../../../hooks/calendar/useFetchData";
 import MyStatusBar from "../../UI/StatusBar/MyStatusBar";
 import BottomSheetMeetingForm from "./components/BottomSheetMeetingForm";
-import { RouteProps } from "../../../types";
+import { Meeting, RouteProps } from "../../../types";
 import TimelineScreenHeader from "../../UI/Headers/TimelineScreenHeader/TimelineScreenHeader";
 import dayjs from "dayjs";
 import { getFloatingButtonActions } from "./config/timelineConfig";
@@ -26,7 +26,9 @@ const Timeline = () => {
   }, []);
   const [monthName, setMonthName] = useState(thisMonthName);
   const [selectedEvent, setSelectedEvent] = useState<PackedEvent>();
-  const [editedEventDraft, setEditedEventDraft] = useState<PackedEvent>();
+  const [editedEventDraft, setEditedEventDraft] = useState<
+    PackedEvent & Meeting
+  >();
   const [timelineHeaderShown, setTimelineHeaderShown] = useState(true);
   const [events, setEvents] = useState<EventItem[]>([]);
   const [searchedEvents, setSearchedEvents] = useState([]);

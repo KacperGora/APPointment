@@ -19,11 +19,16 @@ export function getAgendaDayConfig(props) {
     alignSelf: "flex-end",
     marginTop: 8,
   };
+  const renderCondition = day && nameMonth !== undefined;
   const agendaDayConfig = [
-    { id: 1, text: nameDay, props: textStyle },
+    {
+      id: 1,
+      text: renderCondition ? nameDay : null,
+      props: textStyle,
+    },
     {
       id: 2,
-      text: day && nameMonth !== undefined ? `${day} ${nameMonth}` : null,
+      text: renderCondition ? `${day} ${nameMonth}` : null,
       props: textStyle,
     },
     {
