@@ -15,15 +15,12 @@ const CalendarStripComponent: FunctionComponent<FormCalendarStripProps> = ({
 }) => {
   const calendarStripProps = useRef(getCalendarStripConfig());
   const propsRefShort = calendarStripProps.current;
-  const [pickedDate, setPickedDate] = useState(date);
+
   const datesBlacklistFunc = (date: { isoWeekday: () => number }) => {
     return date.isoWeekday() === 7;
   };
-
-  const dateSelectionHandler = (date: moment.Moment) => {
-    setPickedDate(date.format("YYYY-MM-DD"));
+  const dateSelectionHandler = (date: moment.Moment) =>
     setNewDate(date.format("YYYY-MM-DD"));
-  };
 
   return (
     <CalendarStrip
@@ -43,7 +40,7 @@ const CalendarStripComponent: FunctionComponent<FormCalendarStripProps> = ({
       iconContainer={{ flex: 0.1 }}
       datesBlacklist={datesBlacklistFunc}
       onDateSelected={dateSelectionHandler}
-      selectedDate={new Date(pickedDate)}
+      selectedDate={new Date(date)}
     />
   );
 };

@@ -12,7 +12,7 @@ import { ScreenWidth } from "../../../../shared";
 const AgendaDay: React.FC<AgendaDayProps> = (props) => {
   const { item, emptyWeeks } = props;
   const agendaDayConfig = getAgendaDayConfig(props);
-
+  console.log(agendaDayConfig);
   return item === undefined ? null : (
     <ViewRow>
       <View style={{ width: ScreenWidth / 8 }}>

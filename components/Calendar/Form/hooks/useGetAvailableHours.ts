@@ -3,11 +3,13 @@ import { hours } from "../../../../data";
 import { MeetingsContext } from "../../../../store/CalendarStore";
 import dayjs from "dayjs";
 import { differenceInMinutes } from "date-fns";
-import { SelectiveOptions } from "../../../../types";
+import { Meeting, SelectiveOptions } from "../../../../types";
+import { PackedEvent } from "@howljs/calendar-kit";
 const useGetAvailableHours = (
   pickedDay: string,
   worker: string,
-  pickedService: SelectiveOptions
+  pickedService: SelectiveOptions,
+  selectedEvent: Meeting & PackedEvent
 ) => {
   const ctx = useContext(MeetingsContext);
   const meetings = ctx?.meetings;
@@ -22,11 +24,10 @@ const useGetAvailableHours = (
   const rawAvailableHours = openHours
     .filter((hour) => !excludedTimesAtThisDayForEmployee?.includes(hour.value))
     .map((el) => el.value);
-
-  const avHours = [];
-
   const loopNumber =
     rawAvailableHours?.length - numberOfServiceDurationIntervals;
+
+  const avHours = [];
 
   for (let i = 0; i < loopNumber; i++) {
     const time1 = dayjs(
@@ -40,8 +41,13 @@ const useGetAvailableHours = (
       avHours.push(rawAvailableHours[i]);
     }
   }
+  const availableHoursDurningEditEvent = !!selectedEvent
+    ? avHours
+        .concat(selectedEvent?.excludedTimes)
+        .sort((a, b) => a.localeCompare(b))
+    : avHours;
 
-  return avHours.map((el) => {
+  return availableHoursDurningEditEvent.map((el) => {
     return { value: el, isActive: false };
   });
 };

@@ -25,7 +25,6 @@ const BottomSheetMeetingForm: React.FC<TypeProps> = ({
   index,
   setIndex,
   onCloseBottomSheet,
-  editing,
   selectedEvent,
   editedEventDraft,
 }) => {
@@ -48,6 +47,7 @@ const BottomSheetMeetingForm: React.FC<TypeProps> = ({
   useEffect(() => {
     !!editedEventDraft && setIndex(0);
   }, [editedEventDraft]);
+
   return (
     <BottomSheetComponent
       index={index}

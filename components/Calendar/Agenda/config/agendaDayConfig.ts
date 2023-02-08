@@ -1,6 +1,5 @@
 import { TextStyle } from "react-native";
 import useFetchData from "../../../../hooks/calendar/useFetchData";
-import useFetchEvents from "../../../../hooks/calendar/useFetchData";
 import { colors } from "../../../colors";
 import getDailyIncome from "../helpers/getDailyIncome";
 
@@ -19,7 +18,7 @@ export function getAgendaDayConfig(props) {
     alignSelf: "flex-end",
     marginTop: 8,
   };
-  const renderCondition = day && nameMonth !== undefined;
+  const renderCondition = day && nameMonth !== null;
   const agendaDayConfig = [
     {
       id: 1,
@@ -33,10 +32,7 @@ export function getAgendaDayConfig(props) {
     },
     {
       id: 3,
-      text:
-        dailyIncome[fullDate] === undefined
-          ? null
-          : `${dailyIncome[fullDate]} PLN`,
+      text: renderCondition && `${dailyIncome[fullDate]} PLN`,
       props: textStyle2,
     },
   ];

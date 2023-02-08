@@ -186,7 +186,6 @@ export type InputComponentProps = {
   setUserTypedName: React.Dispatch<React.SetStateAction<string>>;
   setUserTypedLastName: React.Dispatch<React.SetStateAction<string>>;
   fullName: string;
-  setShowSummary: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export type FormCalendarStripProps = {
   date: string;

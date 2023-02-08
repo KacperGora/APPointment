@@ -97,6 +97,7 @@ const useFirebase = (firebasePath: "meetings" | "customers") => {
       const filteredEvents = dirtyData[date]?.filter(
         (meeting) => meeting.id !== data.id
       );
+
       const customersData: NewUserData = {
         ...customers[data?.title],
         meetings: customers[data.title].meetings.filter(
@@ -106,7 +107,7 @@ const useFirebase = (firebasePath: "meetings" | "customers") => {
       customersData.meetings.push(data);
 
       await updateDoc(ref, {
-        [date]: filteredEvents.length !== 0 ? filteredEvents : deleteField(),
+        [date]: filteredEvents?.length !== 0 ? filteredEvents : deleteField(),
       });
       await updateDoc(ref, {
         [data.day]: arrayUnion(data),

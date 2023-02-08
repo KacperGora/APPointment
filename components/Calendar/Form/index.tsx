@@ -15,7 +15,6 @@ import {
   WorkerDetails,
 } from "../../../types";
 import { servicesDetails } from "../../../data";
-import useGetPickedValue from "../../../hooks/calendar/useGetPickedValue";
 import { dateFormatter } from "../../../Utils/formatUtilis";
 import emptyEventDataChecker from "../../../Utils/emptyEventDataChecker";
 import Spinner from "../../UI/Spinner/Spinner";
@@ -34,12 +33,7 @@ import { SaloonContext } from "../../../store/SaloonStore";
 const MeetingForm: React.FC<MeetingFormProps> = ({
   timelineDate,
   onCloseBottomSheet,
-
-  editing,
-  editedEventDraft,
   selectedEvent,
-  setEditingFinished,
-  setIndexForm,
 }) => {
   const salonCtx = useContext(SaloonContext);
   const route = useRoute<RouteProp<RouteProps>>();
@@ -59,7 +53,6 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
   const [userTypedName, setUserTypedName] = useState(
     selectedEvent?.title.split(" ")[0] || ""
   );
-
   const [userTypedLastName, setUserTypedLastName] = useState(
     selectedEvent?.title.split(" ")[1] || ""
   );
@@ -70,7 +63,6 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
 
   const { endHour, startFullDateISO, endFullDateISO, startFullDate, day } =
     dateFormatter(pickedDate, pickedHour, pickedService, availableHours);
-
   const data: Meeting = {
     id: v4(),
     color: color,
@@ -95,45 +87,31 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
   const { error, isLoading, makeFirebaseCall } = useFirebase("meetings");
   const fromDataIsEmpty = emptyEventDataChecker(data);
 
-  const res = getAvHours(pickedDate, data?.worker, pickedService);
+  const res = getAvHours(
+    pickedDate,
+    data?.worker,
+    pickedService,
+    selectedEvent
+  );
 
   useEffect(() => {
     setAvailableHours(res);
-  }, [pickedService, pickedDate, pickedWorker]);
+  }, [pickedService, pickedDate, pickedWorker, selectedEvent]);
 
-  const isOverlapped = useCheckOverlappingEvents(
-    pickedDate,
-    data?.serviceDuration,
-    new Date(data?.start),
-    pickedWorker?.value
-  );
-  useGetPickedValue(setPickedService, services);
-  useGetPickedValue(setPickedHour, availableHours);
-  useGetPickedValue(setPickedWorker, workers);
+  useEffect(() => {
+    const pH = [...availableHours].filter((value) => value.isActive)[0];
+    setPickedHour(pH);
+    const pW = [...workers].filter((value) => value.isActive)[0];
+    setPickedWorker(pW);
+    const pS = [...services].filter((value) => value.isActive)[0];
+    setPickedService(pS);
+  }, [availableHours, workers, services]);
 
   const submitHandler = async () => {
-    if (editing) {
-      setEditingFinished(false),
-        setIndexForm(0),
-        await makeFirebaseCall("edit", data);
-      setEditingFinished(true);
-      // const editedLength = dayjs(editedEventDraft.end).diff(
-      //   editedEventDraft.start,
-      //   "minutes"
-      // );
-      // const editedMeeting: Meeting = { ...editedEventDraft };
-      // editedMeeting.day = dayjs(editedEventDraft.start).format("YYYY-MM-DD");
-      // editedMeeting.endHour = dayjs(editedEventDraft.end).format("HH:mm");
-      // editedMeeting.startHourStr = dayjs(editedEventDraft.start).format(
-      //   "HH:mm"
-      // );
-      // editedMeeting.serviceName = data.serviceName;
-      // editedMeeting.serviceDuration = data.serviceDuration;
-      // editedMeeting.servicePrice = data.servicePrice;
-      // editedMeeting.excludedTimes = getEventExcludedTimes(
-      //   editedLength,
-      //   dayjs(editedEventDraft.start).add(1, "hour").toDate()
-      // );
+    if (!!selectedEvent) {
+      data.id = selectedEvent.id;
+      makeFirebaseCall("edit", data, selectedEvent.day);
+      !isLoading && onCloseBottomSheet();
     } else {
       if (
         customer === undefined &&
@@ -192,6 +170,9 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
     setIndex(0);
     setBottomSheetShown(false);
   };
+  useEffect(() => {
+    !!selectedEvent && setPickedDate(selectedEvent?.day);
+  }, [selectedEvent]);
   return (
     <Container>
       {isLoading ? (
@@ -202,7 +183,6 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
           pickedDate={pickedDate}
           pickedService={pickedService}
           startFullDate={startFullDateISO}
-          isOverlapped={isOverlapped}
           customerName={customerFullName}
           worker={pickedWorker?.value}
           endHour={endHour}

@@ -14,7 +14,7 @@ const FormCoreComponent = ({
   setUserTypedName,
   startFullDate,
   pickedService,
-  isOverlapped,
+
   submitHandler,
   endHour,
   worker,
