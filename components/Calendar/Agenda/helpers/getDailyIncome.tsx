@@ -11,7 +11,6 @@ const getDailyIncome = (flatData) => {
     );
   });
   const dailyIncomeObject = Object.fromEntries(dailyIncomeMap);
-
   return dailyIncomeObject;
 };
 export default getDailyIncome;

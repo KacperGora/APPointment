@@ -1,12 +1,18 @@
 import React from "react";
 import { MeetingDetailProps } from "../../../../../types";
 import SummaryColumn from "./MeetingFormSummaryColumns/SummaryColumn";
-import { RowContainerSpaceBetween, shadowStyle } from "../../../../shared";
+import {
+  RowContainerSpaceBetween,
+  ScreenWidth,
+  shadowStyle,
+} from "../../../../shared";
 import { SummaryViewContainer } from "../../style/Form.style";
 import { getSummaryColumnsData } from "../../config/formConfig";
 import dayjs from "dayjs";
 import BottomSheetToolBar from "../../../../BottomSheet/BottomSheetToolBar";
 import calculateTimeOfEnd from "../../../../../Utils/calculateTimeOfEnd";
+import BottomSheetToolBarShortInformation from "../../../../BottomSheet/BottomSheetToolBarEditingEvent";
+import { View } from "react-native";
 
 const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
   date,
@@ -14,12 +20,13 @@ const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
   worker,
   submitHandler,
   customerName,
-  style,
   selectedEvent,
   editing,
   onDelete,
   onEdit,
   editedEventDraft,
+  eventMove,
+  index,
 }) => {
   const calculatedTime = calculateTimeOfEnd(date, service?.duration);
 
@@ -47,23 +54,34 @@ const NewMeetingFormSummary: React.FC<MeetingDetailProps> = ({
 
   return (
     <>
-      {editing && (
-        <BottomSheetToolBar
-          deleteEventHandler={onDelete}
-          editEventHandler={onEdit}
-          data={data}
-          editedEventDraft={editedEventDraft}
-        />
-      )}
+      <View
+        style={{
+          flexDirection: eventMove || index === 0 ? "row-reverse" : "column",
+          flex: 1,
+        }}
+      >
+        {editing && (
+          <BottomSheetToolBar
+            deleteEventHandler={onDelete}
+            editEventHandler={onEdit}
+            data={data}
+            editedEventDraft={editedEventDraft}
+            eventMove={eventMove}
+            index={index}
+          />
+        )}
 
-      {!!editedEventDraft ? null : (
-        <SummaryViewContainer style={[shadowStyle, style]}>
-          <RowContainerSpaceBetween>
-            <SummaryColumn data={columnsData.firstCol} />
-            <SummaryColumn data={columnsData.secondCol} />
-          </RowContainerSpaceBetween>
-        </SummaryViewContainer>
-      )}
+        {eventMove || index === 0 ? (
+          <BottomSheetToolBarShortInformation data={data} />
+        ) : (
+          <SummaryViewContainer style={[shadowStyle]}>
+            <RowContainerSpaceBetween>
+              <SummaryColumn data={columnsData.firstCol} />
+              <SummaryColumn data={columnsData.secondCol} />
+            </RowContainerSpaceBetween>
+          </SummaryViewContainer>
+        )}
+      </View>
     </>
   );
 };

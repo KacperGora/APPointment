@@ -159,6 +159,7 @@ export type TimelineProps = {
   setSelectedEvent: React.Dispatch<React.SetStateAction<PackedEvent>>;
   setEditedEventDraft: React.Dispatch<React.SetStateAction<PackedEvent>>;
   timelineHeaderShown: boolean;
+  eventMoveHandler: () => void;
 };
 
 export type BottomSheetProps = {
@@ -174,7 +175,6 @@ export type AgendaDayProps = {
   nameMonth: string;
   item: Meeting;
   fullDate: string;
-  emptyWeeks: any;
 };
 export type AgendaItemProps = {
   item: Meeting;
@@ -218,6 +218,8 @@ export type MeetingDetailProps = {
   onEdit?: () => void;
   onDelete?: () => void;
   editedEventDraft?: PackedEvent | Meeting;
+  eventMove?: boolean;
+  index?: number;
 };
 export type MeetingFormProps = {
   timelineDate: string;

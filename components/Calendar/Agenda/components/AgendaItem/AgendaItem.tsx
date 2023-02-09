@@ -6,13 +6,8 @@ import AgendaItemDetail from "./AgendaItemDetail/AgendaItemDetail";
 import { SaloonContext } from "../../../../../store/SaloonStore";
 import CustomerModal from "../../../../Customer modal/CustomerModal";
 import AgendaHourBox from "./AgendaItemHour/AgendaHourBox";
-import InformationText from "../../../../UI/InformationText/InformationText";
 
-const AgendaItem: React.FC<AgendaItemProps> = ({
-  item,
-  emptyWeeks,
-  fullDate,
-}) => {
+const AgendaItem: React.FC<AgendaItemProps> = ({ item }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const salonCtx = useContext(SaloonContext);
   const customers = salonCtx.customers;
@@ -20,10 +15,8 @@ const AgendaItem: React.FC<AgendaItemProps> = ({
   const itemPressed = useCallback(() => {
     setModalVisible(true);
   }, []);
-  console.log();
   return (
     <>
-      {/* {item !== undefined ? ( */}
       <TouchableOpacity onPress={itemPressed} style={styles.container}>
         <View style={styles.item}>
           <AgendaItemDetail item={item} />

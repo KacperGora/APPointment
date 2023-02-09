@@ -19,11 +19,13 @@ const useGetAvailableHours = (
   const excludedTimesAtThisDayForEmployee = meetings[pickedDay]
     ?.filter((event) => event.worker === worker)
     .map((el) => el.excludedTimes)
-    .flat();
+    .flat()
+    .filter((el) => !selectedEvent?.excludedTimes.includes(el));
 
   const rawAvailableHours = openHours
-    .filter((hour) => !excludedTimesAtThisDayForEmployee?.includes(hour.value))
+    ?.filter((hour) => !excludedTimesAtThisDayForEmployee?.includes(hour.value))
     .map((el) => el.value);
+
   const loopNumber =
     rawAvailableHours?.length - numberOfServiceDurationIntervals;
 
@@ -41,13 +43,8 @@ const useGetAvailableHours = (
       avHours.push(rawAvailableHours[i]);
     }
   }
-  const availableHoursDurningEditEvent = !!selectedEvent
-    ? avHours
-        .concat(selectedEvent?.excludedTimes)
-        .sort((a, b) => a.localeCompare(b))
-    : avHours;
 
-  return availableHoursDurningEditEvent.map((el) => {
+  return avHours.map((el) => {
     return { value: el, isActive: false };
   });
 };

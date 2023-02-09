@@ -1,9 +1,7 @@
-import React, { useState } from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import React from "react";
 import MeetingDetails from "../FormSummary/NewMeetingFormSummary";
 import TextInputs from "../NewMeetingTextInputs/NewMeetingTextInputs";
 import FormSelectiveOptionsMap from "../FormSelectiveOptionsMap/FormSelectiveOptionsMap";
-import NoItemsScreen from "../../../../UI/NoMeetingsScreen/NoMeetingsScreen";
 import CalendarStripComponent from "../CalendarStrip/CalendarStrip";
 import { View } from "react-native";
 
@@ -14,7 +12,6 @@ const FormCoreComponent = ({
   setUserTypedName,
   startFullDate,
   pickedService,
-
   submitHandler,
   endHour,
   worker,

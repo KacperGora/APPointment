@@ -26,6 +26,7 @@ const TimelineComponent: React.FC<TimelineProps> = (props) => {
     setSelectedEvent,
     timelineHeaderShown,
     setEditedEventDraft,
+    eventMoveHandler,
   } = props;
 
   const salonCtx = useContext(SaloonContext);
@@ -34,7 +35,11 @@ const TimelineComponent: React.FC<TimelineProps> = (props) => {
 
   const renderEventContent = useCallback(
     (event: PackedEvent) => (
-      <TimelineEventContent event={event} userPickedView={viewMode} />
+      <TimelineEventContent
+        event={event}
+        userPickedView={viewMode}
+        onTouchMove={eventMoveHandler}
+      />
     ),
     []
   );

@@ -1,6 +1,6 @@
 import "moment";
 import "moment/locale/pl";
-import React, { FunctionComponent, useRef, useState } from "react";
+import React, { FunctionComponent, useRef } from "react";
 import CalendarStrip from "react-native-calendar-strip";
 import { FormCalendarStripProps } from "../../../../../types";
 import { getCalendarStripConfig } from "../../config/formConfig";

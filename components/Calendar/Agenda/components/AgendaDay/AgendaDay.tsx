@@ -5,14 +5,11 @@ import SmallText from "../../../../UI/Text/SmallText";
 import AgendaItem from "../AgendaItem/AgendaItem";
 import { ViewRow } from "../../style/Agenda.style";
 import { getAgendaDayConfig } from "../../config/agendaDayConfig";
-import EmptyWeek from "./EmptyWeek";
-import { not } from "react-native-reanimated";
 import { ScreenWidth } from "../../../../shared";
 
 const AgendaDay: React.FC<AgendaDayProps> = (props) => {
-  const { item, emptyWeeks } = props;
+  const { item, day, fullDate, nameDay, nameMonth } = props;
   const agendaDayConfig = getAgendaDayConfig(props);
-  console.log(agendaDayConfig);
   return item === undefined ? null : (
     <ViewRow>
       <View style={{ width: ScreenWidth / 8 }}>
@@ -24,11 +21,7 @@ const AgendaDay: React.FC<AgendaDayProps> = (props) => {
           );
         })}
       </View>
-      <AgendaItem
-        fullDate={props.fullDate}
-        item={item}
-        emptyWeeks={emptyWeeks}
-      />
+      <AgendaItem fullDate={fullDate} item={item} />
     </ViewRow>
   );
 };

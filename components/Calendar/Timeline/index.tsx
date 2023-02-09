@@ -16,6 +16,7 @@ import { getFloatingButtonActions } from "./config/timelineConfig";
 import { SaloonContext } from "../../../store/SaloonStore";
 import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet";
 import FloatingButton from "../../UI/Buttons/FloatingButton";
+import { LayoutAnimation } from "react-native";
 const Timeline = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<RouteProps>>();
@@ -53,6 +54,7 @@ const Timeline = () => {
     setBottomSheetVisible(false);
     setBottomSheetActiveIndex(0);
     setEditedEventDraft(undefined);
+    setEventMove(false);
     !!selectedEvent && setSelectedEvent(undefined);
     bottomSheetRef.current?.close();
   };
@@ -99,6 +101,11 @@ const Timeline = () => {
       : addCustomerButtonPressHandler();
   };
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const [eventMove, setEventMove] = useState(false);
+  const eventMoveHandler = () => {
+    setEventMove(true);
+    LayoutAnimation.easeInEaseOut();
+  };
 
   return (
     <MyStatusBar>
@@ -124,17 +131,18 @@ const Timeline = () => {
         setMonthName={setMonthName}
         setSelectedEvent={setSelectedEvent}
         setEditedEventDraft={setEditedEventDraft}
+        eventMoveHandler={eventMoveHandler}
       />
       <FloatingButton actions={actions} onPress={floatingButtonsPressHandler} />
       {bottomSheetVisible || selectedEvent ? (
         <BottomSheetMeetingForm
           bottomSheetDirtyDate={bottomSheetDirtyDate}
-          editing={!!selectedEvent ? true : false}
           selectedEvent={!!selectedEvent ? selectedEvent : null}
           index={bottomSheetActiveIndex}
           setIndex={setBottomSheetActiveIndex}
           onCloseBottomSheet={onCloseBottomSheet}
           editedEventDraft={editedEventDraft}
+          eventMove={eventMove}
         />
       ) : null}
     </MyStatusBar>

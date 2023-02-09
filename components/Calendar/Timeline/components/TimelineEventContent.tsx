@@ -2,12 +2,15 @@ import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import useSetFontSizeForTimelineEvents from "../hooks/useSetFontSizeForTimelineEvent";
 
-const TimelineEventContent = ({ event, userPickedView }) => {
+const TimelineEventContent = ({ event, userPickedView, onTouchMove }) => {
   const worker = event.worker;
   const fontSize = useSetFontSizeForTimelineEvents(userPickedView);
 
   return (
-    <View style={[styles.container, { backgroundColor: event.color }]}>
+    <View
+      style={[styles.container, { backgroundColor: event.color }]}
+      onTouchMove={onTouchMove}
+    >
       <View
         style={[
           styles.workerBatch,

@@ -1,5 +1,6 @@
 import { TextStyle } from "react-native";
 import useFetchData from "../../../../hooks/calendar/useFetchData";
+import { Meeting } from "../../../../types";
 import { colors } from "../../../colors";
 import getDailyIncome from "../helpers/getDailyIncome";
 
@@ -40,7 +41,7 @@ export function getAgendaDayConfig(props) {
   return agendaDayConfig;
 }
 
-export function getAgendaItemDetails(item) {
+export function getAgendaItemDetails(item: Meeting) {
   const title = item?.title;
   const serviceName = item?.serviceName;
   const singleItem: {

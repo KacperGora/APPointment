@@ -1,3 +1,4 @@
+import { uniqueId } from "lodash";
 import React, { useMemo } from "react";
 import { View } from "react-native";
 import { FormSelectiveOptionsMapProps } from "../../../../../types";
@@ -17,7 +18,7 @@ const FormSelectiveOptionsMap: React.FC<FormSelectiveOptionsMapProps> = ({
             <StyledScrollView showsVerticalScrollIndicator horizontal>
               {item.data.map((element, index: number) => {
                 return (
-                  <View key={element.value}>
+                  <View key={uniqueId()}>
                     <StyledPressable
                       key={index}
                       onPress={item.pressHandler.bind(this, index)}

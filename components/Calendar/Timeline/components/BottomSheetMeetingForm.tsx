@@ -16,9 +16,9 @@ type TypeProps = {
   index: any;
   setIndex: any;
   onCloseBottomSheet: any;
-  editing: any;
   selectedEvent: any;
   editedEventDraft: Meeting;
+  eventMove: boolean;
 };
 const BottomSheetMeetingForm: React.FC<TypeProps> = ({
   bottomSheetDirtyDate,
@@ -27,6 +27,7 @@ const BottomSheetMeetingForm: React.FC<TypeProps> = ({
   onCloseBottomSheet,
   selectedEvent,
   editedEventDraft,
+  eventMove,
 }) => {
   const { error, isLoading, makeFirebaseCall } = useFirebase("meetings");
 
@@ -45,8 +46,8 @@ const BottomSheetMeetingForm: React.FC<TypeProps> = ({
     LayoutAnimation.easeInEaseOut();
   };
   useEffect(() => {
-    !!editedEventDraft && setIndex(0);
-  }, [editedEventDraft]);
+    eventMove && setIndex(0);
+  }, [eventMove]);
 
   return (
     <BottomSheetComponent
@@ -64,6 +65,8 @@ const BottomSheetMeetingForm: React.FC<TypeProps> = ({
             onEdit={editEventHandler}
             onDelete={deleteEventHandler}
             editedEventDraft={editedEventDraft}
+            eventMove={eventMove}
+            index={index}
           />
         )
       )}

@@ -5,7 +5,6 @@ import { NewUserData, User } from "../types";
 const useGetCurrentCustomer = (customerName: string): NewUserData => {
   const salonCtx = useContext(SaloonContext);
   const customers = salonCtx.customers;
-  console.log(customers[customerName]);
   const currCustomer: {} = Object.values(customers)?.filter(
     (customer: NewUserData) =>
       customer?.fullName?.toLowerCase().includes(customerName?.toLowerCase())

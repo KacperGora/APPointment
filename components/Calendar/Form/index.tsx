@@ -1,7 +1,6 @@
 import React, { SetStateAction, useContext, useEffect, useState } from "react";
 import { Alert, LayoutAnimation } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import useCheckOverlappingEvents from "./hooks/useCheckOverlappingEvents";
 import useSetColorForEvent from "../Timeline/hooks/useSetColorForEvent";
 import getEventExcludedTimes from "../../../Utils/getEventExcludedTimes";
 import { hours, salonWorkers } from "../../../data";
@@ -48,11 +47,17 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
   const [pickedDate, setPickedDate] = useState(dateString);
 
   const [pickedHour, setPickedHour] = useState(availableHours[0]);
-  const [pickedService, setPickedService] = useState<SelectiveOptions>(null);
+  const [pickedService, setPickedService] = useState<SelectiveOptions>();
   const [pickedWorker, setPickedWorker] = useState<WorkerDetails>();
   const [userTypedName, setUserTypedName] = useState(
     selectedEvent?.title.split(" ")[0] || ""
   );
+  useEffect(() => {
+    setPickedWorker(workers.find((el) => el.isActive));
+    setPickedService(services.find((el) => el.isActive));
+    setPickedHour(availableHours.find((el) => el.isActive));
+  }, [services, workers, availableHours]);
+
   const [userTypedLastName, setUserTypedLastName] = useState(
     selectedEvent?.title.split(" ")[1] || ""
   );
@@ -98,15 +103,6 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
     setAvailableHours(res);
   }, [pickedService, pickedDate, pickedWorker, selectedEvent]);
 
-  useEffect(() => {
-    const pH = [...availableHours].filter((value) => value.isActive)[0];
-    setPickedHour(pH);
-    const pW = [...workers].filter((value) => value.isActive)[0];
-    setPickedWorker(pW);
-    const pS = [...services].filter((value) => value.isActive)[0];
-    setPickedService(pS);
-  }, [availableHours, workers, services]);
-
   const submitHandler = async () => {
     if (!!selectedEvent) {
       data.id = selectedEvent.id;
@@ -134,6 +130,13 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
     }
   };
 
+  useEffect(() => {
+    const foundIndexServices = services.findIndex(
+      (el) => el.value === selectedEvent?.serviceName
+    );
+    selectedEvent && pickHandler(foundIndexServices, services, setServices);
+  }, [selectedEvent]);
+  console.log(availableHours);
   const selectiveOptionsPressHandler = (
     index: number,
     state: SelectiveOptions[],
@@ -170,6 +173,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
     setIndex(0);
     setBottomSheetShown(false);
   };
+
   useEffect(() => {
     !!selectedEvent && setPickedDate(selectedEvent?.day);
   }, [selectedEvent]);

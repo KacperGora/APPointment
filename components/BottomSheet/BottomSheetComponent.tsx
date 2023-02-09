@@ -1,11 +1,11 @@
 import BottomSheet from "@gorhom/bottom-sheet";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import React from "react";
-import { LayoutAnimation, View } from "react-native";
+import { LayoutAnimation } from "react-native";
 import { colors } from "../colors";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { BottomSheetProps } from "../../types";
-import { ScreenWidth, StyledViewBorder } from "../shared";
+import { StyledViewBorder } from "../shared";
 
 const BottomSheetComponent: React.FC<BottomSheetProps> = ({
   index,
@@ -22,7 +22,7 @@ const BottomSheetComponent: React.FC<BottomSheetProps> = ({
   return (
     <BottomSheet
       enablePanDownToClose
-      onClose={() => onCloseBottomSheet()}
+      onClose={onCloseBottomSheet}
       onChange={onClosePressHandler}
       index={index}
       snapPoints={snapPoints}
