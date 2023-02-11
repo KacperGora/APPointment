@@ -4,7 +4,6 @@ import { ScreenWidth } from "../../../../../shared";
 import SmallText from "../../../../../UI/Text/SmallText";
 
 const SummaryColumn = ({ data }) => {
-  // console.log(data);
   return (
     <View
       style={[
@@ -14,7 +13,7 @@ const SummaryColumn = ({ data }) => {
         },
       ]}
     >
-      <View style={{ maxWidth: ScreenWidth / 2}}>
+      <View style={{ maxWidth: ScreenWidth / 2 }}>
         <Text style={{ color: "black", ...data.title.styling }}>
           {data.title.value}
         </Text>

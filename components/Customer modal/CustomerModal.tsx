@@ -3,7 +3,6 @@ import { Modal, View, StyleSheet, Pressable } from "react-native";
 import { CustomerModalProps } from "../../types";
 import RegularButton from "../UI/Buttons/RegularButton";
 import CustomerModalInformation from "./CustomerModalInformation/CustomerModalInformation";
-import CustomerModalPhoneNumber from "./CustomerModalPhoneNumber/CustomerModalPhoneNumber";
 
 const CustomerModal: React.FC<CustomerModalProps> = ({
   modalVisible,

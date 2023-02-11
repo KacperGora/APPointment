@@ -136,7 +136,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
     );
     selectedEvent && pickHandler(foundIndexServices, services, setServices);
   }, [selectedEvent]);
-  console.log(availableHours);
+
   const selectiveOptionsPressHandler = (
     index: number,
     state: SelectiveOptions[],

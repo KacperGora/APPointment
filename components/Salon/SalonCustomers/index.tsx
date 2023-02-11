@@ -25,7 +25,7 @@ function SalonCustomers() {
     );
     value === "" && setCustomersList(salonCtx.customers);
   };
-
+  console.log(customerInEdition);
   const iconPressHandler = () => {
     setIndex(1);
     setBottomSheetVisible(true);
@@ -40,6 +40,7 @@ function SalonCustomers() {
   };
   const onEditCustomerPress = (customer: NewUserData) => {
     setBottomSheetVisible(true);
+    setIndex(2);
     setCustomerInEdition(customer);
   };
   return (

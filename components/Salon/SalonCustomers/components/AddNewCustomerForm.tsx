@@ -37,9 +37,13 @@ const AddNewCustomerForm: React.FC<AddNewCustomerProps> = ({
     timeStamp: serverTimestamp(),
   };
   const { isLoading, error, makeFirebaseCall } = useFirebase("customers");
-
+  const newCustomerInEditionData: NewUserData = {
+    ...customerInEdition,
+    additionalInfo: userData.additionalInfo,
+    phoneNumber: userData.phoneNumber,
+  };
   const addCustomerButtonPressHandler = async () => {
-    formIsValid && makeFirebaseCall(editing ? "edit" : "add", userData);
+    formIsValid && makeFirebaseCall(editing ? "edit" : "add", editing? newCustomerInEditionData : userData);
     !error && setShowSuccess(true);
   };
   useEffect(() => {
