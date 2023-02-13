@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { LayoutAnimation } from "react-native";
 import { TimelineScreenHeaderProps } from "../../../../types";
-import { RowContainer, RowContainerSpaceBetween } from "../../../shared";
+import { RowContainer } from "../../../shared";
+import GestureDetectorComponent from "../../GestureDetectorComponent/GestureDetectorComponent";
 import CalendarListComponent from "./components/CalendarList/CalendarListComponent";
 import Navbar from "./components/Navbar";
 import SearchBar from "./components/Searchbar/SearchBar";
@@ -35,21 +36,23 @@ const TimelineScreenHeader: React.FC<TimelineScreenHeaderProps> = ({
   return (
     <>
       <RowContainer style={{ marginHorizontal: 16 }}>
-        {searchBarVisible ? (
-          <SearchBar
-            setSearchBarVisible={setSearchBarVisible}
-            searchPressHandler={searchPressHandler}
-          />
-        ) : (
-          <Navbar
-            monthName={monthName}
-            searchIconPressHandler={searchIconPressHandler}
-            onGestureStart={onGestureStartHandler}
-            onTodayIconPressHandler={onTodayIconPressHandler}
-            disableSearchBar={disableSearchBar}
-            disableCalendar={disableCalendar}
-          />
-        )}
+        <GestureDetectorComponent onGestureStartHandler={onGestureStartHandler}>
+          {searchBarVisible ? (
+            <SearchBar
+              setSearchBarVisible={setSearchBarVisible}
+              searchPressHandler={searchPressHandler}
+            />
+          ) : (
+            <Navbar
+              monthName={monthName}
+              searchIconPressHandler={searchIconPressHandler}
+              onGestureStart={onGestureStartHandler}
+              onTodayIconPressHandler={onTodayIconPressHandler}
+              disableSearchBar={disableSearchBar}
+              disableCalendar={disableCalendar}
+            />
+          )}
+        </GestureDetectorComponent>
       </RowContainer>
       {calendarRenderCondition ? (
         <CalendarListComponent

@@ -18,6 +18,11 @@ import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSh
 import FloatingButton from "../../UI/Buttons/FloatingButton";
 import { LayoutAnimation } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+
+import { closestTo } from "date-fns";
+import useFetchData from "../../../hooks/calendar/useFetchData";
+import useScheduleNotification from "./hooks/useScheduleNotification";
+
 const Timeline = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<RouteProps>>();
@@ -41,21 +46,15 @@ const Timeline = () => {
     route.params.date || dayjs().format("YYYY-MM-DD")
   );
 
-  useEffect(() => {
-    const optionalProps = {
-      date: route.params.date,
-      animatedHour: true,
-      animatedDate: true,
-    };
-    calendarRef?.current?.goToDate(optionalProps);
-    searchPressHandler(route?.params?.event?.id);
-  }, [route.params]);
   const salonContext = useContext(SaloonContext);
   const actions = useMemo(() => {
     return getFloatingButtonActions();
   }, []);
-  const { eventsFlatData, isLoading, customers } = useFetchEvents();
-
+  const { eventsFlatData, isLoading, customers } = useFetchData();
+  const { scheduleNotificationHandler } = useScheduleNotification();
+  useEffect(() => {
+    scheduleNotificationHandler();
+  }, []);
   useEffect(() => {
     setEvents(eventsFlatData);
     salonContext.getCustomers(customers);
@@ -126,6 +125,15 @@ const Timeline = () => {
       ? addMeetingButtonPressHandler()
       : addCustomerButtonPressHandler();
   };
+  useEffect(() => {
+    const optionalProps = {
+      date: route.params.date,
+      animatedHour: true,
+      animatedDate: true,
+    };
+    calendarRef?.current?.goToDate(optionalProps);
+    searchPressHandler(route?.params?.event?.id);
+  }, [route.params]);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [eventMove, setEventMove] = useState(false);
   const eventMoveHandler = () => {

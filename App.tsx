@@ -8,20 +8,8 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import MeetingsProvider from "./store/CalendarStore";
 import SaloonProvider from "./store/SaloonStore";
-import * as Notifications from "expo-notifications";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { enableLayoutAnimations } from "react-native-reanimated";
-SplashScreen.preventAutoHideAsync();
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => {
-    return {
-      shouldPlaySound: true,
-      shouldSetBadge: false,
-      shouldShowAlert: true,
-    };
-  },
-});
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -56,21 +44,9 @@ export default function App() {
   if (!appIsReady) {
     return null;
   }
-  const scheduleNotificationHandler = () => {
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: "My first local noti",
-        body: "This is the body.",
-        data: { userName: "Kacper" },
-        vibrate: [10, 50, 250],
-      },
-      trigger: {
-        seconds: 30,
-      },
-    });
-  };
-  scheduleNotificationHandler();
-  
+
+  // scheduleNotificationHandler();
+
   return (
     <MeetingsProvider>
       <SaloonProvider>
