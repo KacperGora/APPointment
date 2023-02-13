@@ -48,7 +48,7 @@ const BottomSheetMeetingForm: React.FC<TypeProps> = ({
   useEffect(() => {
     eventMove && setIndex(0);
   }, [eventMove]);
-
+  console.log(index);
   return (
     <BottomSheetComponent
       index={index}

@@ -3,7 +3,7 @@ import { hours } from "../../../../data";
 import { MeetingsContext } from "../../../../store/CalendarStore";
 import dayjs from "dayjs";
 import { differenceInMinutes } from "date-fns";
-import { Meeting, SelectiveOptions } from "../../../../types";
+import { Hours, Meeting, SelectiveOptions } from "../../../../types";
 import { PackedEvent } from "@howljs/calendar-kit";
 const useGetAvailableHours = (
   pickedDay: string,
@@ -16,30 +16,40 @@ const useGetAvailableHours = (
   const numberOfServiceDurationIntervals = pickedService?.duration / 15;
   const openHours = [...hours];
 
+  const excludedTimesForEmployee = (event: Meeting) => event.worker === worker;
+  const getOnlyExcludedTimes = (event: Meeting) => event.excludedTimes;
+  const editingEventExcludedTimes = (hour: string) =>
+    !selectedEvent?.excludedTimes.includes(hour);
+  const getOnlyTimeValues = (el: Hours) => el.value;
+
   const excludedTimesAtThisDayForEmployee = meetings[pickedDay]
-    ?.filter((event) => event.worker === worker)
-    .map((el) => el.excludedTimes)
+    ?.filter(excludedTimesForEmployee)
+    .map(getOnlyExcludedTimes)
     .flat()
-    .filter((el) => !selectedEvent?.excludedTimes.includes(el));
+    .filter(editingEventExcludedTimes);
+
+  const filterFromAllHoursEmployeeExcludedTimes = (hour: Hours) =>
+    !excludedTimesAtThisDayForEmployee?.includes(hour.value);
 
   const rawAvailableHours = openHours
-    ?.filter((hour) => !excludedTimesAtThisDayForEmployee?.includes(hour.value))
-    .map((el) => el.value);
+    ?.filter(filterFromAllHoursEmployeeExcludedTimes)
+    .map(getOnlyTimeValues);
 
   const loopNumber =
     rawAvailableHours?.length - numberOfServiceDurationIntervals;
-
+  const startEndWindow = pickedService?.duration - 15;
   const avHours = [];
 
   for (let i = 0; i < loopNumber; i++) {
-    const time1 = dayjs(
+    const endTime = dayjs(
       `${pickedDay} ${
         rawAvailableHours[numberOfServiceDurationIntervals + i - 1]
       }`
     ).toDate();
-    const time2 = dayjs(`${pickedDay} ${rawAvailableHours[i]}`).toDate();
 
-    if (differenceInMinutes(time1, time2) === pickedService?.duration - 15) {
+    const startTime = dayjs(`${pickedDay} ${rawAvailableHours[i]}`).toDate();
+
+    if (differenceInMinutes(endTime, startTime) === startEndWindow) {
       avHours.push(rawAvailableHours[i]);
     }
   }

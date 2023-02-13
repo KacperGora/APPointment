@@ -1,4 +1,4 @@
-import React, { SetStateAction, useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LayoutAnimation, View } from "react-native";
 import { addNewCustomerFormConfiguration } from "./addNewCustomerFormConfiguration";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,7 +15,6 @@ import RegularText24 from "../../../UI/Text/RegularText24";
 import Animation from "../../../UI/SuccessAnimation/Animation";
 import useFirebase from "../../../../hooks/useFirebase";
 import { AddNewCustomerProps, NewUserData } from "../../../../types";
-import { SaloonContext } from "../../../../store/SaloonStore";
 
 const AddNewCustomerForm: React.FC<AddNewCustomerProps> = ({
   hideBottomModal,
@@ -43,7 +42,11 @@ const AddNewCustomerForm: React.FC<AddNewCustomerProps> = ({
     phoneNumber: userData.phoneNumber,
   };
   const addCustomerButtonPressHandler = async () => {
-    formIsValid && makeFirebaseCall(editing ? "edit" : "add", editing? newCustomerInEditionData : userData);
+    formIsValid &&
+      makeFirebaseCall(
+        editing ? "edit" : "add",
+        editing ? newCustomerInEditionData : userData
+      );
     !error && setShowSuccess(true);
   };
   useEffect(() => {

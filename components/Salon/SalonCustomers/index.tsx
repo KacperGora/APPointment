@@ -25,9 +25,9 @@ function SalonCustomers() {
     );
     value === "" && setCustomersList(salonCtx.customers);
   };
-  console.log(customerInEdition);
+
   const iconPressHandler = () => {
-    setIndex(1);
+    setIndex(2);
     setBottomSheetVisible(true);
   };
   useEffect(() => {
@@ -61,7 +61,6 @@ function SalonCustomers() {
         color={colors.secondary}
         showBackground={false}
         overlayColor={"#9ea4ab5d"}
-        actionsPaddingTopBottom={1}
         onPressMain={iconPressHandler}
       />
       {bottomSheetVisible ? (

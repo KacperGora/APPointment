@@ -74,6 +74,7 @@ const TimelineComponent: React.FC<TimelineProps> = (props) => {
       start={7}
       isShowHeader={timelineHeaderShown}
       viewMode={viewMode}
+      
       allowPinchToZoom
       overlapEventsSpacing={4}
       scrollToNow={false}

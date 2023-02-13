@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { AntDesign } from "@expo/vector-icons";
 import SearchBar from "../../../UI/Headers/TimelineScreenHeader/components/Searchbar/SearchBar";
 import { RowContainer } from "../../../shared";
 import { LayoutAnimation, Text, View } from "react-native";
@@ -48,7 +47,7 @@ const SaloonCustomersListTools = ({ iconPressHandler, searchPressHandler }) => {
               style={{ marginRight: 8 }}
             />
             <Text style={{ fontSize: 16, color: colors.greydark }}>
-              {dayjs().format("dddd MMM YYYY")}
+              {dayjs().format("DD MMMM YYYY")}
             </Text>
           </View>
           <SearchButton onPress={searchButtonPressHandler} />

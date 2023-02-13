@@ -1,67 +1,47 @@
 import React from "react";
-import { Modal, View, StyleSheet, Pressable } from "react-native";
-import { CustomerModalProps } from "../../types";
+import { CustomerModalProps, Meeting, Navigation } from "../../types";
 import RegularButton from "../UI/Buttons/RegularButton";
 import CustomerModalInformation from "./CustomerModalInformation/CustomerModalInformation";
-
+import Modal from "react-native-modal";
+import { ModalContentContainer } from "./style/Modal.style";
+import { useNavigation } from "@react-navigation/native";
+import { LayoutAnimation } from "react-native";
+import { PackedEvent } from "@howljs/calendar-kit";
+import Animated, { Layout, LightSpeedInLeft } from "react-native-reanimated";
 const CustomerModal: React.FC<CustomerModalProps> = ({
   modalVisible,
   setModalVisible,
   item,
 }) => {
+  const navigation = useNavigation<Navigation>();
+  const onDetailPressHandler = (destination: string, item: Meeting) => {
+    LayoutAnimation.linear();
+    setModalVisible(false);
+    navigation.navigate("Tydzień", { date: destination, event: item });
+  };
+
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        setModalVisible(!modalVisible);
-      }}
-    >
-      <Pressable
-        onPress={() => setModalVisible(false)}
-        style={styles.centeredView}
+    <Animated.View entering={LightSpeedInLeft} layout={Layout.springify()}>
+      <Modal
+        isVisible={modalVisible}
+        animationIn="slideInUp"
+        backdropOpacity={0.3}
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        onBackdropPress={() => setModalVisible(!modalVisible)}
       >
-        <View style={styles.modalView}>
-          <CustomerModalInformation item={item} style={null} />
+        <ModalContentContainer>
+          <CustomerModalInformation
+            item={item}
+            onPress={onDetailPressHandler}
+          />
           <RegularButton
             onPress={() => setModalVisible(!modalVisible)}
             title="Powrót"
+            btnStyles={{ borderWidth: 1, borderColor: "lightgray" }}
           />
-        </View>
-      </Pressable>
-    </Modal>
+        </ModalContentContainer>
+      </Modal>
+    </Animated.View>
   );
 };
 export default CustomerModal;
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-
-  buttonClose: {
-    // backgroundColor: "#2196F3",
-  },
-
-  // modalText: {
-  //   marginBottom: 15,
-  //   textAlign: "center",
-  // },
-});

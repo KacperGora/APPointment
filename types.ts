@@ -40,6 +40,7 @@ export type RouteProps = {
     viewMode?: CalendarViewMode;
     date?: string;
     onCloseBottomSheet?: () => void;
+    event?: PackedEvent;
   };
 };
 export interface AllMeetings {
@@ -77,6 +78,7 @@ export type RootStackParam = {
 };
 export type NavigationParams = {
   date?: string;
+  event?: Meeting;
 };
 export type Navigation = {
   navigate: (param: string, arg1?: NavigationParams) => void;
@@ -287,4 +289,8 @@ export type RightActionArgs = {
   customer: NewUserData;
   onEdit?: any;
   swipeRef?: any;
+};
+export type ModalInformation = {
+  item: NewUserData;
+  onPress?: (destination: string, event: any) => void;
 };

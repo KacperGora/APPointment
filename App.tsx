@@ -65,11 +65,12 @@ export default function App() {
         vibrate: [10, 50, 250],
       },
       trigger: {
-        seconds: 3,
+        seconds: 30,
       },
     });
   };
   scheduleNotificationHandler();
+  
   return (
     <MeetingsProvider>
       <SaloonProvider>
