@@ -12,7 +12,7 @@ const CardEarningFooter = ({ item, colors }) => {
           key={element.id}
           periodFirstLetter={element.periodFirstLetter}
           earning={element.earning}
-          percentage={element.percentage}
+          percentage={+(element.percentage * 100).toFixed(0)}
           color={element.color}
         />
       ))}

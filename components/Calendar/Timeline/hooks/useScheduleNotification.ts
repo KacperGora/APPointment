@@ -6,14 +6,14 @@ Notifications.setNotificationHandler({
   handleNotification: async () => {
     return {
       shouldPlaySound: true,
-      shouldSetBadge: false,
+      shouldSetBadge: true,
       shouldShowAlert: true,
     };
   },
 });
 
 const useScheduleNotification = () => {
-  const { eventsFlatData } = useFetchData();
+  const { eventsFlatData, eventsData } = useFetchData();
   const datesArray = eventsFlatData
     .map((el) => dayjs(el.start).toDate())
     .filter((date) => date.valueOf() > new Date().valueOf());
@@ -21,26 +21,47 @@ const useScheduleNotification = () => {
   const closestMeeting = eventsFlatData.filter(
     (el) =>
       dayjs(el.start).toISOString() === dayjs(closestMeetingDate).toISOString()
-  );
+  )[0];
+  // const todaySortedMeetings = eventsData[dayjs().format("YYYY-MM-DD")]?.sort(
+  //   (a, b) => a.endHour.localeCompare(b.endHour)
+  // );
+  // const lastMeeting = todaySortedMeetings[todaySortedMeetings?.length - 1];
 
-  const scheduleNotificationHandler = () => {
+  const scheduleNotificationHandlerIncomingEvent = () => {
     Notifications.scheduleNotificationAsync({
       content: {
-        title: closestMeeting[0]?.title,
-        body: `${closestMeeting[0]?.serviceName} - ${closestMeeting[0]?.startHourStr}`,
+        title: closestMeeting?.title,
+        body: `${closestMeeting?.serviceName} - ${closestMeeting?.startHourStr}`,
         data: { userName: "Kacper" },
         vibrate: [10, 50, 250],
       },
       trigger: {
-        hour: dayjs(closestMeeting[0]?.start)
-          .subtract(30, "minutes")
-          .get("hour"),
-        minute: dayjs(closestMeeting[0]?.start)
+        day: dayjs(closestMeeting?.start).subtract(30, "minutes").get("date"),
+        month:
+          dayjs(closestMeeting?.start).subtract(30, "minutes").get("M") + 1,
+        hour: dayjs(closestMeeting?.start).subtract(30, "minutes").get("hour"),
+        minute: dayjs(closestMeeting?.start)
           .subtract(30, "minutes")
           .get("minute"),
       },
     });
   };
-  return { scheduleNotificationHandler };
+  const scheduleNotificationHandlerDailyReport = () => {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Wygeneruj raport dzienny",
+        body: `Jesteś już po pracy!`,
+        data: { userName: "Kacper" },
+        vibrate: [10, 50, 250],
+      },
+      trigger: {
+        seconds: 5,
+      },
+    });
+  };
+  return {
+    scheduleNotificationHandlerIncomingEvent,
+    scheduleNotificationHandlerDailyReport,
+  };
 };
 export default useScheduleNotification;

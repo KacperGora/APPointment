@@ -8,7 +8,6 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import MeetingsProvider from "./store/CalendarStore";
 import SaloonProvider from "./store/SaloonStore";
-
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
@@ -44,8 +43,6 @@ export default function App() {
   if (!appIsReady) {
     return null;
   }
-
-  // scheduleNotificationHandler();
 
   return (
     <MeetingsProvider>

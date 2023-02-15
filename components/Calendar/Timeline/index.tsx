@@ -6,7 +6,6 @@ import {
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import TimelineComponent from "./components/TimelineComponent";
-import useFetchEvents from "../../../hooks/calendar/useFetchData";
 import MyStatusBar from "../../UI/StatusBar/MyStatusBar";
 import BottomSheetMeetingForm from "./components/BottomSheetMeetingForm";
 import { Meeting, RouteProps } from "../../../types";
@@ -18,10 +17,9 @@ import BottomSheet from "@gorhom/bottom-sheet/lib/typescript/components/bottomSh
 import FloatingButton from "../../UI/Buttons/FloatingButton";
 import { LayoutAnimation } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-
-import { closestTo } from "date-fns";
 import useFetchData from "../../../hooks/calendar/useFetchData";
 import useScheduleNotification from "./hooks/useScheduleNotification";
+import useSearchHandler from "../../../hooks/useSearchHandler";
 
 const Timeline = () => {
   const navigation = useNavigation<any>();
@@ -37,6 +35,8 @@ const Timeline = () => {
   const [editedEventDraft, setEditedEventDraft] = useState<
     PackedEvent & Meeting
   >();
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const [eventMove, setEventMove] = useState(false);
   const [timelineHeaderShown, setTimelineHeaderShown] = useState(true);
   const [events, setEvents] = useState<EventItem[]>([]);
   const [searchedEvents, setSearchedEvents] = useState([]);
@@ -51,14 +51,22 @@ const Timeline = () => {
     return getFloatingButtonActions();
   }, []);
   const { eventsFlatData, isLoading, customers } = useFetchData();
-  const { scheduleNotificationHandler } = useScheduleNotification();
+  const {
+    scheduleNotificationHandlerIncomingEvent,
+    scheduleNotificationHandlerDailyReport,
+  } = useScheduleNotification();
   useEffect(() => {
-    scheduleNotificationHandler();
+    const controller = new AbortController();
+    scheduleNotificationHandlerIncomingEvent();
+    scheduleNotificationHandlerDailyReport();
+    return () => {
+      controller.abort();
+    };
   }, []);
+
   useEffect(() => {
     setEvents(eventsFlatData);
-    salonContext.getCustomers(customers);
-  }, [eventsFlatData, customers]);
+  }, [eventsFlatData]);
 
   const onCloseBottomSheet = () => {
     setBottomSheetVisible(false);
@@ -93,23 +101,9 @@ const Timeline = () => {
     }
   }, [searchedEvents]);
 
+  const { searchFn } = useSearchHandler("events");
   const searchPressHandler = (searchedValue: string) => {
-    const filteredData = eventsFlatData.filter((value) => {
-      const searchStr = searchedValue?.toLowerCase();
-      const serviceNameMatches = value.serviceName
-        .toLowerCase()
-        .includes(searchStr);
-      const titleMatches = value.title
-        .toString()
-        .toLocaleLowerCase()
-        .includes(searchStr);
-      const idMatches = value.id
-        .toString()
-        .toLocaleLowerCase()
-        .includes(searchStr);
-      return serviceNameMatches || titleMatches || idMatches;
-    });
-
+    const filteredData = searchFn(searchedValue);
     setSearchedEvents(filteredData);
   };
   const addMeetingButtonPressHandler = () => {
@@ -134,8 +128,7 @@ const Timeline = () => {
     calendarRef?.current?.goToDate(optionalProps);
     searchPressHandler(route?.params?.event?.id);
   }, [route.params]);
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const [eventMove, setEventMove] = useState(false);
+
   const eventMoveHandler = () => {
     setEventMove(true);
     LayoutAnimation.easeInEaseOut();

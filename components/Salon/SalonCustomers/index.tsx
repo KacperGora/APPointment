@@ -8,6 +8,7 @@ import { FloatingAction } from "react-native-floating-action";
 import { colors } from "../../colors";
 import { NewUserData } from "../../../types";
 import useFetchData from "../../../hooks/calendar/useFetchData";
+import useSearchHandler from "../../../hooks/useSearchHandler";
 
 function SalonCustomers() {
   const salonCtx = useContext(SaloonContext);
@@ -17,13 +18,12 @@ function SalonCustomers() {
   const [modalVisible, setModalVisible] = useState(false);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [customerInEdition, setCustomerInEdition] = useState<NewUserData>(null);
+  const { searchFn } = useSearchHandler("customers");
+
   const searchPressHandler = (value: string) => {
-    setCustomersList(
-      Object.values(customers).filter((el: NewUserData) =>
-        el.fullName.toLowerCase().includes(value.toLowerCase())
-      )
-    );
-    value === "" && setCustomersList(salonCtx.customers);
+    const result = searchFn(value);
+    setCustomersList(result);
+    value === "" && setCustomersList(salonCtx.fetchedCustomers);
   };
 
   const iconPressHandler = () => {

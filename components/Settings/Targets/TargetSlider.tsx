@@ -2,31 +2,31 @@ import React from "react";
 import { View, Text } from "react-native";
 import Slider from "@react-native-community/slider";
 import { colors } from "../../colors";
+import { RowContainer, ScreenWidth } from "../../shared";
+import SmallText from "../../UI/Text/SmallText";
 const TargetSlider = ({ targetTypeString, sliderHandler, value }) => {
   return (
-    <View
+    <RowContainer
       style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
       }}
     >
-      <Text style={{ color: colors.greydark, width: 90 }}>
+      <SmallText textStyles={{ width: ScreenWidth * 0.25 }}>
         {targetTypeString}:
-      </Text>
-      <View style={{ flexDirection: "row" }}>
+      </SmallText>
+      <RowContainer>
         <Slider
           style={{ width: 125, height: 50 }}
           minimumValue={100}
           step={100}
           value={value}
-          maximumValue={8000}
+          maximumValue={10000}
           minimumTrackTintColor={colors.accent}
           maximumTrackTintColor="#000000"
           onValueChange={sliderHandler}
         />
-      </View>
-    </View>
+      </RowContainer>
+    </RowContainer>
   );
 };
 export default TargetSlider;

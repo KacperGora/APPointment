@@ -30,7 +30,9 @@ const CardEarningPeriodDetail: React.FC<Props> = ({
       </CardIncomingsDot>
       <View>
         <SmallText>{earning} PLN</SmallText>
-        <SmallText>{percentage} %</SmallText>
+        <SmallText textStyles={{ color: percentage < 90 ? "red" : "green" }}>
+          {percentage} %
+        </SmallText>
       </View>
     </RowContainer>
   );

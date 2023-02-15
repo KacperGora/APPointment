@@ -5,7 +5,7 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import LandingScreen from "../../screens/LandingScreen";
-import RootTab, { CalendarDrawerNav } from "../RootTab";
+import RootTab, { CalendarDrawerNav, SalonDrawerNav } from "../RootTab";
 import SalonCustomersScreen from "../../screens/Saloon/SalonCustomersScreen";
 import SalonSummaryScreen from "../../screens/Saloon/SalonSummaryScreen";
 import SettingsDrawerNavigation from "../SettingsDrawerNavigation";
@@ -15,6 +15,8 @@ import Timeline from "../../components/Calendar/Timeline";
 import { CalendarViewMode } from "@howljs/calendar-kit";
 import { AgendaProps } from "../../types";
 import { FC } from "react";
+import SalonSummary from "../../components/Salon/SalonSummary/SalonSummary";
+import SpendingComponent from "../../components/Salon/SalonSummary/Spending";
 
 type screenProps = {
   id: number;
@@ -86,7 +88,7 @@ export function getTabNavigationScreens() {
     {
       id: 3,
       name: "Analizy",
-      component: SalonSummaryScreen,
+      component: SalonDrawerNav,
       iconFamily: MaterialCommunityIcons,
       iconName: "google-analytics",
     },
@@ -99,6 +101,25 @@ export function getTabNavigationScreens() {
     },
   ];
   return tabScreens;
+}
+export function getSalonDrawerNavigation() {
+  const drawerSalonScreens = [
+    {
+      id: 1,
+      name: "Podsumowanie",
+      component: SalonSummaryScreen,
+      iconFamily: MaterialCommunityIcons,
+      iconName: "abacus",
+    },
+    {
+      id: 2,
+      name: "Rozliczenie",
+      component: SpendingComponent,
+      iconFamily: MaterialCommunityIcons,
+      iconName: "cash-fast",
+    },
+  ];
+  return drawerSalonScreens;
 }
 export function getCalendarDrawerNavigation() {
   const drawerCalendarScreens: screenProps = [

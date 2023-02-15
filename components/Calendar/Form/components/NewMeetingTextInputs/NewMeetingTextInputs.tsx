@@ -1,43 +1,13 @@
-import { colors } from "../../../../colors";
-import React, { useRef } from "react";
+import React from "react";
 import { InputComponentProps } from "../../../../../types";
 import { InputContainer } from "../../style/Form.style";
-import { Keyboard, LayoutAnimation, TextInput, View } from "react-native";
+import { View } from "react-native";
 import { TextInput as TextInputRNPaper } from "react-native-paper";
-const TextInputs: React.FC<InputComponentProps> = ({
-  setUserTypedName,
-  setUserTypedLastName,
-  fullName,
-}) => {
-  const firstNameInputRef = useRef<TextInput>();
-  const lastNameInputRef = useRef<TextInput>();
-  const formTextInputsConfig = [
-    {
-      id: 1,
-      placeholder: "Imię",
-      autoCorrect: true,
-      onChangeText: setUserTypedName,
-      value: fullName.split(" ")[0].trim(),
-      ref: firstNameInputRef,
-      onSubmitEditing: () => lastNameInputRef?.current?.focus(),
-    },
-    {
-      id: 2,
-      placeholder: "Nazwisko",
-      autoCorrect: false,
-      onChangeText: setUserTypedLastName,
-      value: fullName.split(" ")[1].trim(),
-      ref: lastNameInputRef,
-      onSubmitEditing: () => {
-        LayoutAnimation.easeInEaseOut();
-        Keyboard.dismiss();
-      },
-    },
-  ];
 
+const TextInputs: React.FC<InputComponentProps> = ({ data, direction }) => {
   return (
-    <InputContainer>
-      {formTextInputsConfig.map((input) => {
+    <InputContainer style={{ flexDirection: direction }}>
+      {data.map((input) => {
         return (
           <View key={input.id} style={{ flex: 1, marginVertical: 12 }}>
             <TextInputRNPaper
@@ -50,6 +20,7 @@ const TextInputs: React.FC<InputComponentProps> = ({
               autoCorrect={input.autoCorrect}
               value={input.value}
               ref={input.ref}
+              keyboardType={input.keyboardType}
               onSubmitEditing={input.onSubmitEditing}
               style={{
                 backgroundColor: "white",
@@ -58,7 +29,6 @@ const TextInputs: React.FC<InputComponentProps> = ({
               outlineColor="lightgray"
               activeOutlineColor="#f764ab52"
               textAlign="center"
-              textContentType="name"
             />
           </View>
         );

@@ -10,7 +10,7 @@ import AgendaHourBox from "./AgendaItemHour/AgendaHourBox";
 const AgendaItem: React.FC<AgendaItemProps> = ({ item }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const salonCtx = useContext(SaloonContext);
-  const customers = salonCtx.customers;
+  const customers = salonCtx.fetchedCustomers;
   const currentCustomer = customers[item.title];
   const itemPressed = useCallback(() => {
     setModalVisible(true);

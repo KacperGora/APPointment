@@ -170,6 +170,7 @@ export type BottomSheetProps = {
   children: ReactNode;
   onCloseBottomSheet?: () => void;
   editing?: boolean;
+  oneSnap?: boolean;
 };
 export type AgendaDayProps = {
   nameDay: string;
@@ -185,9 +186,8 @@ export type AgendaItemProps = {
 };
 
 export type InputComponentProps = {
-  setUserTypedName: React.Dispatch<React.SetStateAction<string>>;
-  setUserTypedLastName: React.Dispatch<React.SetStateAction<string>>;
-  fullName: string;
+  data: any;
+  direction: "row" | "column";
 };
 export type FormCalendarStripProps = {
   date: string;
@@ -286,11 +286,18 @@ export type AddNewCustomerProps = {
 export type RightActionArgs = {
   progress: Animated.AnimatedInterpolation;
   dragX: Animated.AnimatedInterpolation;
-  customer: NewUserData;
+  customer?: NewUserData;
   onEdit?: any;
   swipeRef?: any;
 };
 export type ModalInformation = {
   item: NewUserData;
   onPress?: (destination: string, event: any) => void;
+};
+export type SpendingType = {
+  name: string;
+  value: number;
+  type: "spending" | "income";
+  date: string;
+  folder: string;
 };

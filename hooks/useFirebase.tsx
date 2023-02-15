@@ -13,29 +13,35 @@ import { db } from "../firebase/firebase";
 import { MeetingsContext } from "../store/CalendarStore";
 import { SaloonContext } from "../store/SaloonStore";
 import { Meeting, NewUserData } from "../types";
-import Animation from "../components/UI/SuccessAnimation/Animation";
-import React from "react";
-import dayjs from "dayjs";
 
 type FirebaseCallType = "edit" | "delete" | "add";
-const useFirebase = (firebasePath: "meetings" | "customers") => {
-  const ref = doc(db, firebasePath, firebasePath);
+const useFirebase = (
+  firebasePath: "meetings" | "customers" | "salon settings",
+  fireBaseCollection?: string
+) => {
+  const ref = doc(db, firebasePath, fireBaseCollection || firebasePath);
   const customerRef = doc(db, "customers", "customers");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState(null);
   const ctx = useContext(MeetingsContext);
   const salonCtx = useContext(SaloonContext);
-  const customers = salonCtx.customers;
+  const customers = salonCtx.fetchedCustomers;
   const meetings = ctx.meetings;
-
-  const addDataHandler = async (data: Meeting & NewUserData) => {
+  type SpendingType = {
+    spendingName: string;
+    spendingValue: number;
+    date: string;
+    folder: string;
+  };
+  const addDataHandler = async (data: Meeting & NewUserData & SpendingType) => {
     const customer: NewUserData = { ...customers[data.title] };
 
     !isEmpty(customer) && customer.meetings.push(data);
     const docSnap = await getDoc(ref);
 
     if (!!data.day) {
+      console.log(data.day);
       docSnap.exists()
         ? await updateDoc(ref, {
             [data.day]: arrayUnion(data),
@@ -54,6 +60,14 @@ const useFirebase = (firebasePath: "meetings" | "customers") => {
           })
         : await setDoc(ref, {
             [data.fullName]: data,
+          });
+    } else if (!!data.date) {
+      docSnap.exists()
+        ? await updateDoc(ref, {
+            [data.folder]: arrayUnion(data),
+          })
+        : await setDoc(ref, {
+            [data.folder]: arrayUnion(data),
           });
     }
   };

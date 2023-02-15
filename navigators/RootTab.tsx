@@ -4,8 +4,11 @@ import { colors } from "../components/colors";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
   getCalendarDrawerNavigation,
+  getSalonDrawerNavigation,
   getTabNavigationScreens,
 } from "./config/navigationConfig";
+import { View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 export const CalendarDrawerNav = () => {
   const Drawer = createDrawerNavigator();
   const calendarDrawerScreens = useRef(getCalendarDrawerNavigation());
@@ -34,6 +37,37 @@ export const CalendarDrawerNav = () => {
             ),
           }}
           initialParams={{ viewMode: screen.viewMode }}
+        />
+      ))}
+    </Drawer.Navigator>
+  );
+};
+export const SalonDrawerNav = () => {
+  const Drawer = createDrawerNavigator();
+  const salonDrawerScreens = getSalonDrawerNavigation();
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        header: () => null,
+        drawerActiveBackgroundColor: "#85c6d841",
+        drawerActiveTintColor: "black",
+        drawerStatusBarAnimation: "fade",
+      }}
+    >
+      {salonDrawerScreens.map((screen) => (
+        <Drawer.Screen
+          key={screen.id}
+          name={screen.name}
+          component={screen.component}
+          options={{
+            drawerIcon: () => (
+              <screen.iconFamily
+                name={screen.iconName}
+                size={24}
+                color={colors.greydark}
+              />
+            ),
+          }}
         />
       ))}
     </Drawer.Navigator>

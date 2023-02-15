@@ -62,7 +62,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({
     selectedEvent?.title.split(" ")[1] || ""
   );
   const customerFullName = `${userTypedName} ${userTypedLastName}`;
-  const customers = salonCtx.customers;
+  const customers = salonCtx.fetchedCustomers;
   const customer: NewUserData = customers[customerFullName];
   const color = useSetColorForEvent(pickedService);
 

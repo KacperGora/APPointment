@@ -25,7 +25,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <RowContainer
       style={{
-        marginBottom: 4,
+        paddingVertical: 10,
       }}
     >
       <StyledTextInput

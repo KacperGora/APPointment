@@ -12,8 +12,12 @@ const BottomSheetComponent: React.FC<BottomSheetProps> = ({
   children,
   setIndex,
   onCloseBottomSheet,
+  oneSnap,
 }) => {
-  const snapPoints = useMemo(() => ["15%", "30%", "90%"], []);
+  const snapPoints = useMemo(
+    () => (oneSnap ? ["90%"] : ["15%", "30%", "90%"]),
+    []
+  );
   const onClosePressHandler = (index: number) => {
     setIndex(index);
     LayoutAnimation.easeInEaseOut();

@@ -35,7 +35,7 @@ const TimelineScreenHeader: React.FC<TimelineScreenHeaderProps> = ({
 
   return (
     <>
-      <RowContainer style={{ marginHorizontal: 16 }}>
+      <RowContainer style={{ marginHorizontal: 16, backgroundColor: "white" }}>
         <GestureDetectorComponent onGestureStartHandler={onGestureStartHandler}>
           {searchBarVisible ? (
             <SearchBar

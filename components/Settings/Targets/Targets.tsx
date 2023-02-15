@@ -6,6 +6,7 @@ import { SaloonContext } from "../../../store/SaloonStore";
 
 import { colors } from "../../colors";
 import RegularButton from "../../UI/Buttons/RegularButton";
+import SmallText from "../../UI/Text/SmallText";
 import TargetSlider from "./TargetSlider";
 
 const Targets = () => {
@@ -15,10 +16,11 @@ const Targets = () => {
   const weeklyTargetRef = useRef(salonCtx.weeklyTarget);
   const monthlyTargetRef = useRef(salonCtx.monthlyTarget);
   const [targetText, setTargetText] = useState({
-    daily: salonCtx.dailyTarget.toString(),
-    weekly: salonCtx.weeklyTarget.toString(),
-    monthly: salonCtx.monthlyTarget.toString(),
+    daily: salonCtx.dailyTarget?.toString(),
+    weekly: salonCtx.weeklyTarget?.toString(),
+    monthly: salonCtx.monthlyTarget?.toString(),
   });
+
   const targetChangeHandler = (e: number, targetType: string) => {
     switch (targetType) {
       case "daily": {
@@ -63,21 +65,6 @@ const Targets = () => {
   const buttonPressHandler = async () => {
     await setDoc(doc(db, "salon settings", "targets"), salonTargetData);
   };
-  // const fetchTargets = () => {
-  //   const q = query(collection(db, "salon settings"));
-  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  //     const settings = [];
-  //     querySnapshot.forEach((doc) => {
-  //       settings.push(doc.data());
-  //     });
-  //     salonCtx.changeTargetHandler(settings[0]["dailyTargets"], "daily");
-  //     salonCtx.changeTargetHandler(settings[0]["weeklyTargets"], "weekly");
-  //     salonCtx.changeTargetHandler(settings[0]["monthlyTargets"], "monthly");
-  //   });
-  // };
-  // useEffect(() => {
-  //   fetchTargets();
-  // }, [dailyTargets, weeklyTargets, monthlyTargets]);
 
   return (
     <View
@@ -107,6 +94,7 @@ const Targets = () => {
           margin: 12,
           flexDirection: "row",
           alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
         <TargetSlider
@@ -115,7 +103,7 @@ const Targets = () => {
           value={+targetText.daily}
         />
 
-        <Text>{targetText.daily} PLN</Text>
+        <SmallText>{targetText.daily} PLN</SmallText>
       </View>
 
       <View style={{ margin: 12, flexDirection: "row", alignItems: "center" }}>
@@ -155,22 +143,3 @@ const Targets = () => {
 };
 
 export default Targets;
-const styles = StyleSheet.create({
-  heading: {
-    fontWeight: "600",
-    fontSize: 16,
-    color: colors.greydark,
-    textAlign: "center",
-    // letterSpacing: 1.2,
-  },
-  headingContainer: {
-    borderColor: colors.accent,
-    borderWidth: 1,
-    borderRadius: 16,
-    backgroundColor: "#fbcd7761",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    width: 110,
-    marginHorizontal: 12,
-  },
-});
