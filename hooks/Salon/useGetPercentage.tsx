@@ -23,8 +23,7 @@ const useGetPercentage = () => {
   const todayPercentage: number = +(
     todayEarnings / targetCtx.dailyTarget
   ).toFixed(2);
-  console.log(todayEarnings);
-  console.log(targetCtx.dailyTarget);
+
   //week
   const meetingsThisWeek = [];
   for (const [key, value] of Object.entries(events)) {

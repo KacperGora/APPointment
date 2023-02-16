@@ -48,3 +48,24 @@ export const useGetSpendingFormConfig = (date) => {
   };
   return { data, inputsData };
 };
+export const getMonthsArr = () => {
+  return Array.from({ length: 12 }, (e, i) => {
+    return {
+      short: new Date(null, i + 1, null).toLocaleDateString("pl", {
+        month: "short",
+      }),
+      long: new Date(null, i + 1, null).toLocaleDateString("pl", {
+        month: "long",
+      }),
+      index: i,
+      folder: dayjs().set("month", i).format("MM-YYYY"),
+    };
+  });
+};
+export const getType = () => {
+  return [
+    { id: 1, type: "all", label: "wszystko" },
+    { type: "income", id: 2, label: "wpływy" },
+    { id: 3, type: "spending", label: "wydatki" },
+  ];
+};

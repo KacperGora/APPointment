@@ -50,19 +50,7 @@ export function getCarouselRingChartData() {
     todayEarnings,
     weeklyEarnings,
   } = useGetPercentage();
-  console.log({
-    title: "Przychody",
-    data: {
-      todayPercentage,
-      weeklyPercentage,
-      monthlyPercentage,
-      thisMonthEarnings,
-      todayEarnings,
-      weeklyEarnings,
-    },
-    iconName: "settings",
-    navDestination: "Ustawienia",
-  });
+
   return [
     {
       title: "Przychody",

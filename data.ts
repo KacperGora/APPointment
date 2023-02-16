@@ -55,30 +55,34 @@ export const salonWorkers = [
 ];
 export const servicesDetails = [
   {
+    id: 1,
     value: "Manicure Klasyczny",
     isActive: false,
     duration: 90,
     price: "40PLN",
   },
   {
+    id: 2,
     value: "Manicure Hybrydowy",
     isActive: false,
     duration: 120,
     price: "80PLN",
   },
   {
+    id: 3,
     value: "Uzupełnienie żelowe",
     isActive: false,
     duration: 150,
     price: "120PLN",
   },
   {
+    id: 4,
     value: "Przedłużenie paznokci żelem",
     isActive: false,
     duration: 180,
     price: "140PLN",
   },
-  { value: "Pedicure", isActive: false, duration: 60, price: "120PLN" },
+  { id: 5, value: "Pedicure", isActive: false, duration: 60, price: "120PLN" },
 ];
 
 export const openingHours = [

@@ -56,15 +56,15 @@ const useFetchData = () => {
       onSnapshot(salonSettingsQuery, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
           const salonSettings = {};
-          salonSettings[doc.id] = doc.data();
+
+          doc.id !== "spending"
+            ? (salonSettings[doc.id] = doc.data())
+            : setSalonSpending(doc.data());
+
           setSalonSettings(salonSettings);
         });
       });
-      onSnapshot(salonSettingsQuery, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          doc.id === "spending" && setSalonSpending(doc.data());
-        });
-      });
+
       setIsLoading(false);
     } catch (error) {
       setError(error);
@@ -76,7 +76,7 @@ const useFetchData = () => {
       abortController.abort();
     };
   }, []);
-  console.log(salonSpending);
+
   return {
     eventsData,
     eventsFlatData,

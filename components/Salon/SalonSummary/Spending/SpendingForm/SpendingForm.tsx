@@ -68,7 +68,7 @@ const SpendingForm = ({ onSubmit }) => {
             mode="date"
             value={date}
             onChange={(d, e) => {
-              console.log(d), setDate(e);
+              setDate(e);
             }}
             display="compact"
             locale="pl-PL"

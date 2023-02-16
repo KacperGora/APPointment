@@ -3,10 +3,20 @@ import { Button, Pressable, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { servicesDetails } from "../../../data";
 import { colors } from "../../colors";
-
+import FloatingButton from "../../UI/Buttons/FloatingButton";
+import { AntDesign } from "@expo/vector-icons";
 const ManageServices = () => {
   const [services, setServices] = useState(servicesDetails);
   const serviceChangeHandler = () => {};
+  const actions = [
+    {
+      text: "Dodaj usługę",
+      icon: <AntDesign name="plus" size={24} color="white" />,
+      name: "addSpending",
+      position: 1,
+      color: colors.secondary,
+    },
+  ];
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <Text
@@ -24,6 +34,7 @@ const ManageServices = () => {
         {services.map((service) => {
           return (
             <Pressable
+              key={service.id}
               style={({ pressed }) => [
                 {
                   flexDirection: "row",
@@ -62,6 +73,7 @@ const ManageServices = () => {
           );
         })}
       </View>
+      <FloatingButton actions={actions} onPress={null} />
     </View>
   );
 };

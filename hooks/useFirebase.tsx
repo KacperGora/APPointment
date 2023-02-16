@@ -41,7 +41,6 @@ const useFirebase = (
     const docSnap = await getDoc(ref);
 
     if (!!data.day) {
-      console.log(data.day);
       docSnap.exists()
         ? await updateDoc(ref, {
             [data.day]: arrayUnion(data),
