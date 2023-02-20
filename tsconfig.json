@@ -1,6 +1,10 @@
 {
   "extends": "expo/tsconfig.base",
+  "esModuleInterop": true,
+  "allowSyntheticDefaultImports": true,
   "compilerOptions": {
-    "strict": true
+    "jsx": "react",
+    "lib": ["es5", "es6", "dom", "dom.iterable"]
+    // "strict": true
   }
 }
