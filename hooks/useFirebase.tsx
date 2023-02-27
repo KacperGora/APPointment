@@ -7,7 +7,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { isEmpty } from "lodash";
+import { filter, isEmpty } from "lodash";
 import { useContext, useState } from "react";
 import { db } from "../firebase/firebase";
 import { MeetingsContext } from "../store/CalendarStore";
@@ -23,6 +23,7 @@ const useFirebase = (
   const ref = doc(db, firebasePath, fireBaseCollection || firebasePath);
   const customerRef = doc(db, "customers", "customers");
   const spendingRef = doc(db, "salon settings", "spending");
+  const meetingsRef = doc(db, "meetings", "meetings");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -98,10 +99,12 @@ const useFirebase = (
       const customer: NewUserData = { ...customers[data.name] };
       const customerData: NewUserData = {
         ...customer,
-        meetings: customer.meetings.filter((meeting) => meeting.id !== data.id),
+        meetings: customer.meetings?.filter(
+          (meeting) => meeting.id !== data.id
+        ),
       };
       if (data.type === "spending") {
-        const newData = [...salonSpending[data.folder]].filter(
+        const newData = [...salonSpending[data.folder]]?.filter(
           (spending) => spending.id !== data.id
         );
         await updateDoc(ref, {
@@ -132,17 +135,27 @@ const useFirebase = (
       dirtyData[data.fullName] = data;
       await updateDoc(customerRef, dirtyData);
     } else if (!!data.folder) {
-      const newData = { ...salonSpending };
-      console.log(
-        Object.values(newData)
-          .flat()
-          .filter((el) => el.id !== data.id)
-      );
-      // !!newData[data.folder]
-      //   ? newData[data.folder].push(data)
-      //   : (newData[data.folder] = [data]);
-      // // await setDoc(ref, newData);
-      // console.log(newData);
+      const dataCopy = { ...salonSpending };
+      if (data.type === "spending") {
+        dataCopy[data.folder].filter((el) => el.id !== data.id);
+        const filteredCopy = dataCopy[data.folder].filter(
+          (el) => el.id !== data.id
+        );
+        filteredCopy.push(data);
+        dataCopy[data.folder] = filteredCopy;
+        await updateDoc(ref, {
+          [data.folder]: filteredCopy,
+        });
+      } else if (data.type === "income") {
+        const editedMeeting = meetings[data.originFolder].filter(
+          (el) => el.id === data.id
+        )[0];
+        console.log(meetings);
+        editedMeeting.servicePrice = data.value;
+        await updateDoc(meetingsRef, {
+          [data.originFolder]: meetings[data.originFolder],
+        });
+      }
     } else {
       const dirtyData = { ...meetings };
       const filteredEvents = dirtyData[date]?.filter(

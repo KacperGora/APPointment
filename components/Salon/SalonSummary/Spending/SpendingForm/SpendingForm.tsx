@@ -28,10 +28,14 @@ const SpendingForm = ({ onSubmit, editedCost }) => {
     if (data.type === "spending") {
       const newData: SpendingType = {
         ...data,
+        value: data.value,
+        originFolder: editedCost.originFolder,
+        type: editedCost.type,
         id: editedCost.id,
       };
 
       makeFirebaseCall("edit", newData);
+      onSubmit();
     }
   };
   const submitSpendingHandler = () => {

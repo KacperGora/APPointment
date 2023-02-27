@@ -36,6 +36,7 @@ const SpendingComponent = () => {
 
   const { spending, income, totalData, searchPressHandler } =
     useGetMonthlyFunds(selectedMonth, selectedType);
+
   const onCloseBottomSheetHandler = () => {
     setEditedCost(undefined);
     setBottomSheetShown(false);

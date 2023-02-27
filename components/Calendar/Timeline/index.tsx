@@ -136,7 +136,7 @@ const Timeline = () => {
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
     .onStart(() => {
-      searchPressHandler("");
+      searchPressHandler(null);
       setSearchedEvents([]);
     })
     .runOnJS(true);
