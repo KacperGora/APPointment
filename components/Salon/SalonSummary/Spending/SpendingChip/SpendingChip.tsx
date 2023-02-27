@@ -34,12 +34,6 @@ const SpendingChip = ({
       label: "rodzaj",
       onPress: () => setExpandTypeView(!expandTypeView),
     },
-    {
-      id: 3,
-      icon: "shape",
-      label: "kategoria",
-      onPress: () => {},
-    },
   ];
 
   const monthNamePressHandler = (el) => {
@@ -61,7 +55,7 @@ const SpendingChip = ({
   };
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <RowContainer>
         {showSearchBar ? (
           <SearchBar
@@ -69,24 +63,32 @@ const SpendingChip = ({
             searchPressHandler={searchPressHandler}
           />
         ) : (
-          <RowContainer style={{ marginVertical: 12 }}>
-            {chip.map((el) => {
-              return (
-                <Chip
-                  key={el.id}
-                  style={{
-                    backgroundColor: "white",
-                    borderWidth: 1,
-                    marginHorizontal: 5,
-                    borderColor: colors.accent,
-                  }}
-                  icon={el.icon}
-                  onPress={el.onPress}
-                >
-                  {el.label}
-                </Chip>
-              );
-            })}
+          <RowContainer
+            style={{
+              flex: 1,
+              marginVertical: 12,
+              justifyContent: "space-between",
+            }}
+          >
+            <RowContainer>
+              {chip.map((el) => {
+                return (
+                  <Chip
+                    key={el.id}
+                    style={{
+                      backgroundColor: "white",
+                      borderWidth: 1,
+                      marginHorizontal: 5,
+                      borderColor: colors.accent,
+                    }}
+                    icon={el.icon}
+                    onPress={el.onPress}
+                  >
+                    {el.label}
+                  </Chip>
+                );
+              })}
+            </RowContainer>
             <SearchButton onPress={showSearchBarHandler} />
           </RowContainer>
         )}

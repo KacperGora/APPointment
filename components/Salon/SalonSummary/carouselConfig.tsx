@@ -53,6 +53,19 @@ export function getCarouselRingChartData() {
 
   return [
     {
+      title: "Podusmowanie",
+      data: {
+        todayPercentage,
+        weeklyPercentage,
+        monthlyPercentage,
+        thisMonthEarnings,
+        todayEarnings,
+        weeklyEarnings,
+      },
+      iconName: "settings",
+      navDestination: "Ustawienia",
+    },
+    {
       title: "Przychody",
       data: {
         todayPercentage,

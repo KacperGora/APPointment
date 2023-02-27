@@ -2,19 +2,14 @@ import { isSameMonth } from "date-fns";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import useFetchData from "../../../../hooks/calendar/useFetchData";
+import { SpendingType } from "../../../../types";
 type Month = {
   short: string;
   long: string;
   index: number;
   folder: string;
 };
-type SpendingType = {
-  name: string;
-  value: number;
-  type: "spending" | "income";
-  date: string;
-  folder: string;
-};
+
 const useGetMonthlyFunds = (
   selectedMonth: Month,
   selectedType: "all" | "spending" | "income"
@@ -41,6 +36,7 @@ const useGetMonthlyFunds = (
             folder: dayjs(el.day).format("MM-YYYY"),
             type: "income",
             id: el.id,
+            originFolder: dayjs(el.day).format("YYYY-MM-DD"),
           };
         });
         thisMonthEvents.push(...newVal);

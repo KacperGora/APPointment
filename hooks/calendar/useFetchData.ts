@@ -21,6 +21,7 @@ type SpendingType = {
     type: "spending" | "income";
     date: string;
     folder: string;
+    id: string;
   }[];
 };
 const useFetchData = () => {

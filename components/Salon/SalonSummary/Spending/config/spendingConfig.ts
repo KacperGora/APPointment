@@ -2,17 +2,16 @@ import dayjs from "dayjs";
 import { useRef, useState } from "react";
 import { Keyboard, LayoutAnimation } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-type SpendingType = {
-  name: string;
-  value: number;
-  type: "spending" | "income";
-  date: string;
-  folder: string;
-};
-export const useGetSpendingFormConfig = (date) => {
-  const [spendingName, setSpendingName] = useState("");
-  const [spendingValue, setSpendingValue] = useState("");
+import { v4 } from "uuid";
+import { SpendingType } from "../../../../../types";
+
+export const useGetSpendingFormConfig = (date, editedCost) => {
+  const [spendingName, setSpendingName] = useState(editedCost?.name || "");
+  const [spendingValue, setSpendingValue] = useState(
+    editedCost?.value.toString() || ""
+  );
   const costName = useRef<TextInput>();
+
   const costValue = useRef<TextInput>();
   const inputsData = [
     {
@@ -45,6 +44,7 @@ export const useGetSpendingFormConfig = (date) => {
     date: dayjs(date).format("DD.MM.YY"),
     folder: dayjs(date).format("MM-YYYY"),
     type: "spending",
+    id: v4(),
   };
   return { data, inputsData };
 };

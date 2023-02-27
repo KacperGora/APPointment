@@ -289,6 +289,8 @@ export type RightActionArgs = {
   customer?: NewUserData;
   onEdit?: any;
   swipeRef?: any;
+  data?: any;
+  isLoading?: any;
 };
 export type ModalInformation = {
   item: NewUserData;
@@ -300,4 +302,6 @@ export type SpendingType = {
   type: "spending" | "income";
   date: string;
   folder: string;
+  id: string;
+  originFolder?: string;
 };

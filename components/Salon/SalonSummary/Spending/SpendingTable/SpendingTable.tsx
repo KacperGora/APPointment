@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import { FlatList } from "react-native";
 import { DataTable } from "react-native-paper";
 import { colors } from "../../../../colors";
-import { RowContainerSpaceBetween, ScreenHeight } from "../../../../shared";
+
+import { RowContainer, ScreenHeight } from "../../../../shared";
 import { uniqueId } from "lodash";
 import SpendingChip from "../SpendingChip/SpendingChip";
 import SpendingItem from "../SpendingItem/SpendingItem";
-
 const SpendingTable = ({
   setSelectedMonth,
   data,
   setSelectedType,
   searchPressHandler,
+  setEditing,
 }) => {
   const [dateSortType, setDateSortType] = useState<"descending" | "ascending">(
     "descending"
@@ -30,13 +31,13 @@ const SpendingTable = ({
 
   return (
     <DataTable>
-      <RowContainerSpaceBetween style={{ marginHorizontal: 12 }}>
+      <RowContainer style={{ marginHorizontal: 12 }}>
         <SpendingChip
           setSelectedMonth={setSelectedMonth}
           setSelectedType={setSelectedType}
           searchPressHandler={searchPressHandler}
         />
-      </RowContainerSpaceBetween>
+      </RowContainer>
 
       <DataTable.Header
         style={{
@@ -56,7 +57,9 @@ const SpendingTable = ({
         key={uniqueId()}
         style={{ height: ScreenHeight / 2 }}
         data={data}
-        renderItem={({ item }) => <SpendingItem item={item} />}
+        renderItem={({ item }) => (
+          <SpendingItem item={item} setEditing={setEditing} />
+        )}
       />
     </DataTable>
   );

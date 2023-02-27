@@ -21,7 +21,8 @@ const INITALMONTH = {
 const SpendingComponent = () => {
   const [bottomSheetShown, setBottomSheetShown] = useState(false);
   const navigate = useNavigation<Navigation>();
-  const [index, setIndex] = useState(2);
+  const [index, setIndex] = useState(0);
+  const [editedCost, setEditedCost] = useState(undefined);
   const [selectedType, setSelectedType] = useState<
     "income" | "spending" | "all"
   >("all");
@@ -36,6 +37,7 @@ const SpendingComponent = () => {
   const { spending, income, totalData, searchPressHandler } =
     useGetMonthlyFunds(selectedMonth, selectedType);
   const onCloseBottomSheetHandler = () => {
+    setEditedCost(undefined);
     setBottomSheetShown(false);
     setIndex(0);
   };
@@ -49,7 +51,6 @@ const SpendingComponent = () => {
       color: colors.secondary,
     },
   ];
-
   return (
     <SafeAreaContainer style={{ backgroundColor: "white" }}>
       <TimelineScreenHeader
@@ -62,8 +63,9 @@ const SpendingComponent = () => {
       <SpendingTable
         setSelectedMonth={setSelectedMonth}
         setSelectedType={setSelectedType}
-        data={totalData?.sort((a, b) => a.date.localeCompare(b.date))}
+        data={totalData}
         searchPressHandler={searchPressHandler}
+        setEditing={setEditedCost}
       />
       <SpendingBottomSummary
         income={income}
@@ -77,14 +79,17 @@ const SpendingComponent = () => {
         }}
       />
 
-      {bottomSheetShown && (
+      {(bottomSheetShown || !!editedCost) && (
         <BottomSheetComponent
           index={index}
           setIndex={setIndex}
           onCloseBottomSheet={onCloseBottomSheetHandler}
           oneSnap={true}
         >
-          <SpendingForm onSubmit={onCloseBottomSheetHandler} />
+          <SpendingForm
+            onSubmit={onCloseBottomSheetHandler}
+            editedCost={editedCost}
+          />
         </BottomSheetComponent>
       )}
     </SafeAreaContainer>

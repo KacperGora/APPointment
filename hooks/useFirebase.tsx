@@ -12,7 +12,8 @@ import { useContext, useState } from "react";
 import { db } from "../firebase/firebase";
 import { MeetingsContext } from "../store/CalendarStore";
 import { SaloonContext } from "../store/SaloonStore";
-import { Meeting, NewUserData } from "../types";
+import { Meeting, NewUserData, SpendingType } from "../types";
+import useFetchData from "./calendar/useFetchData";
 
 type FirebaseCallType = "edit" | "delete" | "add";
 const useFirebase = (
@@ -21,6 +22,7 @@ const useFirebase = (
 ) => {
   const ref = doc(db, firebasePath, fireBaseCollection || firebasePath);
   const customerRef = doc(db, "customers", "customers");
+  const spendingRef = doc(db, "salon settings", "spending");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -28,12 +30,8 @@ const useFirebase = (
   const salonCtx = useContext(SaloonContext);
   const customers = salonCtx.fetchedCustomers;
   const meetings = ctx.meetings;
-  type SpendingType = {
-    spendingName: string;
-    spendingValue: number;
-    date: string;
-    folder: string;
-  };
+  const { salonSpending } = useFetchData();
+
   const addDataHandler = async (data: Meeting & NewUserData & SpendingType) => {
     const customer: NewUserData = { ...customers[data.title] };
 
@@ -70,7 +68,9 @@ const useFirebase = (
           });
     }
   };
-  const deleteDataHandler = async (data: PackedEvent & NewUserData) => {
+  const deleteDataHandler = async (
+    data: PackedEvent & NewUserData & SpendingType
+  ) => {
     if (!!data.day) {
       const meetingsAtThisDay = meetings[data?.day]?.filter(
         (el) => el.id !== data.id
@@ -94,17 +94,55 @@ const useFirebase = (
       await updateDoc(ref, {
         [data.fullName]: deleteField(),
       });
+    } else if (!!data.folder) {
+      const customer: NewUserData = { ...customers[data.name] };
+      const customerData: NewUserData = {
+        ...customer,
+        meetings: customer.meetings.filter((meeting) => meeting.id !== data.id),
+      };
+      if (data.type === "spending") {
+        const newData = [...salonSpending[data.folder]].filter(
+          (spending) => spending.id !== data.id
+        );
+        await updateDoc(ref, {
+          [data.folder]: newData.length === 0 ? deleteField() : newData,
+        });
+      } else if (data.type === "income") {
+        const meetingRef = doc(db, "meetings", "meetings");
+        const meetingsAtThisDay = meetings[data?.originFolder]?.filter(
+          (el) => el.id !== data.id
+        );
+        await updateDoc(meetingRef, {
+          [data.originFolder]:
+            meetingsAtThisDay.length === 0 ? deleteField() : meetingsAtThisDay,
+        });
+        await updateDoc(customerRef, {
+          [data.name]: customerData,
+        });
+      }
     }
   };
 
   const editDataHandler = async (
-    data: PackedEvent & NewUserData & Meeting,
+    data: PackedEvent & NewUserData & Meeting & SpendingType,
     date?: string
   ) => {
     if (!!data.meetings) {
       const dirtyData = { ...customers };
       dirtyData[data.fullName] = data;
       await updateDoc(customerRef, dirtyData);
+    } else if (!!data.folder) {
+      const newData = { ...salonSpending };
+      console.log(
+        Object.values(newData)
+          .flat()
+          .filter((el) => el.id !== data.id)
+      );
+      // !!newData[data.folder]
+      //   ? newData[data.folder].push(data)
+      //   : (newData[data.folder] = [data]);
+      // // await setDoc(ref, newData);
+      // console.log(newData);
     } else {
       const dirtyData = { ...meetings };
       const filteredEvents = dirtyData[date]?.filter(
@@ -118,7 +156,6 @@ const useFirebase = (
         ),
       };
       customersData.meetings.push(data);
-
       await updateDoc(ref, {
         [date]: filteredEvents?.length !== 0 ? filteredEvents : deleteField(),
       });

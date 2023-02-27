@@ -9,19 +9,33 @@ import RegularButton from "../../../../UI/Buttons/RegularButton";
 import SmallText from "../../../../UI/Text/SmallText";
 import useFirebase from "../../../../../hooks/useFirebase";
 import { useGetSpendingFormConfig } from "../config/spendingConfig";
+import { SpendingType } from "../../../../../types";
 
-const SpendingForm = ({ onSubmit }) => {
+const SpendingForm = ({ onSubmit, editedCost }) => {
   const [date, setDate] = useState(new Date());
-  const { data, inputsData } = useGetSpendingFormConfig(date);
+  const { data, inputsData } = useGetSpendingFormConfig(date, editedCost);
   const [status, setStatus] = useState("unchecked");
   const { makeFirebaseCall } = useFirebase("salon settings", "spending");
 
   const checkBoxPressHandler = () => {
     setStatus(status === "unchecked" ? "checked" : "unchecked");
   };
-  const submitSpendingHandler = () => {
+  const addNewSpending = () => {
     makeFirebaseCall("add", data);
     onSubmit();
+  };
+  const editSpending = () => {
+    if (data.type === "spending") {
+      const newData: SpendingType = {
+        ...data,
+        id: editedCost.id,
+      };
+
+      makeFirebaseCall("edit", newData);
+    }
+  };
+  const submitSpendingHandler = () => {
+    !!editedCost ? editSpending() : addNewSpending();
   };
 
   return (
@@ -41,7 +55,9 @@ const SpendingForm = ({ onSubmit }) => {
         }}
       >
         <View style={{ margin: 6 }}>
-          <RegularText24>Dodaj koszty</RegularText24>
+          <RegularText24>
+            {!!editedCost ? "Edytuj koszt" : "Dodaj koszty"}
+          </RegularText24>
         </View>
         {/* <KeyboardAwareScrollView> */}
         <View
@@ -105,7 +121,7 @@ const SpendingForm = ({ onSubmit }) => {
         </View>
         <RegularButton
           onPress={submitSpendingHandler}
-          title="Dodaj"
+          title={!!editedCost ? "Edytuj" : "Dodaj"}
           primary
           textStyles={{ color: "white" }}
           btnStyles={{ width: ScreenWidth / 2, alignSelf: "center" }}
